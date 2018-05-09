@@ -1,0 +1,23 @@
+mesclics_espace_client_index:
+    path:    /{client}/{section}
+    defaults: 
+        _controller: MesClicsEspaceClientBundle:Main:index
+        section:     index 
+    requirements:
+        section: ((index)|(charte)|(charte-graphique)|(contrat)|(profil))[\/]?
+
+mesclics_espace_client_test:
+    path: /test/{var}
+    defaults:
+        _controller: MesClicsEspaceClientBundle:Main:test
+
+mesclics_espace_client_test_update:
+    path:    /test/update/{id}/{numero}
+    defaults:
+        _controller: MesClicsEspaceClientBundle:Main:update
+
+mesclics_espace_client_test_add:
+    path:    /test/add/{nom}/{prospect}
+    defaults:
+         _controller: MesClicsEspaceClientBundle:Main:addClient
+         prospect: false

@@ -1,0 +1,78 @@
+services:
+#    mesclics_espace_client.example:
+#        class: MesClics\EspaceClientBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    mesclics_espace_client.clientRepository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - MesClics\EspaceClientBundle\Entity\Client
+
+    mesclics_espace_client.clientChecker:
+        class: MesClics\EspaceClientBundle\ClientChecker\MesClicsClientChecker
+        arguments:
+            - "@mesclics_espace_client.clientRepository"
+    
+    mesclics_espace_client.clientNumerator:
+        class: MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator
+
+    mesclics_espace_client.contratNumerator:
+        class: MesClics\EspaceClientBundle\ContratNumerator\MesClicsContratNumerator
+
+    #FORM MANAGERS#
+    mesclics_espace_client.form_manager.client.new:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.client.edit:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ClientEditFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.projet.new:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.projet.associer_contrat:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ProjetAssocierContratFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.projet.dissocier_contrat:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ProjetDissocierContratFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.contrat.new:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+
+    mesclics_espace_client.form_manager.contrat.associer_projet:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"
+    
+    mesclics_espace_client.form_manager.contrat.dissocier_projet:
+        class: MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request_stack"
+            - "@session"

@@ -1,0 +1,12 @@
+client:
+  new:
+    title: 'Aggiungere un cliente'
+  datas:
+    title: 'Dati del cliente'
+  edit:
+    title: 'Modificare i dati del cliente'
+    link: 'Modificare i dati del cliente'
+client_new_form:
+  prospect: 'Salvare come cliente potenziale'
+  nom: 'Nome commerciale del cliente'
+  ajouter: 'Aggiungere il cliente'

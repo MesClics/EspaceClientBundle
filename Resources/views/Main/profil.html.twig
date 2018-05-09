@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ client.nom|upper }} - Mon profil | mesclics.fr</title>
+    </head>
+
+    <body>
+        <h1>Mon Profil</h1>
+        <p>Mon nom : {{ client.nom }}</p>
+        <p>Mon numero client : {{ client.numero }}</p>
+        <p>Mon adresse directe vers mon espace client : http://www.mesclics.fr/{{ client.alias }}</p>
+        <p>Mon image de profil: <img src="{{ client.image.url }}" alt="{{ client.image.alt }}"></p>
+
+    </body>
+</html>

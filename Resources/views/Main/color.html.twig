@@ -1,0 +1,14 @@
+{#FOR INCLUDES#}
+<!-- BLOC COULEUR CHARTE GRAPHIQUE -->
+{% for colorName, colorCodes  in colorType %}
+    <h4>
+        {% block colorName %}
+            {{ colorName }}
+        {% endblock colorName %}
+    </h4>
+    <p class="colorCode">
+        {% for colorCodeType, colorCode in colorCodes %}
+            <span class="{{ colorCodeType }}">{{ colorCode }}</span>
+        {% endfor %}
+    </p>
+{% endfor %}

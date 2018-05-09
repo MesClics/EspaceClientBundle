@@ -1,0 +1,23 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - Espace Client
+{% endblock title %}
+
+{% block body %}
+    <h1>{% block espaceClientSection %}{% endblock %}</h1>
+    
+    {% set currentMenuItem = 'espace-client' %}
+   
+    {% block espaceClientMenu %}
+        {% include "MesClicsEspaceClientBundle::menu.html.twig" %}
+    {% endblock espaceClientMenu %}  
+
+    <div class="intro">
+        {% block sectionIntro %} {% endblock %}
+    </div>
+
+    <div>
+        {% block sectionContent %} {% endblock %}
+    </div>
+{% endblock body %}

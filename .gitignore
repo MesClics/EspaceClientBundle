@@ -1,0 +1,6 @@
+#ignore le dossier Tests
+Tests/*
+#ignore le fichier de paramètrage des clients mesclics
+Resources/config/clients
+#ignore le dossier des icones clients
+Resources/public/images/icones/clients

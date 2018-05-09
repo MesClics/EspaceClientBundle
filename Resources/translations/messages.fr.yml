@@ -1,0 +1,14 @@
+client:
+  new:
+    title: 'Ajouter un client'
+  datas:
+    title: 'Données du client'
+  edit:
+    title: 'Modifier les données du client'
+    link: 'Modifier les données du client'
+client_new_form:
+  prospect: 'Enregistrer comme prospect'
+  nom: 'Nom commercial du client'
+  ajouter: 'Ajouter le client'
+
+

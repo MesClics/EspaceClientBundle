@@ -1,0 +1,19 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - Tests
+{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur mesclics.fr</h1>
+    Le client ayant pour nom "{{ name }}" est :
+    {{ client.nom }} - {{ client.numero }}
+
+    <p>Voici la liste des {{ nb_clients }} clients :</p>
+    {% for client in clients %}
+        <p>{{ client.numero }} : {{ client.nom }}</p>
+        {% if client.image is not null %}
+         <img src="{{ client.image.url }}" alt="{{ client.image.alt }}"> 
+        {% endif %}
+    {% endfor %}
+{% endblock %}

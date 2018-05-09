@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ client.nom|upper }} - Mon Espace Client | mesclics.fr</title>
+    </head>
+
+    <body>
+        <h1>Mon Espace Client</h1>
+        <h2 class="[ oocss-title-section ]">TESTS</h2>
+        {% if client.nom is same as ('AMS Nettoyage') %}
+            <p>Bonjour Alassane</p>            
+        {% elseif client.nom is same as ('Sophro Et Energies') %}
+            <p>Bonjour Maryline</p>
+        {% endif %}
+    </body>
+</html>

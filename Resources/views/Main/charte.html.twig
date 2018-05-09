@@ -1,0 +1,23 @@
+{% extends "MesClicsEspaceClientBundle::layout.html.twig" %}
+
+{% block title %}{{ client.nom|upper }} - Ma Charte Graphique | mesclics.fr{% endblock title %}
+{% block body %}
+    {% set currentMenuItem = 'charte' %}
+    {%- block espaceClientMenu -%} {{ parent() }} {%- endblock espaceClientMenu -%}
+    {%- block espaceClientSection -%}
+        <h2 class="[ oocss-title-section ]">Ma charte graphique</h2>
+    {%- endblock espaceClientSection -%}
+    {%- block sectionIntro -%}
+        <p>Votre site internet est à votre image. Nous avons choisi ensemble les caractéristiques graphiques qui permettent de transmettre cette image à vos visiteurs.</p>
+        <p>Pour une communication efficace, il est conseillé de toujours utiliser les mêmes codes graphiques. Cela permet de ne pas « brouiller » l’information auprès de vos clients et de les fidéliser à votre « marque ».</p>
+        <p>Voici la liste des codes graphiques à respecter pour être fidèle à la charte graphique de votre site internet</p>
+    {% endblock %}
+    {%- block sectionContent -%}
+        <h3>Couleurs principales</h3>
+        {% set colorType = charte.primaryColors %}
+        {%- include "MesClicsEspaceClientBundle:Main:color.html.twig" -%}
+        <h3>Couleurs secondaires</h3>
+        {% set colorType = charte.secondaryColors %}
+        {%- include "MesClicsEspaceClientBundle:Main:color.html.twig" -%}
+    {%- endblock -%}
+{% endblock body %}
