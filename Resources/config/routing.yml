@@ -1,4 +1,34 @@
-mesclics_espace_client_index:
+#admin
+mesclics_admin_clients:
+    path: /
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:clients }
+
+mesclics_admin_client:
+    path:   /client-{client_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:client }
+
+mesclics_admin_client_edit:
+    path: /client-{client_id}/edit/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:edit }
+
+mesclics_admin_client_projets:
+    path: /client-{client_id}/projets/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:projets }
+
+mesclics_admin_client_projet:
+    path: /client-{client_id}/projet-{projet_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:projet }
+
+mesclics_admin_client_contrats:
+    path: /client-{client_id}/contrats/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:contrats }
+
+mesclics_admin_client_contrat:
+    path: /client-{client_id}/contrat-{contrat_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:contrat }
+
+#espace_client
+mesclics_espace_client:
     path:    /{client}/{section}
     defaults: 
         _controller: MesClicsEspaceClientBundle:Main:index

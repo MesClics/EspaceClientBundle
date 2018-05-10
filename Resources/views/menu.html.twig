@@ -3,7 +3,7 @@
 <!-- MENU ESPACE CLIENT -->
 <nav>
     <ul>
-        <li{% if currentMenuItem is same as ('contrat') %} class="active"{% endif %}><a href="{{ path('mesclics_espace_client_index', {'client': client.alias, 'section': 'contrat'})}}">Mon contrat</a></li>
-        <li{% if currentMenuItem is same as ('charte') %} class="active"{% endif %}><a href="{{ path('mesclics_espace_client_index', {'client': client.alias, 'section': 'charte'})}}">Ma charte graphique</a></li>
+        <li{% if currentMenuItem is same as ('contrat') %} class="active"{% endif %}><a href="{{ path('mesclics_espace_client', {'client': client.alias, 'section': 'contrat'})}}">Mon contrat</a></li>
+        <li{% if currentMenuItem is same as ('charte') %} class="active"{% endif %}><a href="{{ path('mesclics_espace_client', {'client': client.alias, 'section': 'charte'})}}">Ma charte graphique</a></li>
     </ul>
 </nav>

@@ -24,7 +24,60 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class ClientsController extends Controller{
+class AdminController extends Controller{
+
+    //CLIENTS
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function clientsAction(Request $request){
+        //on récupère la lise des clients
+        $em = $this->getDoctrine()->getManager();
+        $clientRepo = $em->getRepository('MesClicsEspaceClientBundle:Client');
+        $clients = $clientRepo->getClientsList();
+        //Ajout de client
+        //on crée un objet qui sera hydraté par notre formulaire
+        $client = new Client();
+        //création du formulaire
+        $clientForm = $this->createForm(ClientType::class, $client);
+
+        if(!$request->isMethod('POST')){
+            //on génère la vue
+            $args = array(
+                'clients' => $clients,
+                'client_new_form' => $clientForm->createView(),
+                'currentSection' => 'clients'
+            );
+            return $this->render('MesClicsAdminBundle:Panel:clients.html.twig', $args);
+        }
+
+        //si le formulaire est soumis
+        else{
+            //gestion du formulaire si requête de type post, on gère le formulaire
+            $clientFormManager = $this->get('mesclics_espace_client.form_manager.client.new');
+            $clientFormManager->handle($clientForm);
+
+                //on redirige vers la page client
+                $args = array(
+                    'id' => $clientFormManager->getForm()->getData()->getId()
+                );
+                return $this->redirectToRoute('mesclics_admin_client', $args);
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
+     */
+    public function clientAction(Client $client){
+        $args = array(
+            'currentSection' => 'clients',
+            'client' => $client
+        );
+
+        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+    }
+
     /**
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
