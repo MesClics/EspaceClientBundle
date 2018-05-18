@@ -2,7 +2,7 @@
     "name": "mesclics/espace-client-bundle",
     "description": "Bundle pour l'ajout d'un espace client à la console d'administration mesclics",
     "license": "proprietary",
-    "type": "project",
+    "type": "symfony-bundle",
     "version": "0.0.1",
     "homepage": "https://github.com/MesClics/EspaceClientBundle.git",
     "authors": [
@@ -12,8 +12,5 @@
             "homepage": "http://www.mesclics.fr",
             "role": "Developer"
         }
-    ],
-    "require": {
-        "mesclics/admin-bundle": "0.*"
-    }
+    ]
 }
