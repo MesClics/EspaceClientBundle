@@ -80,6 +80,11 @@ class Client
      * @Assert\Valid()
      */
     private $contrats;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MesClics\EspaceClientBundle\Entity\Facture", mappedBy="client", cascade={"persist"})
+     */
+    private $factures;
         
     /**
      * Get id
@@ -327,5 +332,45 @@ class Client
     public function getContrats()
     {
         return $this->contrats;
+    }
+
+    /**
+     * Add facture
+     * @param \MesClics\EspaceClientBundle\Entity\Facture
+     * 
+     * @return Client
+     */
+    public function addFacture(\MesClics\EspaceClientBundle\Entity\Facture $fatcure){
+        $this->factures[] = $facture;
+        $fdacture->setClient($this);
+
+        return $this;
+    }
+
+    /**
+     * remove facture
+     * @param \MesClics\EspaceClientBundle\Entity\Facture
+     * 
+     */
+    public function removeFacture(\MesClics\EspaceClientBundle\Entity\Facture $facture){
+        $this->factures->removeElement($facture);
+        $facture->setClient(null);
+    }
+
+    /**
+     * get Factures
+     */
+    public function getFactures(){
+        return $this->factures;
+    }
+    
+
+    /**
+     * constructor
+     */
+    public function __construct(){
+        $this->contrats = new ArrayCollection();
+        $this->projets = new ArrayCollection();
+        $this->factures = new ArrayCollection();
     }
 }

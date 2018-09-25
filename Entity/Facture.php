@@ -37,9 +37,20 @@ class Facture
     private $franchiseTva;
 
     /**
-     * @ORM\OneToMany(targetEntity="MesClics\EspaceClientBundle\Article")
+     * @ORM\ManyToMany(targetEntity="MesClics\EspaceClientBundle\Entity\Article")
+     * 
      */
     private $articles;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="\MesClics\EspaceClientBundle\Entity\ArticleQuantite")
+     */
+    private $articles_quantites;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="MesClics\EspaceClientBundle\Entity\Client", inversedBy="factures")
+     */
+    private $client;
 
 
     /**
@@ -124,7 +135,60 @@ class Facture
         return $this->articles;
     }
 
+    /**
+     * set client
+     */
+    public function setClient(\MesClics\EspaceClientBundle\Entity\Client $client){
+        $this->client = $client;
+
+        return $this;
+    }
+
+
+    /**
+     * get client
+     */
+    public function getClient(){
+        return $this->client;
+    }
+
+    /**
+     * Add article-quantite
+     * 
+     * @param \MesClics\EspaceClientBundle\Entity\ArticleQuantite $article_quantite
+     * 
+     * @return Facture
+     */
+    public function addArticleQuantite(\MesClics\EspaceClientBundle\Entity\ArticleQuantite $article_quantite){
+        $this->articles_quantites[$article] = $quantite;
+
+        return $this;
+    }
+
+    /**
+     * Remove article-quantite
+     * 
+     * @param \MesClics\EspaceClient\Entity\ArticleQuantite $article_quantite
+     */
+    public function removeArticleQuantite(\MesClics\EspaceClientBundle\Entity\ArticleQuantite $article_quantite){
+        $this->articles_quantites->removeElement($article);
+    }
+
+    /**
+     * Get aricles-quantites
+     */
+    public function getAriclesQuantites(){
+        return $this->articles_quantites;
+    }
+
+
+    /**
+     * constructor
+     */
     public function __construct(){
         $this->articles = new ArrayCollection();
+        $this->articles_quantites = new ArrayCollection();
+        //by default franchise tva = false
+        $this->setFranchiseTva(false);
     }
 }

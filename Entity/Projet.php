@@ -33,7 +33,7 @@ class Projet
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=60, nullable=true)
-     * @Assert\Length(min= 3, minMessage="Le nom du projet doit contenir au moins 3 caractères", max = 30, maxMessage="Le nom du projet est trop long")
+     * @Assert\Length(min= 3, minMessage="Le nom du projet doit contenir au moins 3 caractères", max = 60, maxMessage="Le nom du projet est trop long")
      */
     private $nom;
 
