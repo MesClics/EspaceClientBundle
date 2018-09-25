@@ -3,7 +3,8 @@
 namespace MesClics\EspaceClientBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use MesClics\EspaceClientBundle\Entity\Article;
 /**
  * Facture
  *
@@ -34,6 +35,11 @@ class Facture
      * @ORM\Column(name="franchise_tva", type="boolean")
      */
     private $franchiseTva;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MesClics\EspaceClientBundle\Article")
+     */
+    private $articles;
 
 
     /**
@@ -92,5 +98,33 @@ class Facture
     public function isFranchiseTva()
     {
         return $this->franchiseTva;
+    }
+
+    /**
+     * Add Article
+     * 
+     */
+    public function addArticle(Article $article){
+        $this->articles[] = $article;
+
+        return $this;
+    }
+
+    /**
+     * remove article
+     */
+    public function removeArticle(Article $article){
+        $this->articles->removeElement($article);
+    }
+
+    /**
+     * get Articles
+     */
+    public function getArticles(){
+        return $this->articles;
+    }
+
+    public function __construct(){
+        $this->articles = new ArrayCollection();
     }
 }
