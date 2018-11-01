@@ -76,3 +76,9 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@request_stack"
             - "@session"
+
+    mesclics_espace_client.communications_handler:
+        class: MesClics\EspaceClientBundle\ClientCommunicationsHandler\MesClicsClientCommunicationsHandler
+        arguments:
+            $options: 
+                trello_api: '%trello%'
