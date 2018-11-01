@@ -30,16 +30,21 @@ class AdminController extends Controller{
     /**
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function clientsAction(Request $request){
+    public function getClientsAction(Request $request){
         //on récupère la lise des clients
         $em = $this->getDoctrine()->getManager();
         $clientRepo = $em->getRepository('MesClicsEspaceClientBundle:Client');
         $clients = $clientRepo->getClientsList();
+
         //Ajout de client
         //on crée un objet qui sera hydraté par notre formulaire
         $client = new Client();
         //création du formulaire
         $clientForm = $this->createForm(ClientType::class, $client);
+
+        // Trello Clients Board
+        $this->getTrelloClientsBoard();
+
 
         if(!$request->isMethod('POST')){
             //on génère la vue
@@ -69,7 +74,7 @@ class AdminController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function clientAction(Client $client){
+    public function getClientAction(Client $client){
         $args = array(
             'currentSection' => 'clients',
             'client' => $client
@@ -82,7 +87,7 @@ class AdminController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function editAction(Client $client, Request $request){
+    public function postClientAction(Client $client, Request $request){
         $args = array(
             'currentSection' => 'clients',
             'client' => $client
@@ -110,7 +115,7 @@ class AdminController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function projetsAction(Client $client, Request $request){
+    public function getClientProjectsAction(Client $client, Request $request){
         //récupération des projets du client
         $projets = $client->getProjets();
 
@@ -144,7 +149,7 @@ class AdminController extends Controller{
      * @ParamConverter("projet", options={"mapping": {"projet_id": "id"}})
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function projetAction(Client $client, Projet $projet, Request $request){
+    public function getClientProjectAction(Client $client, Projet $projet, Request $request){
         //on check si le projet est déjà associé à un contrat
         $hasContrat = $projet->getContrat();
 
@@ -203,7 +208,7 @@ class AdminController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function contratsAction(Client $client, Request $request){
+    public function getClientContractsAction(Client $client, Request $request){
         //récupération des contrats du client
         $contrats = $client->getContrats();
 
@@ -241,7 +246,7 @@ class AdminController extends Controller{
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      * @ParamConverter("contrat", options={"mapping": {"contrat_id": "id"}})
      */
-    public function contratAction(Client $client, Contrat $contrat, Request $request){
+    public function getClientContractAction(Client $client, Contrat $contrat, Request $request){
         //on génère les formulaires :
         //ASSOCIATION DE PROJETS
         //on crée le formulaire
@@ -294,5 +299,17 @@ class AdminController extends Controller{
             'dissociationForms' => $dissociationForms
         );
         return $this->render('MesClicsEspaceClientBundle:Admin:client.html.twig', $args);
+    }
+
+    /**
+     * Get Trello Clients Boards
+     */
+    protected function getTrelloClientsBoard(){        
+        //Trello Boards
+        $trello_api = $this->container->get('mesclics_espace_client.communications_handler')->getTrelloApi();
+        $trello_boards = $trello_api->getBoardsRequest();
+
+        var_dump($trello_boards);
+        die();
     }
 }

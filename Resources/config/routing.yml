@@ -1,31 +1,31 @@
 #admin
 mesclics_admin_clients:
     path: /
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:clients }
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClients }
 
 mesclics_admin_client:
-    path:   /client-{client_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:client }
+    path:   /{client_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClient }
 
 mesclics_admin_client_edit:
-    path: /client-{client_id}/edit/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:edit }
+    path: /{client_id}/edit/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:postClient }
 
 mesclics_admin_client_projets:
-    path: /client-{client_id}/projets/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:projets }
+    path: /{client_id}/projets/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientProjects }
 
 mesclics_admin_client_projet:
-    path: /client-{client_id}/projet-{projet_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:projet }
+    path: /{client_id}/projets/{projet_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientProject }
 
 mesclics_admin_client_contrats:
-    path: /client-{client_id}/contrats/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:contrats }
+    path: /{client_id}/contracts/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientContracts }
 
 mesclics_admin_client_contrat:
-    path: /client-{client_id}/contrat-{contrat_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:contrat }
+    path: /{client_id}/contracts/{contrat_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientContract }
 
 #espace_client
 mesclics_espace_client:
