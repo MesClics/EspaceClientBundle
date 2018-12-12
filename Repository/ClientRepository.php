@@ -115,20 +115,25 @@ class ClientRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function lastClientNumeroBeginningWith($initials){
+    public function lastClientBeginningWith($initials){
         $qb = $this->createQueryBuilder('c');
         $qb
-            ->where('c.numero LIKE :numero')
-            ->setParameter('numero', '%'.$initials.'%')
+            ->where(
+                $qb->expr()->like('c.alias', ':alias')
+            )
+            ->setParameter('alias', $initials.'%')
+            ->andWhere(
+                $qb->expr()->isNotNull('c.numero')
+            )
             ->orderBy('c.id', 'DESC');
         
         $result = $qb->getQuery()->getResult();
+
         if(!isset($result[0])){
             return null;
         } else{
             return $result[0];
         }
-        
     }
 
     public function getClientByAlias($alias){
