@@ -1,28 +1,30 @@
-<div class="oocss-widget--head">
-    <h2 class="oocss-widget--title">Liste des clients</h2>
-</div>
+<section class="oocss-widget large clients-list">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Liste des clients</h2>
+    </div>
 
-<div class="oocss-widget--content">
-    <table class="oocss-table">
-        <tr class="oocss-table-head-row">
-            <th class="none-on-small-screens">logo</th>
-            <th>numero</th>
-            <th>nom</th>
-            <th class="none-on-small-screens">alias</th>
-            <th class="none-on-small-screens">dernière modification</th>
-            <th>prospect</th>
-        </tr>
+    <div class="oocss-widget--content">
+        <table class="oocss-table">
+            <tr class="oocss-table-head-row">
+                <th class="none-on-small-screens">logo</th>
+                <th>numero</th>
+                <th>nom</th>
+                <th class="none-on-small-screens">alias</th>
+                <th class="none-on-small-screens">dernière modification</th>
+                <th>prospect</th>
+            </tr>
 
-        {% for item in clients %}
-        <tr>
-            <td class="[ oocss-table-data oocss-table-data__d__discret ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.image is defined and item.image is not null %}<img class="[ oocss-image__d__extra_small ]" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/></a>{% endif %}</td>
-            <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}"></a>{{ item.numero }}</a></td>
-            <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.nom }}</a></td>
-            <td class="[ oocss-table-data ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.alias }}</a></td>
-            <td class="[ oocss-table-data ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.updatedAt|date('d/m/Y') }}</a></td>
-            <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.prospect %}&#10003;{% endif %}</a></td>
-        
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+            {% for item in clients %}
+            <tr>
+                <td class="[ oocss-table-data oocss-table-data__d__discret ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.image is defined and item.image is not null %}<img class="[ oocss-image__d__extra_small ]" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/></a>{% endif %}</td>
+                <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}"></a>{{ item.numero }}</a></td>
+                <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.nom }}</a></td>
+                <td class="[ oocss-table-data ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.alias }}</a></td>
+                <td class="[ oocss-table-data ] none-on-small-screens"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.updatedAt|date('d/m/Y') }}</a></td>
+                <td class="[ oocss-table-data ]"><a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.prospect %}&#10003;{% endif %}</a></td>
+            
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
