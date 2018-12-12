@@ -102,13 +102,15 @@ class MesClicsClientCreationListener{
         }
         $em->flush();
 
-        // ADD INITAL CARDS
+        // ADD INITIAL CARDS
+        //CARD INFOS
         $infos_card_datas = array(
             "name" => "INFOS",
             "idList" => $list->id,
             "pos" => "top",
-            "desc" => ">numero\xA".$client->getNumero()."\xA ---"
+            "desc" => "> numero\xA\xA".$client->getNumero()."\xA\xA ---"
         );
+
         $info_card = $trello_api->addCard($infos_card_datas);
 
         // ADD LOGO AS ATTACHMENT
@@ -120,5 +122,36 @@ class MesClicsClientCreationListener{
             );
             $trello_api->addAttachmentToCard($info_card->id, $attachment);
         }
+
+        //CARD CHRONO
+        $chrono_card_datas = array(
+            "name" => "CHRONO",
+            "idList" => $list->id,
+            "pos" => "bottom",
+            "desc" => "chronologie des événéments liés au client"
+        );
+        $chrono_card = $trello_api->addCard($chrono_card_datas);
+
+        //ADD CHECKLIST EVENEMENTS CLIENT
+        $evts_client_checklist_datas = array(
+            "idCard" => $chrono_card->id,
+            "name" => "EVENEMENTS COMPTE CLIENT",
+            "pos" => "top"
+        );
+        $evts_client_checklist = $trello_api->addChecklist($evts_client_checklist_datas);
+        
+        //add creation du compte client comme item
+        $creation_compte_client_item = array(
+            "name" => "ouverture du compte client"
+        );
+        $trello_api->addItemToChecklist($evts_client_checklist->id, $creation_compte_client_item);
+
+        //ADD CHECKLIST COMMUNICATIONS
+        $comm_client_checklist_datas = array(
+            "idCard" => $chrono_card->id,
+            "name" => "COMMUNICATIONS",
+            "pos" => "bottom"
+        );
+        $comm_client_checklist = $trello_api->addChecklist($comm_client_checklist_datas);
     }
 }
