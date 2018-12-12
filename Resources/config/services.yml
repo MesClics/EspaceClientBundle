@@ -14,11 +14,16 @@ services:
         arguments:
             - "@mesclics_espace_client.clientRepository"
     
-    mesclics_espace_client.clientNumerator:
+    mesclics_espace_client.client_numerator:
         class: MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator
 
-    mesclics_espace_client.contratNumerator:
+    mesclics_espace_client.contrat_numerator:
         class: MesClics\EspaceClientBundle\ContratNumerator\MesClicsContratNumerator
+
+    mesclics_espace_client.communications_handler:
+        class: MesClics\EspaceClientBundle\ClientCommunicationsHandler\MesClicsClientCommunicationsHandler
+        arguments:
+            - "@mesclics_utils.trello_api"
 
     #FORM MANAGERS#
     mesclics_espace_client.form_manager.client.new:
@@ -75,10 +80,21 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@request_stack"
-            - "@session"
 
-    mesclics_espace_client.communications_handler:
-        class: MesClics\EspaceClientBundle\ClientCommunicationsHandler\MesClicsClientCommunicationsHandler
+    #EVENT LISTENERS
+    mesclics_espace_client.doctrine_listener.client_creation:
+        class: MesClics\EspaceClientBundle\Event\Listener\MesClicsClientCreationListener
         arguments:
-            $options: 
-                trello_api: '%trello%'
+            - "@mesclics_espace_client.client_numerator"
+            - "@mesclics_utils.apis_manager"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preUpdate }
+
+    mesclics_espace_client.doctrine_listener.contrat_creation:
+        class: MesClics\EspaceClientBundle\Event\Listener\MesClicsContratCreationListener
+        arguments:
+            - "@mesclics_espace_client.contrat_numerator"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }

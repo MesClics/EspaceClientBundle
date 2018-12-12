@@ -2,22 +2,16 @@
 
 namespace MesClics\EspaceClientBundle\ClientCommunicationsHandler;
 
-use MesClics\EspaceClientBundle\ClientCommunicationsHandler\RestApiConsumer;
+use MesClics\UtilsBundle\ApisManager\RestApi\TrelloApi\TrelloApi;
 
 class MesClicsClientCommunicationsHandler{
-    private $trello_api_consumer;
+    private $trello_api;
 
-    public function __construct($options){
-        if($options['trello_api']){
-            $this->setTrelloApiConsumer($options['trello_api']);
-        }
+    public function __construct(TrelloApi $trello_api){
+        $this->trello_api = $trello_api;
     }
 
-    public function setTrelloApiConsumer($trello_options){
-        $this->trello_api_consumer = new MesClicsTrelloRestApiConsumer($trello_options);
-    }
-
-    public function getTrelloApiConsumer(){
-        return $this->trello_api_consumer;
+    public function getTrelloApi(){
+        return $this->trello_api;
     }
 }

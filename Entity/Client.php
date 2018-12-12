@@ -85,6 +85,16 @@ class Client
      * @ORM\OneToMany(targetEntity="MesClics\EspaceClientBundle\Entity\Facture", mappedBy="client", cascade={"persist"})
      */
     private $factures;
+
+    /**
+     * @ORM\Column(name="trello", type="json_array", nullable=true)
+     */
+    private $trello_list;
+
+    // /**
+    //  * @ORM\OneToMany(targetEntity="MesClics\UserBundle\Entity\MesclicsUser", mappedBy="client", cascade={"persist"})
+    //  */
+    // private $users;
         
     /**
      * Get id
@@ -190,11 +200,11 @@ class Client
     }
 
     /**
-     * Get prospect
+     * Is prospect
      *
      * @return boolean
      */
-    public function getProspect()
+    public function isProspect()
     {
         return $this->prospect;
     }
@@ -363,6 +373,38 @@ class Client
     public function getFactures(){
         return $this->factures;
     }
+
+    /**
+     * set trello_list
+     */
+    public function setTrelloList($trello_list){
+        $this->trello_list = $trello_list;
+    }
+
+    /**
+     * get trello list
+     */
+    public function getTrelloList(){
+        return $this->trello_list;
+    }
+
+    public function hasTrelloList(){
+        return $this->getTrelloList() ? true : false;
+    }
+
+    // /**
+    //  * add User
+    //  */
+    // public function addUser(MesclicsUser $user){
+    //     $this->users[] = $user;
+    // }
+
+    // /**
+    //  * get Users
+    //  */
+    // public function getUsers(){
+    //     return $this->users;
+    // }
     
 
     /**
