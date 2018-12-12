@@ -379,6 +379,7 @@ class Client
      */
     public function setTrelloList($trello_list){
         $this->trello_list = $trello_list;
+        return $this;
     }
 
     /**
@@ -389,7 +390,7 @@ class Client
     }
 
     public function hasTrelloList(){
-        return $this->getTrelloList() ? true : false;
+        return $this->getTrelloList() ? $this->trello_list : false;
     }
 
     // /**
