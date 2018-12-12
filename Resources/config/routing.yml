@@ -7,9 +7,13 @@ mesclics_admin_client:
     path:   /{client_id}/
     defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClient }
 
+mesclics_admin_client_add:
+    path: /add/
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:postClient }
+
 mesclics_admin_client_edit:
     path: /{client_id}/edit/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:postClient }
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:updateClient }
 
 mesclics_admin_client_projets:
     path: /{client_id}/projets/
