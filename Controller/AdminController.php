@@ -57,7 +57,7 @@ class AdminController extends Controller{
         );
         $trelloClientsBoard = $trello_api->getBoardByName("CLIENTS", $boards_options);
 
-        //Ajout de client
+        //WIDGET Ajouter un client
         //on crée un objet qui sera hydraté par notre formulaire
         $client = new Client();
         //création du formulaire
