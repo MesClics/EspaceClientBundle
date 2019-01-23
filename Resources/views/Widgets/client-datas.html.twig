@@ -1,27 +1,31 @@
-<section class="client_datas_widget [ oocss-widget oocss-widget large oocss-widget discret ]">
-    <h2 class="[ oocss-widget--head ]">{{ client.nom }} {% if client.prospect %} (PROSPECT) {% endif %}</h2>
-    <ul class="[ oocss-widget--content oocss-list oocss-list__d__column ]">
-        {% if client.image is defined and client.image is not null %}
-        <li class="[ oocss-list--item oocss-list oocss-list__d__row ]">
-            <span class="[ oocss-label ]">logo :</span>
-            <img src="{{ client.image.url }}" alt="{{ client.image.alt }}" class="[ oocss-image oocss-image__d__extra_small ]">
-        </li>
-            
-        {% endif %}
-        <li class="[ oocss-list--item oocss-list oocss-list__d__row ]">
-            <span class="[ oocss-label ]">numéro :</span>
-            <span class="">{{ client.numero }}</span>
-        </li>
-        <li class="[ oocss-list--item oocss-list oocss-list__d__row ]">
-            <span class="[ oocss-label ]">alias :</span>
-            <span class="">{{ client.alias }}</span>
-        </li>
-        <li class="[ oocss-list--item oocss-list oocss-list__d__row ]">
-            <span class="[ oocss-label ]">dernière modification :</span>
-            <span class="">{{ client.updatedAt|date('d/m/Y') }} à {{ client.updatedAt|date('H\\hi') }}</span>
-        </li>
-        <!-- TODO: Ajouter lien vers le trello du client -->
-    </ul>
-    <!-- TODO: Ajouter un bouton pour modifier les données client -->
-    <a class="[ oocss-button oocss-link__d__button ]" href="{{ path('mesclics_admin_client_edit', { 'client_id': client.id }) }}">Modifier les données du client</a>
+<section class="client_datas_widget oocss-widget oocss-widget medium highlight">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">{{ client.nom }} {% if client.prospect %} (PROSPECT) {% endif %}</h2>
+    </div>
+    <div class="oocss-widget--content">
+        <ul class="oocss-list oocss-list__d__column">
+            {% if client.image is defined and client.image is not null %}
+            <li class="[ oocss-list--item oocss-list oocss-list__d__column]">
+                <span class="[ oocss-label ]">logo</span>
+                <img src="{{ client.image.url }}" alt="{{ client.image.alt }}" class="[ oocss-image oocss-image__d__extra_small ]">
+            </li>
+                
+            {% endif %}
+            <li class="[ oocss-list--item oocss-list oocss-list__d__column ]">
+                <span class="[ oocss-label ]">numéro</span>
+                <span class="">{{ client.numero }}</span>
+            </li>
+            <li class="[ oocss-list--item oocss-list oocss-list__d__column ]">
+                <span class="[ oocss-label ]">alias</span>
+                <span class="">{{ client.alias }}</span>
+            </li>
+            <li class="[ oocss-list--item oocss-list oocss-list__d__column ]">
+                <span class="[ oocss-label ]">dernière modification</span>
+                <span class="">{{ client.updatedAt|date('d/m/Y') }} à {{ client.updatedAt|date('H\\hi') }}</span>
+            </li>
+            <!-- TODO: Ajouter lien vers le trello du client -->
+        </ul>
+        <!-- TODO: Ajouter un bouton pour modifier les données client -->
+        <a class="[ oocss-button oocss-link__d__button ]" href="{{ path('mesclics_admin_client_edit', { 'client_id': client.id }) }}">Modifier les données du client</a>
+    </div>
 </section>

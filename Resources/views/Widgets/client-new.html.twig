@@ -1,15 +1,43 @@
-<section class="client-new oocss-widget oocss-widget highlight small">
+<section class="client-new oocss-widget highlight small">
     <div class="oocss-widget--head">
         <h2 class="oocss-widget--title">Ajouter un client</h2>
     </div>
     <div class="oocss-widget--content">
-        {{ form_start(client_new_form, {'attr' : {'class': '[ oocss-form__d__mini ]'}}) }}
+        {{ form_start(client_new_form, {'attr' : {'class': '[ oocss-form oocss-form__d__mini oocss-slideshow ]'}}) }}
         {{ form_errors(client_new_form) }}
-        {{ form_row(client_new_form.prospect) }}
-        {{ form_row(client_new_form.nom) }}
-        {{ form_row(client_new_form.image) }}
-        {{ form_row(client_new_form.ajouter, {'attr' : {'class': '[ oocss-form-submit ]'}})  }}
+
+        <div class="oocss-slideshow-content">
+            <div class="oocss-slideshow-step" tabindex="-1">
+                {{ form_row(client_new_form.prospect, {'attr': {'class': 'oocss-form-radio-on-off'}}) }}
+            </div>
+
+            <div class="oocss-slideshow-step" tabindex="-1">
+                {{ form_row(client_new_form.nom) }}
+            </div>
+
+            <div class="oocss-slideshow-step" tabindex="-1">
+                {{ form_row(client_new_form.image) }}
+            </div>
+
+            <div class="oocss-slideshow-step" tabindex="-1">
+                {{ form_row(client_new_form.ajouter, {'attr' : {'class': '[ oocss-form-submit ]'}})  }}
+            </div>
+        </div>
+
+       
+        <div class="oocss-slideshow--slider">
+            <button class="oocss-btn oocss-prev">←</button>
+            <div class="oocss-cursor">
+                <span class="oocss-cursor-item"></span>
+                <span class="oocss-cursor-item"></span>
+                <span class="oocss-cursor-item"></span>
+                <span class="oocss-cursor-item"></span>
+            </div>
+            <button class="oocss-btn oocss-next">→</button>
+        </div>
+
         {{ form_rest(client_new_form) }}
         {{ form_end(client_new_form)}}
+
     </div>
 </section>
