@@ -17,6 +17,7 @@ services:
     mesclics_espace_client.client_numerator:
         class: MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator
 
+
     mesclics_espace_client.contrat_numerator:
         class: MesClics\EspaceClientBundle\ContratNumerator\MesClicsContratNumerator
 

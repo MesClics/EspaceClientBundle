@@ -21,13 +21,20 @@ class ClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', TextType::class)
-            ->add('prospect', CheckboxType::class, array('required' => false))
+            ->add('nom', TextType::class, array(
+                'label' => 'le nom du nouveau client est'
+            ))
+            ->add('prospect', CheckboxType::class, array(
+                'required' => false,
+                'label' => 'le nouveau client est un prospect'
+            ))
             ->add('image', ImageType::class, array(
                 'required' => false,
-                'label' => 'logo du client'
+                'label' => 'le logo du nouveau client est'
             ))
-            ->add('ajouter', SubmitType::class)
+            ->add('ajouter', SubmitType::class, array(
+                'label' => 'ajouter le client'
+            ))
         ;
     }
     
