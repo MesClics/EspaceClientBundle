@@ -7,6 +7,12 @@
         {{ form_start(form) }}
         {{ form_row(form.dateSignature, {'label': 'date de signature'}) }}
         {{ form_row(form.type) }}
+        {{ form_row(form.projets, {'label': 'associer un ou des projet(s) au contrat', 'widget_attr': {'class': 'oocss-full-container-width'}, 'help': 'CTRL + clic pour sélectionner plusieurs projets'}) }}
+
+        {% if contrat.projets is not empty %}
+            {# TODO: ajouter le formulaire de dissociation de projet #}
+        {% endif %}
+
         {{ form_row(form.submit, {'label': 'enregistrer les modifications'}) }}
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
