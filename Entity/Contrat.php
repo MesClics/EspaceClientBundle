@@ -49,6 +49,13 @@ class Contrat
     private $dateSignature;
 
     /**
+     * @var \DateTime
+     * 
+     * @ORM\Column(name="last_update", type="datetime", nullable=true)
+     */
+    private $lastUpdate;
+
+    /**
      * @ORM\Column(name="numero", type="string", nullable=true)
      */
     private $numero;
@@ -69,8 +76,7 @@ class Contrat
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
@@ -81,8 +87,7 @@ class Contrat
      *
      * @return Contrat
      */
-    public function setType($type)
-    {
+    public function setType($type){
         $this->type = $type;
 
         return $this;
@@ -93,8 +98,7 @@ class Contrat
      *
      * @return string
      */
-    public function getType()
-    {
+    public function getType(){
         return $this->type;
     }
 
@@ -105,8 +109,7 @@ class Contrat
      *
      * @return Contrat
      */
-    public function setDateCreation($dateCreation)
-    {
+    public function setDateCreation($dateCreation){
         $this->dateCreation = $dateCreation;
 
         return $this;
@@ -117,8 +120,7 @@ class Contrat
      *
      * @return \DateTime
      */
-    public function getDateCreation()
-    {
+    public function getDateCreation(){
         return $this->dateCreation;
     }
 
@@ -129,8 +131,7 @@ class Contrat
      *
      * @return Contrat
      */
-    public function setDateSignature($dateSignature)
-    {
+    public function setDateSignature($dateSignature){
         $this->dateSignature = $dateSignature;
 
         return $this;
@@ -141,9 +142,28 @@ class Contrat
      *
      * @return \DateTime
      */
-    public function getDateSignature()
-    {
+    public function getDateSignature(){
         return $this->dateSignature;
+    }
+
+    /**
+     * Set lastUpdate
+     * 
+     * @return Contrat
+     */
+    public function setLastUpdate(){
+        $this->lastUpdate = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdate
+     * 
+     * @return \DateTime
+     */
+    public function getLastUpdate(){
+        return $this->lastUpdate;
     }
 
     /**
@@ -232,8 +252,16 @@ class Contrat
     /**
      * @ORM\PrePersist
      */
-    public function updateDateCreation(){
+    public function updateDates(){
         $this->setDateCreation(new \DateTime());
+        $this->updateLastUpdate();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateLastUpdate(){
+        $this->setLastUpdate(new \Datetime());
     }
 
     /**
