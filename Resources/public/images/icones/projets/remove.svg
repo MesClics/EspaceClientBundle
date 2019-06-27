@@ -1,0 +1,17 @@
+<svg width="64.73mm" height="64.73mm" version="1.1" viewBox="0 0 64.73 64.73" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(1009.1 423.28)">
+  <g transform="translate(-1265.6 -732.64)">
+   <rect x="256.54" y="309.36" width="64.73" height="64.73" fill="none" style="paint-order:stroke fill markers"/>
+   <g transform="translate(-.75595 70.304)">
+    <path d="m283.43 258.95v31.271m11.573-36.84 0.30711 30.893-11.88 5.9458-11.87-5.5678v-31.271l11.87 5.5681 11.573-5.5681 12.76 5.6465v13.22" fill="none" stroke="#fff" stroke-width="2.6458"/>
+    <g transform="matrix(.48196 -.13345 .1331 .48479 289.64 125.65)" stroke-width="1.9944"></g>
+   </g>
+   <g fill="none" stroke="#fff" stroke-width="2.6458">
+    <path d="m313.65 358.66-6.54-6.54"/>
+    <path d="m305.33 350.34-6.54-6.54"/>
+    <path d="m298.79 358.66 6.54-6.54"/>
+    <path d="m307.11 350.34 6.54-6.54"/>
+   </g>
+  </g>
+ </g>
+</svg>

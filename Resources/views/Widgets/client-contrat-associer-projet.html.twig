@@ -1,0 +1,13 @@
+<section class="oocss-widget small client-contrat-associer-projets">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Associer des projets</h2>
+    </div>
+
+    <div class="oocss-widget--content">
+        {{ form_start(form) }}
+        {{ form_row(form.projets, {'label': 'sélectionner le ou les projets à associer au contrat', 'help': 'CTRL + Clic pour sélectionner plusieurs projets', 'multiple': true, 'required': true, 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+        {{ form_row(form.submit, {'label': 'associer'}) }}
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+</section>

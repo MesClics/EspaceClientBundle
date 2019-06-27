@@ -1,35 +1,49 @@
 #admin
 mesclics_admin_clients:
     path: /
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClients }
+    defaults: { _controller: MesClicsEspaceClientBundle:Admin:clients }
 
 mesclics_admin_client:
     path:   /{client_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClient }
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:get }
 
 mesclics_admin_client_add:
     path: /add/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:postClient }
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:post }
 
-mesclics_admin_client_edit:
+mesclics_admin_client_update:
     path: /{client_id}/edit/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:updateClient }
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:update }
 
+# PROJETS
 mesclics_admin_client_projets:
     path: /{client_id}/projets/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientProjects }
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:projets }
+
+mesclics_admin_client_projets_add:
+    path: /{client_id}/projets/new/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:post }
 
 mesclics_admin_client_projet:
     path: /{client_id}/projets/{projet_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientProject }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:update }
 
+mesclics_admin_client_projet_remove:
+    path: /{client_id}/projets/{projet_id}/remove/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:remove }
+
+# CONTRATS
 mesclics_admin_client_contrats:
-    path: /{client_id}/contracts/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientContracts }
+    path: /{client_id}/contrats/
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:contrats }
+
+mesclics_admin_client_contrats_add:
+    path: /{client_id}/contrats/new/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:post }
 
 mesclics_admin_client_contrat:
-    path: /{client_id}/contracts/{contrat_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:getClientContract }
+    path: /{client_id}/contrats/{contrat_id}/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:get }
 
 #espace_client
 mesclics_espace_client:

@@ -1,52 +1,8 @@
-{% block listeContrats %}
-    <h2 class="[ oocss-title-section ]">Contrats</h2>
-    {% if contrats is defined and contrats|length > 0 %}
-        <h3>Contrats du client</h3>
-        <table>
-            <tr>
-                <th>numero</th>
-                <th>type</th>
-                <th>projets associés</th>
-                <th>date de création</th>
-                <th>date de signature</th>
-            </tr>
-            {% for contrat in contrats %}
-                <tr>
-                    <td class="[ oocss-table-data ]"><a href="{{ path('mesclics_admin_client_contrat', { 'client_id' : client.id, 'contrat_id' : contrat.id }) }}">{{ contrat.numero }}</a></td>
-                    <td class="[ oocss-table-data ]">{{ contrat.type }}</td>
-                    <td class="[ oocss-table-data ]">
-                        {% if contrat.projets is not null %}
-                            <ul>
-                                {% for projet in contrat.projets %}
-                                    <li>{{ projet.nom }} ({{ projet.type }})</li>
-                                {% endfor %}
-                            </ul>
-                            
-                        {% endif %}
-                    </td>
-                    <td class="[ oocss-table-data ]">{{ contrat.dateCreation|date('d/m/Y') }}</td>
-                    <td class="[ oocss-table-data ]">{% if contrat.dateSignature %}{{ contrat.dateSignature|date('d/m/Y') }}{% endif %}</td>
-                </tr>
-            {% endfor %} 
-        </table>  
-    {% else %}
-        Il n'existe encore aucun contrat pour ce client.
-    {% endif %}
-{% endblock listeContrats %}
+{% if contrats is defined and contrats is not empty %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-list.html.twig" %}
+{% else %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-start.html.twig" %}
+{% endif %}
 
-{% block addContrat %}
-    <h3>Ajouter un contrat</h3>
-    {# TODO: ajouter formulaire d'ajout de projet #}
-    {{ form_start(contratForm) }}
-        {{ form_row(contratForm.type) }}
-        {{ form_row(contratForm.dateSignature) }}
-        {{ form_widget(contratForm.dateSignature) }}
-        <!-- S'il existe des projets associés à aucun contrat pour ce client -->
-        {% if (contratForm.projets is defined) and (contratForm.projets.vars['choices'] | length > 0) %}
-            {{ form_row(contratForm.projets) }}   
-        {% endif %}
-        {{ form_row(contratForm._token) }}
-        {{ form_row(contratForm.ajouter) }}
-    {{ form_end(contratForm, {'render_rest': false}) }}
-{% endblock addContrat %}
+{% include "MesClicsEspaceClientBundle:Widgets:client-contrats-new.html.twig" with {'isSlideshow': true, 'form': contratForm} %}
 

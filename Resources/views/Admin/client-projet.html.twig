@@ -1,35 +1,19 @@
-{# {% set currentProjet = '' %}
-{% for projet in client.projets %} 
-    {% set currentProjet = projet %}
-{% endfor %} #}
+{% extends "MesClicsAdminBundle::layout.html.twig" %} 
 
-{% block projet %}
-    <h2 class="[ oocss-title-section ]">Projet : {{ currentProjet.nom }}</h2>
-    {% if currentProjet.contrat %}   
-        <p>Ce projet fait partie du contrat n° {{ currentProjet.contrat.numero }}</p>
-        <!--TODO: ajouter bouton pour délier du contrat -->
-        {% if (projetDissocierContratForm is defined) %}
-            {{ form_start(projetDissocierContratForm) }}
-                {{ form_row(projetDissocierContratForm._token) }}
-                {{ form_row(projetDissocierContratForm.dissocier) }}
-            {{ form_end(projetDissocierContratForm, {'render_rest': false}) }}
-        {% endif %}
-    {% else %}
-         {% if (projetAssocierContratForm.contrat is defined) and (projetAssocierContratForm.contrat.vars['choices'] | length > 0) %}
-        <!-- relier le projet à un contrat -->
-            <h3>Relier le projet à un contrat</h3>
-            <!-- ici on inclue le formulaire permettant de relier le projet à un contrat -->
-            {% block associateContrat %}
-                {{ form_start(projetAssocierContratForm) }}
-                    {{ form_errors(projetAssocierContratForm) }}
-                    {{ form_row(projetAssocierContratForm.contrat) }}
-                    {{ form_row(projetAssocierContratForm._token) }}
-                    {{ form_row(projetAssocierContratForm.associer) }}
-                {{ form_end(projetAssocierContratForm, {'render_rest': false}) }}
-            {% endblock associateContrat %}
-        {% endif %}
-    {% endif %}
-    <!-- ACTIONS sur le projet -->
-    <!-- si le projet n'est pas terminé on peut modifier ses données (type, nom) -->
-    
-{% endblock projet %}
+{% block deskHeadNavRails %}
+    <a href="{{ path('mesclics_admin_home') }}" class="desk-head-nav_rails--item">
+        Console d'administration</a>
+    >
+    <a href="{{ path('mesclics_admin_clients') }}" class="desk-head-nav_rails--item">Clients</a>
+    >
+    <a href="{{ path('mesclics_admin_client', {'client_id': client.id}) }}" class="desk-head-nav_rails--item">{{ client.nom }}</a>
+    >
+    <a href="{{ path('mesclics_admin_client_' ~ subSection, {'client_id': client.id}) }}" class="desk-head-nav_rails--item">{{ subSection }}</a>
+    >
+    <a href="{{ path('mesclics_admin_client_projet', {'client_id': client.id, 'projet_id': projet.id}) }}" class="desk-head-nav_rails--item">{{ projet.nom }}</a>
+{% endblock deskHeadNavRails %}
+
+{% block deskMain %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-nav.html.twig" %}
+    {% with {'form': projetForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-projet-edit.html.twig" %}{% endwith %}
+{% endblock deskMain %}

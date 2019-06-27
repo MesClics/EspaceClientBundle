@@ -27,7 +27,7 @@ class ContratType extends AbstractType
         $builder
         ->add('type', TextType::class)
         ->add('dateSignature', DateTimeType::class, array('required' => false))
-        ->add('ajouter', SubmitType::class)
+        ->add('submit', SubmitType::class)
         ;
     }
     
@@ -41,8 +41,7 @@ class ContratType extends AbstractType
             // 'projet' => null
         ));
         $resolver->setRequired(array(
-            'client',
-            // 'kind'
+            'client'
         ));
     }
 

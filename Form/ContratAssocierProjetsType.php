@@ -28,15 +28,13 @@ class ContratAssocierProjetsType extends AbstractType
         
         $builder
         ->add('projets', EntityType::class, array(
-            'required' => false,
             'class' => 'MesClicsEspaceClientBundle:Projet',
             'choice_label' => 'selectLabel',
-            'multiple' => true,
             'query_builder' => function(ProjetRepository $projet_repo) use ($client){
                     return $projet_repo->getProjetsWithNoContratQB($client);
                 }
             ))
-        ->add('associer', SubmitType::class)
+        ->add('submit', SubmitType::class)
         ;
     }
     

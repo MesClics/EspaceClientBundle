@@ -1,0 +1,50 @@
+<section class="oocss-widget large client-projets">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Projets</h2>    
+    </div>
+
+    <div class="oocss-widget--content">
+        <table class="oocss-table oocss-full-container-width">
+            <tr class="oocss-table-row">
+                <th class="none-on-small-screens">créé le</th>
+                <th class="none-on-small-screens">modifié le</th>
+                <th>nom</th>
+                <th>type</th>
+                <th>contrat</th>
+                <th>terminé</th>
+            </tr>
+            {% for projet in projets %}
+            <tr class="oocss-table-row oocss-clickable-table-row">
+                <td class="oocss-table-data none-on-small-screens">
+                    {% if projet.dateCreation is not null %}
+                        {{ projet.dateCreation|date("d/m/Y") }}{{ projet.dateCreation|date(" à h\\hm") }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="oocss-table-data none-on-small-screens">
+                    {% if projet.lastUpdate is not null %}
+                        {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à h\\hm") }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="oocss-table-data"><a href="{{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}">{{ projet.nom }}</a>
+                </td>
+                <td class="oocss-table-data">{{ projet.type }}</td>
+                <td class="oocss-table-data">
+                    {{ projet.contrat.numero|default("-") }}
+                </td>
+                <td class="oocss-table-data">
+                    {% if projet.closed %}&#10003;{% else %} - {% endif %}
+                </td>
+                <td class="oocss-table-data">
+                    <a class="oocss-input-button oocss-discret oocss-table-data-icon" href="{{ path('mesclics_admin_client_projet_remove', {'client_id': client.id, 'projet_id': projet.id}) }}" title="supprimer">
+                        {{ source('@mesclicsbundle/images/svg/trash.svg') }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>

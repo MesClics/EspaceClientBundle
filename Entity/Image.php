@@ -35,6 +35,13 @@ class Image
      */
     private $alt;
 
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     */
+    private $title;
+
 
     /**
      * Get id
@@ -92,6 +99,26 @@ class Image
     public function getAlt()
     {
         return $this->alt;
+    }
+
+    /**
+     * Set title
+     * 
+     * @return Image
+     */
+    public function setTitle(String $title){
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     * 
+     * @return String
+     */
+    public function getTitle(){
+        return $this->title;
     }
 }
 

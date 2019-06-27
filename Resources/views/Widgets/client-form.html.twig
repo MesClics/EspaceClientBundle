@@ -1,0 +1,50 @@
+{% if isSlideshow %}
+<div class="oocss-slideshow">
+    {{ form_start(client_new_form, {'attr': {'class': 'oocss-slideshow--content'}}) }}
+        {{ form_errors(client_new_form) }}
+        {{ form_row(client_new_form.prospect, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nouveau client est-il un prospect?', 'widget_attr': {'class': 'oocss-full-container-width'}})
+        }}
+        {{ form_row(client_new_form.nom, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nom du client est', 'widget_attr': {'class': 'oocss-full-container-width'}})
+        }}
+        <div class="oocss-slideshow--step">
+            <label class="oocss-label">Le logo du client</label>
+            {{ form_row(client_new_form.image.url, {'label': 'url', 'widget_attr': {'class': 'oocss-full-container-width'}})
+            }}
+            {{ form_row(client_new_form.image.alt, {'label': 'texte alternatif', 'widget_attr': {'class': 'oocss-full-container-width'}})}}
+            {{ form_row(client_new_form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}})
+            }}
+        </div>
+        {{ form_row(client_new_form.website, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'quelle est l\'adresse du site internet du client ?', 'widget_attr': {'class': 'oocss-full-container-width'}})
+        }}
+        {{ form_row(client_new_form.submit, {'attr' : {'class': 'oocss-slideshow--step'}, 'label': 'ajouter le client'}) }}
+        {{ form_rest(client_new_form) }}
+    {{ form_end(client_new_form)}}
+
+    <div class="oocss-slideshow--slider">
+    </div>
+</div>
+
+{% else %}
+    {{ form_start(client_new_form) }}
+        {{ form_errors(client_new_form) }}
+        {{ form_row(client_new_form.prospect, {'label': 'prospect'}) }}
+        <div class="oocss-form-fieldset oocss-vertical oocss-block oocss-full-container-width">
+            <label class="oocss-label">Coordonnées</label>
+            {{ form_row(client_new_form.nom, {'attr': {'class': 'oocss-full-container-width'}, 'label': 'nom du client', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+            {{ form_row(client_new_form.website, {'attr': {'class': 'oocss-full-container-width oocss-slideshow--step'}, 'label': 'url du site internet du client', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+        </div>
+        <div class="oocss-fieldset">
+            <label class="oocss-label">Le logo du client</label>
+            {{ form_row(client_new_form.image.url, {'label': 'url', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+            {{ form_row(client_new_form.image.alt, {'label': 'texte alternatif', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+            {{ form_row(client_new_form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+        </div>
+        {% if client is defined %}
+            {{ form_row(client_new_form.submit, {'label': 'enregistrer les modifications'}) }}
+        {% else %}
+            {{ form_row(client_new_form.submit, {'label': 'ajouter le client'}) }}
+        {% endif %}
+                    
+        {{ form_rest(client_new_form) }}
+    {{ form_end(client_new_form) }}
+{% endif %}

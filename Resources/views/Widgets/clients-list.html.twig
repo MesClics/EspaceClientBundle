@@ -4,14 +4,15 @@
     </div>
 
     <div class="oocss-widget--content">
-
-        <div class="oocss-filters oocss-block oocss-horizontal" data-filters="name:prospect/class:isProspect|name:client/class:isClient" data-filters-target-class="clients-list-filterable" data-filters-title="h3/filtrer">
-            <button class="oocss-filters-button oocss-legend--item">
-                <span class="oocss-index oocss-filters-button-class"></span>
-                <span data-filters-button-textContent></span>
-            </button>
+        <div class="oocss-widget--content-zone">
+            <div class="oocss-filters oocss-block oocss-horizontal" data-filters="name:prospect/class:isProspect|name:client/class:isClient" data-filters-target-class="clients-list-filterable" data-filters-title="h3/filtrer">
+                <button class="oocss-filters-button oocss-legend--item">
+                    <span class="oocss-index oocss-filters-button-class"></span>
+                    <span data-filters-button-textContent></span>
+                </button>
+            </div>
         </div>
-        <table class="oocss-table oocss-sortable clients-list-filterable">
+        <table class="oocss-table oocss-full-container-width oocss-sortable clients-list-filterable">
             <tr class="oocss-table-head-row">
                 <th class="none-on-small-screens">logo</th>
                 <th class="oocss-sortable">numero</th>
@@ -25,15 +26,15 @@
             <tr class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}">
 
                 <td class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.image is defined and item.image is not null %}<img class="[ oocss-image__d__extra_small ]" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/></a>{% endif %}
+                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/></a>{% endif %}
                 </td>
                 
                 <td class="oocss-table-data">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}"></a>{{ item.numero }}</a>
+                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}"></a>{{ item.numero }}</a>
                 </td>
                 
                 <td class="oocss-table-data">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.nom }}</a>
+                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.nom }}</a>
                 </td>
                 
                 <td class="oocss-table-data none-on-small-screens">
@@ -41,11 +42,11 @@
                 </td>
                
                 <td class="oocss-table-data none-on-small-screens">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.updatedAt|date('d/m/Y') }}</a>
+                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.updatedAt|date('d/m/Y') }}</a>
                 </td>
              
                 <td class="oocss-table-data">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.prospect %}&#10003;{% endif %}</a>
+                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.prospect %}&#10003;{% endif %}</a>
                 </td>
             
             </tr>

@@ -3,12 +3,13 @@
 namespace MesClics\EspaceClientBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use MesClics\EspaceClientBundle\Entity\Projet;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use MesClics\EspaceClientBundle\Repository\ContratRepository;
 
 class ProjetType extends AbstractType
@@ -18,15 +19,13 @@ class ProjetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // $formKind = $options['kind'];
-        $client = $options['client'];
 
         // if($formKind === 'ajoutProjet'){
             $builder
-                ->add('type', TextType::class, array('required'=> false))
-                ->add('nom', TextType::class, array('required'=> false))
+                ->add('type', TextType::class)
+                ->add('nom', TextType::class)
                 ->add('isClosed', CheckboxType::class, array('required'=> false))
-                ->add('ajouter', SubmitType::class)
+                ->add('submit', SubmitType::class)
             ;
         // }
 
@@ -56,11 +55,7 @@ class ProjetType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MesClics\EspaceClientBundle\Entity\Projet'
-        ));
-        $resolver->setRequired(array(
-            'client',
-            // 'kind'
+            'data_class' => Projet::class
         ));
 
     }

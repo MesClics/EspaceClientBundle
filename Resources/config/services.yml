@@ -41,12 +41,12 @@ services:
             - "@request_stack"
             - "@session"
 
-    mesclics_espace_client.form_manager.projet.new:
-        class: MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@request_stack"
-            - "@session"
+    # mesclics_espace_client.form_manager.projet.new:
+    #     class: MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager
+    #     arguments:
+    #         - "@doctrine.orm.entity_manager"
+    #         - "@request_stack"
+    #         - "@session"
 
     mesclics_espace_client.form_manager.projet.associer_contrat:
         class: MesClics\EspaceClientBundle\Form\FormManager\ProjetAssocierContratFormManager

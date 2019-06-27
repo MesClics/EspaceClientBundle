@@ -1,38 +1,15 @@
-{% block listeProjets %}
-    <h2 class="[ oocss-title-section ]">Projets</h2>
-    {% if projets is defined %}
-    <h3>Projets du client</h3>
-    <table>
-        <tr>
-            <th>nom</th>
-            <th>type</th>
-            <th>contrat</th>
-            <th>terminé</th>
-        </tr>
-        {% for projet in projets %}
-            <tr>
-                <td class="[ oocss-table-data ]"><a href="{{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}">{{ projet.nom }}</a></td>
-                <td class="[ oocss-table-data ]">{{ projet.type }}</td>
-                <td class="[ oocss-table-data ]">
-                    {% if projet.contrat is not null %}
-                        {{ projet.contrat.numero }}
-                    {% endif %}
-                </td>
-                <td class="[ oocss-table-data ]">
-                    {% if projet.closed %}&#10003;{% endif %}
-                </td>
-            </tr>
-        {% endfor %} 
-    </table>   
-    {% endif %}
-{% endblock listeProjets %}
+{% if client.projets is not empty %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-projets-list.html.twig" with {'projets': client.projets} %}
+{% else %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-projets-start.html.twig" %}
+{% endif %}
 
-{% block addProjet %}
-    <h3>Ajouter un projet</h3>
-    {# TODO: ajouter formulaire d'ajout de projet #}
-    {{ form(projetsForm) }}
-    {{ form_start(projetsForm) }}
-    
-    {{ form_rest(projetsForm)}}
-    {{ form_end(projetsForm) }}
-{% endblock addProjet %}
+{% if projetsForm is defined %}
+    {% block addProjet %}
+        {% with {'isSlideshow': true, 'form': projetsForm } %}{% include "MesClicsEspaceClientBundle:Widgets:client-projets-new.html.twig" %}{% endwith %}
+    {% endblock addProjet %}
+{% endif %}
+
+{% if removePopup is defined and removePopup %}
+    {% include "MesClicsEspaceClientBundle:PopUps:client-projet-remove.html.twig" %}
+{% endif %}

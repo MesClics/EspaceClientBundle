@@ -1,0 +1,19 @@
+<section class="oocss-widget medium highlight2">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Par où commencer ?</h2>
+    </div>
+    <div class="oocss-widget--content">
+        <div class="oocss-widget--content-zone">
+            <h3>Qu'est-ce qu'un contrat ?</h3>
+            <p class="">Un contrat est un accord commercial passé entre mesclics et un client. Il peut être composé d'un seul ou de plusieurs projets.</p>
+        </div>
+
+        <img class="oocss-s oocss-image oocss-full-container-width" src={{ client.image.url }}
+            alt={{ client.image.alt }} title={{ client.image.title|default('logo du client') }} />
+        <p class="oocss-instruction">Vous n'avez pas encore de contrat avec {{ client.nom }}.</p>
+        <p class="oocss-instruction">
+            <a class="oocss-button oocss-headed-block oocss-s client-contrats-new"
+                href="{{ path('mesclics_admin_client_contrats_add', {'client_id': client.id})}}">Ajouter un contrat</a>
+        </p>
+    </div>
+</section>

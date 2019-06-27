@@ -1,45 +1,23 @@
-{% block contrat %}
-    <h2 class="[ oocss-title-section ]">Contrat : {{ currentContrat.numero }}</h2>
-    {% if currentContrat.projets is not empty %}
-        {% if currentContrat.projets|length > 1 %}
-            <p>Ce contrat a {{ currentContrat.projets|length }} projets associés :</p>
-        {% else %}
-            <p>Ce contrat a 1 projet associé :</p>
-        {% endif %}   
-        <ul>
-            {% for projet in currentContrat.projets %}
-                <li>
-                    {{ projet.nom }} ({{ projet.type }})
-                    <!--TODO: ajouter bouton pour délier du contrat --> 
-                    {% set form = dissociationForms['dissociation' ~ projet.id] %}
-                    {% if form is defined %}
-                        {{ form_start(form) }}
-                            {{ form_errors(form) }}
-                            {{ form_row(form.projetAssocie) }}
-                            {{ form_row(form._token) }}
-                            {{ form_row(form.dissocier, {'label': 'Dissocier du contrat'})}}
-                        {{ form_end(form, {'render_rest': false}) }}
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-        {# on ajoute le formulaire de dissociation des projets #}
-        
-    {% else %}
-        <p>Aucun projet n'est encore associé à ce contrat</p>
-    {% endif %}    
-{% endblock contrat %}
+{% extends "MesClicsAdminBundle::layout.html.twig" %}
 
-<!-- S'il existe des projets associés à aucun contrat pour ce client -->
-{% if contratAssocierProjetsForm.projets.vars['choices'] | length > 0 %}
-    {% block associateProjets %}
-        <h3>Associer un projet au contrat</h3>
-        {# TODO: ajouter formulaire d'ajout de projet #}
-        {{ form_start(contratAssocierProjetsForm) }}
-            {{ form_errors(contratAssocierProjetsForm) }}
-            {{ form_row(contratAssocierProjetsForm.projets) }}
-            {{ form_row(contratAssocierProjetsForm._token) }}
-            {{ form_row(contratAssocierProjetsForm.associer) }}
-        {{ form_end(contratAssocierProjetsForm, {'render_rest': false}) }}
-    {% endblock associateProjets %}
-{% endif %}
+{% block deskHeadNavRails %}
+<a href="{{ path('mesclics_admin_home') }}" class="desk-head-nav_rails--item">
+    Console d'administration</a>
+>
+<a href="{{ path('mesclics_admin_clients') }}" class="desk-head-nav_rails--item">Clients</a>
+>
+<a href="{{ path('mesclics_admin_client', {'client_id': client.id}) }}"
+    class="desk-head-nav_rails--item">{{ client.nom }}</a>
+>
+<a href="{{ path('mesclics_admin_client_contrats', {'client_id': client.id}) }}"
+    class="desk-head-nav_rails--item">contrats</a>
+>
+<a href="{{ path('mesclics_admin_client_contrat', {'client_id': client.id, 'contrat_id': contrat.id}) }}"
+    class="desk-head-nav_rails--item">{{ contrat.numero }}</a>
+{% endblock deskHeadNavRails %}
+
+{% block deskMain %}
+{% include "MesClicsEspaceClientBundle:Widgets:client-nav.html.twig" %}
+{% with {'form': contratForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-edit.html.twig" %}{% endwith %}
+{% with {'form': contratAssocierProjetsForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-associer-projet.html.twig" %}{% endwith %}
+{% endblock deskMain %}

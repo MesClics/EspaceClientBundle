@@ -28,8 +28,7 @@ class ProjetAssocierContratType extends AbstractType
                         return $contrat_repo->getContratsQB($client);
                     }
             ))
-            ->add('associer', SubmitType::class)
-        ;
+            ->add('associer', SubmitType::class);
     }
     
     /**

@@ -64,8 +64,7 @@ class MesClicsClientCreationListener{
             return;
         }        
         $em = $args->getObjectManager();
-        // $numero = $this->clientNumerator->numeroAuto($entity, $em, $this->nameStartHasChanged, $this->prospectHasChanged);
-        // $entity->setNumero($numero);
+        
         $this->setPostUpdated(true);
         $em->flush();
     }
@@ -98,9 +97,7 @@ class MesClicsClientCreationListener{
                 'name' => $client->getNumero() . ' : ' . strtoupper($client->getNom())
             );
             $list = $trello_api->addList($board, $datas);
-            $client->setTrelloList($list);
         }
-        $em->flush();
 
         // ADD INITIAL CARDS
         //CARD INFOS
@@ -153,5 +150,9 @@ class MesClicsClientCreationListener{
             "pos" => "bottom"
         );
         $comm_client_checklist = $trello_api->addChecklist($comm_client_checklist_datas);
+
+        
+        $client->setTrelloList($list);
+        $em->flush();
     }
 }

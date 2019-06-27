@@ -1,0 +1,35 @@
+<section class="oocss-widget large client-contrats">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Contrats</h2>
+    </div>
+    <div class="oocss-widget--content">
+        <table class="oocss-table oocss-full-container-width">
+            <tr class="oocss-table-row">
+                <th>numero</th>
+                <th>type</th>
+                <th>projets associés</th>
+                <th>date de création</th>
+                <th>date de signature</th>
+            </tr>
+            {% for contrat in contrats %}
+                <tr class="oocss-table-row oocss-clickable-table-row">
+                    <td class="oocss-table-data"><a href="{{ path('mesclics_admin_client_contrat', { 'client_id' : client.id, 'contrat_id' : contrat.id }) }}">{{ contrat.numero }}</a></td>
+                    <td class="oocss-table-data">{{ contrat.type }}</td>
+                    <td class="oocss-table-data oocss-vertical oocss-center-h">
+                        {% if contrat.projets is not empty %}
+                            <ul>
+                                {% for projet in contrat.projets %}
+                                    <li>{{ projet.nom }} ({{ projet.type }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="oocss-table-data">{{ contrat.dateCreation|date('d/m/Y') }}</td>
+                    <td class="oocss-table-data">{% if contrat.dateSignature %}{{ contrat.dateSignature|date('d/m/Y') }}{% endif %}</td>
+                </tr>
+            {% endfor %} 
+        </table>
+    </div>
+</section>

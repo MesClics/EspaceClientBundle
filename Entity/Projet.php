@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="mesclics_projet")
  * @ORM\Entity(repositoryClass="MesClics\EspaceClientBundle\Repository\ProjetRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Projet
 {
@@ -54,6 +55,21 @@ class Projet
      * @ORM\ManyToOne(targetEntity="MesClics\EspaceClientBundle\Entity\Contrat", inversedBy="projets")
      */
     private $contrat;
+
+    /**
+     * @ORM\Column(name="date_creation", type="datetime", nullable=true)
+     */
+    private $date_creation;
+
+    /**
+     * @ORM\Column(name="last_update", type="datetime", nullable=true)
+     */
+    private $last_update;
+
+    /**
+     * @ORM\Column(name="date_cloture", type="datetime", nullable=true)
+     */
+    private $date_cloture;
 
     /**
      * Get id
@@ -124,6 +140,7 @@ class Projet
     public function setIsClosed($closed)
     {
         $this->closed = $closed;
+        $this->setDateCloture(new \DateTime());
 
         return $this;
     }
@@ -191,5 +208,47 @@ class Projet
      */
     public function getSelectLabel(){
         return $this->nom .  ' (' . $this->type . ')';
+    }
+
+    public function setDateCreation(\DateTime $date){
+        $this->date_creation = $date;
+        return $this;
+    }
+
+    public function getDateCreation(){
+        return $this->date_creation;
+    }
+
+    public function setLastUpdate(\DateTime $date){
+        $this->last_update = $date;
+        return $this;
+    }
+
+    public function getLastUpdate(){
+        return $this->last_update;
+    }
+
+    public function setDateCloture(\DateTime $date){
+        $this->date_cloture = $date;
+        return $this;
+    }
+
+    public function getDateCloture(){
+        return $this->date_cloture;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate(){
+        $this->setLastUpdate(new \DateTime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(){
+        $this->setDateCreation(new \DateTime());
+        $this->setLastUpdate(new \DateTime());
     }
 }

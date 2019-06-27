@@ -1,0 +1,14 @@
+<section class="oocss-widget large highlight client-contrats">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Contrat n° {{ contrat.numero }}</h2>
+    </div>
+
+    <div class="oocss-widget--content">
+        {{ form_start(form) }}
+        {{ form_row(form.dateSignature, {'label': 'date de signature'}) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.submit, {'label': 'enregistrer les modifications'}) }}
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+    </div>
+</section>

@@ -1,12 +1,4 @@
-{% if client_edit_form is defined %}
-    {% include "MesClicsEspaceClientBundle:Widgets:client-edit.html.twig" with { 'client_edit_form': client_edit_form } %}
-{% endif %}
-
-{# on inclue le template de la vue messages correspondant à la subSection #}
-{% if subSection is defined and subSection is same as ('clients') %}
-    {% if clientsSection is defined and clientsSection is not null %}
-        <section id= "clients-{{ clientsSection }}">
-            {% include "MesClicsEspaceClientBundle:Admin:messages-" ~ clientsSection ~ ".html.twig" %}
-        </section>
-    {% endif %}
+{# on inclue le template de la vue clients correspondant à la subSection #}
+{% if subSection is defined %}
+    {% include "MesClicsEspaceClientBundle:Admin:client-" ~ subSection ~ ".html.twig" %}
 {% endif %}

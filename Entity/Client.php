@@ -95,6 +95,11 @@ class Client
     //  * @ORM\OneToMany(targetEntity="MesClics\UserBundle\Entity\MesclicsUser", mappedBy="client", cascade={"persist"})
     //  */
     // private $users;
+
+    /**
+     * @ORM\Column(name="website", type="text", length=255, nullable=true)
+     */
+    private $website;
         
     /**
      * Get id
@@ -406,6 +411,16 @@ class Client
     // public function getUsers(){
     //     return $this->users;
     // }
+
+    public function getWebsite(){
+        return $this->website;
+    }
+
+    public function setWebsite(String $website_url){
+        $this->website = $website_url;
+
+        return $this;
+    }
     
 
     /**

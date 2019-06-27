@@ -1,0 +1,55 @@
+<section class="oocss-widget medium highlight client-projet-edit">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Modifier le projet {{ projet.nom }}</h2>
+    </div>
+    <div class="oocss-widget--content">
+        {{ form_start(form) }}
+            <div class="oocss-form-fieldset">
+                <div class="oocss-block oocss-vertical">
+                    <div class="oocss-form-row">
+                        {% if projet.dateCreation %}
+                            <label class="oocss-label">Créé le</label>
+                            <span>{{ projet.dateCreation|date("d/m/Y")|default("-") }}{{ projet.dateCreation|date(" à H\\hi")|default("") }}</span>
+                        {% endif %}
+                    </div>
+                    {% if projet.isClosed %}
+                        <label class="oocss-label">Clos le</label>
+                        <span>{{ projet.dateCloture|date("d/m/Y")|default("-") }}{{ projet.dateCloture|date(" à H\\hi")|default("") }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="oocss-form-row oocss-justify-center">
+                    <label class="oocss-label">client</label>
+                    <a class="oocss-block oocss-vertical oocss-center-all" href="{{ path('mesclics_admin_client', {'client_id': projet.client.id}) }}">
+                        <img class="oocss-image oocss-s" src={{ projet.client.image.url }} alt={{ projet.client.image.alt }}
+                        title={{ projet.client.image.title }} />
+                        <span class="oocss-discret">{{ projet.client.nom }} ({{ projet.client.numero }})</span>
+                    </a>
+                </div>
+
+                <div class="oocss-form-row oocss-justify-end">
+                    {% if projet.lastUpdate %}
+                        <label class="oocss-label">Dernière modification le</label>
+                        <span>le {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à H\\hi"|default("")) }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {{ form_row(form.nom, {'attr': {'class': 'oocss-full-container-width'}, 'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'Quel nom donner au projet ?'}) }}
+            {{ form_row(form.type, {'attr': {'class': 'oocss-full-container-width'}, 'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'De quel type de projet s\'agit-il ?', 'help': 'par ex : web, design, conseil etc...'}) }}
+            {% if projet.id is defined %}
+                {% if not projet.isClosed %}
+                    {{ form_row(form.isClosed, {'attr': {'invertLabel': true}, 'label': 'Clore le projet'}) }}
+                {% endif %}
+            {% endif %}
+
+            <div class="oocss-form-fieldset oocss-vertical">
+                {{ form_row(form.submit, {'label': 'enregistrer les modifications'}) }}
+
+                <div>
+                    <a href="{{ path('mesclics_admin_client_projet_remove', {'client_id': projet.client.id, 'projet_id': projet.id}) }}" class="oocss-button oocss-headed-block oocss-horizontal oocss-s client-projets-remove">Supprimer le projet</a>
+                </div>
+            </div>
+            {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+</section>
