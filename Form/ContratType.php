@@ -19,21 +19,20 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ContratType extends AbstractType
 {
-    protected $client;
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->client = $options['client'];
+        $client = $builder->getData()->getClient();
         $builder
         ->add('type', TextType::class)
         ->add('dateSignature', DateTimeType::class, array('required' => false))
         ->add('projets', EntityType::class, array(
             'class' => 'MesClicsEspaceClientBundle:Projet',
-            'query_builder' => function(ProjetRepository $repo){
-                return $repo->getProjetsWithNoContratQB($this->client);
+            'query_builder' => function(ProjetRepository $repo) use($client){
+                return $repo->getProjetsWithNoContratQB($client);
             },
             'property_path' => 'projets',
             'choice_label' => function(Projet $projet){
@@ -59,9 +58,6 @@ class ContratType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'MesClics\EspaceClientBundle\Entity\Contrat',
             // 'projet' => null
-        ));
-        $resolver->setRequired(array(
-            'client'
         ));
     }
 

@@ -201,6 +201,15 @@ class Contrat
         return $this->projets;
     }
 
+
+    /**
+     * Set projets
+     * 
+     */
+    public function setProjets(Projet $projet){
+        $this->addProjet($projet);
+    }
+
     /**
      * Set numero
      *

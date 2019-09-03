@@ -45,6 +45,10 @@ mesclics_admin_client_contrat:
     path: /{client_id}/contrats/{contrat_id}/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:get }
 
+mesclics_admin_client_contrat_remove:
+    path: /{client_id}/contrats/{contrat_id}/remove/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:remove }
+
 #espace_client
 mesclics_espace_client:
     path:    /{client}/{section}

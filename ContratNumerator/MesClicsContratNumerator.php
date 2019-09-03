@@ -12,7 +12,7 @@ class MesClicsContratNumerator{
         $date = date('Ymd', $contrat->getDateCreation()->getTimestamp());
         $temp_num = $numero . $date;
         $order = $em->getRepository('MesClicsEspaceClientBundle:Contrat')->getNumeroOrder($temp_num) + 1;
-        $temp_num = $temp_num . '_' . $order;
+        $temp_num = $temp_num . $order;
                 
         $contrat->setNumero($temp_num);
         

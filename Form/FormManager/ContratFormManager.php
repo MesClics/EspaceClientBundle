@@ -15,30 +15,6 @@ class ContratFormManager extends FormManager{
     const SUCCESS_NOTIFICATION_SINGULIER = "Les contrat a été ajouté.";
     const SUCCESS_NOTIFICATION_PLURIEL = "Les contrats ont été ajoutés.";
 
-    // public function setErrorNotification(){
-    //     if($this->getResult() > 1){
-    //         $this->errorNotification = 'Les contrats n\'ont pas pu être ajoutés. Veuillez vérifier les données saisies';
-    //     } else{
-    //         $this->errorNotification = 'Le contrat n\'a pas pu être ajouté. Veuillez vérifier les données saisies';
-    //     }
-    // }
-
-    // public function setErrorRedirection(){
-    //     $this->errorRedirection = null;
-    // }
-
-    // public function setSuccessNotification(){
-    //     if($this->getResult() > 1){
-    //         $this->successNotification = 'Les contrats ont bien été ajoutés.';
-    //     } else{
-    //         $this->successNotification = 'Le contrat a bien été ajouté sous le numéro : ' . $this->getResult()->getNumero();
-    //     }
-    // }
-
-    // public function setSuccessRedirection(){
-    //     $this->successRedirection = null;
-    // }
-
     public function setClient(Client $client){
         $this->client = $client;
         return $this;
@@ -58,11 +34,10 @@ class ContratFormManager extends FormManager{
         if($this->getForm()->isSubmitted() && $this->getForm()->isValid()){
             $this->setAction($this->getForm()->getClickedButton()->getName());
             $object = $this->getForm()->getData();
-            //on associe le client au contrat
-            $object->setClient($this->getClient());
             //on persiste notre objet en bdd
             $this->getEm()->persist($object);
-            $this->setResult($this->getEm()->flush());
+            $this->getEm()->flush();
+            $this->setResult($object);
             $this->setSuccess(true);
         }
 

@@ -112,7 +112,7 @@ class ClientController extends Controller{
             $projet_form_manager->handle($projetForm);
 
             if($projet_form_manager->hasSucceeded()){
-                $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet->getId()));
+                return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet_form_manager->getResult()->getId()));
             }
         }
                 
@@ -140,10 +140,10 @@ class ClientController extends Controller{
 
         //on crée un objet qui sera hydraté par le formulaire
         $contrat = new Contrat();
+        $contrat->setClient($client);
         //on génère le formulaire
-        $contratForm = $this->createForm(ContratType::class, $contrat, array(
-            'client' => $client
-        ));
+        $contratForm = $this->createForm(ContratType::class, $contrat);
+
         
         //on gère le formulaire
         //si la requête est de type POST
@@ -154,7 +154,7 @@ class ClientController extends Controller{
                 ->handle($contratForm);
 
                 if($contrat_form_manager->hasSucceeded()){
-                    return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat_form_manager->getResult()->getId()));
+                    return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat_form_manager->getResult()->getClient()->getId(), 'contrat_id' => $contrat_form_manager->getResult()->getId()));
                 }
         }
 

@@ -1,0 +1,13 @@
+{% extends "MesClicsBundle:Popups:layout.html.twig" %}
+{% block popupHeader %}
+<h2>Attention !</h2>
+{% endblock popupHeader %}
+
+{% block popupContent %}
+<p class="oocss-instruction oocss-block oocss-full-container-width oocss-center-h">Êtes-vous sûr de vouloir supprimer le
+    contrat {{ contrat.type }} n°{{ contrat.numero }}?</p>
+<div class="oocss-center-h">
+    <a class="oocss-button oocss-discret" href="{{ path('mesclics_admin_client_contrat_remove', {'remove':true, 'client_id': client.id, 'contrat_id': contrat.id}) }}">Oui</a>
+    <a class="oocss-button oocss-discret" href="{{ path('mesclics_admin_client_contrats', {'client_id': client.id}) }}">Annuler</a>
+</div>
+{% endblock popupContent %}

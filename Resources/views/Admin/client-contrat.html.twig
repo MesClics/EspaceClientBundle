@@ -12,12 +12,25 @@
 <a href="{{ path('mesclics_admin_client_contrats', {'client_id': client.id}) }}"
     class="desk-head-nav_rails--item">contrats</a>
 >
-<a href="{{ path('mesclics_admin_client_contrat', {'client_id': client.id, 'contrat_id': contrat.id}) }}"
+{% if contrat.id %}
+    <a href="{{ path('mesclics_admin_client_contrat', {'client_id': client.id, 'contrat_id': contrat.id}) }}"
     class="desk-head-nav_rails--item">{{ contrat.numero }}</a>
+{% else %}
+    <a href="{{ path('mesclics_admin_client_contrats_add', {'client_id': client.id}) }}"
+    class="desk-head-nav_rails--item">ajouter un contrat</a>
+{% endif %}
 {% endblock deskHeadNavRails %}
 
 {% block deskMain %}
 {% include "MesClicsEspaceClientBundle:Widgets:client-nav.html.twig" %}
-{% with {'form': contratForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-edit.html.twig" %}{% endwith %}
-{% with {'form': contratAssocierProjetsForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-associer-projet.html.twig" %}{% endwith %}
+
+{% if contrat.id %}
+    {% with {'form': contratForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-edit.html.twig" %}{% endwith %}
+{% else %}
+    {% with {'form': contratForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrats-new.html.twig" %}{% endwith %}
+{% endif %}
+
+{% if contratAssocierProjetsForm is defined %}
+    {% with {'form': contratAssocierProjetsForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-associer-projet.html.twig" %}{% endwith %} 
+{% endif %}
 {% endblock deskMain %}

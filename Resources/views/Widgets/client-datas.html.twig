@@ -4,7 +4,7 @@
     </div>
     <div class="oocss-widget--content">
         <div class="oocss-form-fieldset oocss-horizontal">
-            <div class="oocss-row">
+            <div class="oocss-form-row">
                 <span class="oocss-label">Numéro client</span>
                 <span>{{ client.numero }}</span>
             </div>
@@ -19,7 +19,7 @@
         {% with {'isSlideshow': false } %}{% include "MesClicsEspaceClientBundle:Widgets:client-form.html.twig" %}{% endwith %}
     
         {% if client.trelloList %}
-            <div class="oocss-row">
+            <div class="oocss-form-row">
                 <span class="oocss-label">Liens Trello</span> 
                 <ul class="oocss-block oocss-horizontal">
                     <li>
@@ -33,7 +33,7 @@
         {% endif %}
 
         {% if client.website %}
-            <div class="oocss-row">
+            <div class="oocss-form-row">
                 <span class="oocss-label">Website</span>
                 <span><a class="oocss-button oocss-discret" href={{ client.website }} target="_blank">Voir le site</a></span>
             </div>

@@ -15,16 +15,6 @@ class ProjetFormManager extends FormManager{
     const SUCCESS_NOTIFICATION_SINGULIER = "Les projet a été ajouté.";
     const SUCCESS_NOTIFICATION_PLURIEL = "Les projets ont été ajoutés.";
 
-
-    // public function setClient(Client $client){
-    //     $this->client = $client;
-    //     return $this;
-    // }
-
-    // protected function getClient(){
-    //     return $this->client;
-    // }
-
     public function handle(Form $form, $addNotification = true){
         $this->hydrate(array(
             'form' => $form
@@ -37,7 +27,8 @@ class ProjetFormManager extends FormManager{
             $object = $this->getForm()->getData();
             //on persiste notre objet en bdd
             $this->getEm()->persist($object);
-            $this->setResult($this->getEm()->flush());
+            $this->getEm()->flush();
+            $this->setResult($object);
             $this->setSuccess(true);
         }
 

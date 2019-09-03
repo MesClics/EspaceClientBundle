@@ -5,15 +5,35 @@
 
     <div class="oocss-widget--content">
         {{ form_start(form) }}
-        {{ form_row(form.dateSignature, {'label': 'date de signature'}) }}
-        {{ form_row(form.type) }}
-        {{ form_row(form.projets, {'label': 'associer un ou des projet(s) au contrat', 'widget_attr': {'class': 'oocss-full-container-width'}, 'help': 'CTRL + clic pour sélectionner plusieurs projets'}) }}
-
-        {% if contrat.projets is not empty %}
-            {# TODO: ajouter le formulaire de dissociation de projet #}
+        <div class="oocss-form-fieldset oocss-horizontal">
+            {{ form_row(form.dateSignature, {'label': 'date de signature'}) }}
+            <div class="oocss-form-row oocss-justify-end">
+                <span class="oocss-label">dernière modification</span>
+                <span>le {{ contrat.lastUpdate|default("")|date("d/m/Y") }} à {{ contrat.lastUpdate|default("")|date("H\\hi") }}</span>
+            </div>
+        </div>        {{ form_row(form.type) }}{% if contrat.projets is not empty %}
+        {# TODO: ajouter le formulaire de dissociation de projet #}
+        <div class="oocss-form-row oocss-full-container-width">
+            <span class="oocss-label">Les projets suivants sont associés au contrat</span>
+            <ul>
+                {% for projet in contrat.projets %}
+                <li class="oocss-block oocss-horizontal">
+                    <span class="oocss-headed-block client-projets oocss-s oocss-horizontal">{{ projet.nom }} (créé le {{ projet.dateCreation|date("d/m/Y") }})</span>
+                    <a class="oocss-button oocss-headed-block oocss-s oocss-discret oocss-table-data-icon oocss-justify-end oocss-center-v client-contrats-projets-unlink">dissocier</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
 
-        {{ form_row(form.submit, {'label': 'enregistrer les modifications'}) }}
+        {{ form_row(form.projets, {'label': 'associer un ou des projet(s) au contrat', 'widget_attr': {'class': 'oocss-full-container-width'}, 'help': 'CTRL + clic pour sélectionner plusieurs projets'}) }}
+
+        <div class="oocss-form-fieldset oocss-horizontal">
+            {{ form_row(form.submit, {'label': 'enregistrer les modifications', 'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}}) }}
+            <div class="oocss-form-row oocss-justify-end">
+                <a href="{{ path('mesclics_admin_client_contrat_remove', {'client_id': contrat.client.id, 'contrat_id': contrat.id}) }}" class="oocss-button oocss-headed-block oocss-discret oocss-horizontal oocss-s client-contrats-remove">Supprimer le contrat</a>
+            </div>
+        </div>
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
     </div>

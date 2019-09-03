@@ -134,12 +134,12 @@ class ClientProjetController extends Controller{
     public function removeAction(Client $client, Projet $projet, EntityManagerInterface $em, Packages $assets_manager, Request $request){
         if($request->isMethod("GET")){
             if($request->query->get('remove')){
-                $em->remove($projet);
-                $em->flush();
-
                 $redirect_args = array(
                     "client_id" => $client->getId()
                 );
+                $em->remove($projet);
+                $em->flush();
+                // TODO: add a flash message
                 return $this->redirectToRoute('mesclics_admin_client_projets', $redirect_args);
             } 
         }
@@ -153,10 +153,11 @@ class ClientProjetController extends Controller{
                 'remove' => array(
                     'options' => array(
                         'illustration' => array(
-                            'url' => '@mesclicsespaceclientbundle/images/icones/projets/remove.svg',
+                            'url' => '@mesclicsespaceclientbundle/images/icones/projets/svg/remove.svg',
                             'alt' => 'illustration de suppression de projet',
                             'title' => 'supprimer un projet',
-                            'type' => 'svg'                            
+                            'type' => 'svg',
+                            'class' => 'projet-remove'
                         ),
                         'class' => 'alert'
                     ),

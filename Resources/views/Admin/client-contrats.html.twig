@@ -4,5 +4,7 @@
     {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-start.html.twig" %}
 {% endif %}
 
-{% include "MesClicsEspaceClientBundle:Widgets:client-contrats-new.html.twig" with {'isSlideshow': true, 'form': contratForm} %}
+{% if contratForm is defined %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-new.html.twig" with {'isSlideshow': true, 'form': contratForm} %}
+{% endif %}
 

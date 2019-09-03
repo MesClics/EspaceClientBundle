@@ -9,16 +9,39 @@
             <div class="oocss-slideshow oocss-full-container-width">
                 {{ form_start(form, {'attr': {'class': 'oocss-slideshow--content oocss-full-container-width'}}) }}
                     {{ form_row(form.type, {'label': 'Quel type de contrat créer ?', 'help': 'Ex: web, design, abonnement', 'attr': {'class': 'oocss-slideshow--step'}, 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
-                    {{ form_row(form.dateSignature, {'label': 'à quelle date le contrat a-t-il été signé ?', 'attr': {'class': 'oocss-slideshow--step'}}, {'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {{ form_row(form.dateSignature, {'label': 'à quelle date le contrat a-t-il été signé ?', 'attr': {'class': 'oocss-slideshow--step'}, 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
                     <!-- S'il existe des projets associés à aucun contrat pour ce client -->
-                    {% if (form.projets is defined) and (form.projets.vars['choices'] | length > 0) %}
-                        {{ form_row(form.projets, {'attr': {'class': 'oocss-slideshow--step'}}, {'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {% if (form.projets is defined) and (form.projets.vars['choices'] | length > 1) %}
+                        {{ form_row(form.projets, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'associer des projets', 'help': 'ctrl + clic pour sélectionner plusieurs projets', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {% elseif (form.projets is defined) and (form.projets.vars['choices'] | length == 1) %}
+                        {{ form_row(form.projets, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'associer un projet', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
                     {% endif %}
                     {{ form_row(form._token) }}
                     {{ form_row(form.submit, {'label': 'Créer le contrat','attr': {'class': 'oocss-slideshow--step oocss-center-all'}}, {'widget_attr': {'class': 'oocss-full-container-width'}}) }}
                 {{ form_end(form, {'render_rest': false}) }}
                 <div class="oocss-slideshow--slider"></div>
             </div>
+        </div>
+    </section>
+
+{% else %}
+    <section class="oocss-widget large highlight client-contrats-new">
+        <div class="oocss-widget--head">
+            <h2 class="oocss-widget--title">{{ widget_title|default("Ajouter un contrat") }}</h2>
+        </div>
+        <div class="oocss-widget--content">
+                {{ form_start(form, {'attr': {'class': 'oocss-full-container-width'}}) }}
+                    {{ form_row(form.type, {'label': 'Quel type de contrat créer ?', 'help': 'Ex: web, design, abonnement', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {{ form_row(form.dateSignature, {'label': 'à quelle date le contrat a-t-il été signé ?', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {% if (form.projets is defined) and (form.projets.vars['choices'] | length == 1) %}
+                        {{ form_row(form.projets, {'label': 'associer un projet', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {% elseif (form.projets is defined) and (form.projets.vars['choices'] | length > 1) %}
+                        {{ form_row(form.projets, {'label': 'associer des projets', 'help': 'CTRL + clic pour sélectionner plusieurs projets', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                    {% endif %}
+                    {{ form_row(form._token) }}
+                    {{ form_row(form.submit, {'label': 'Créer le contrat', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+                {{ form_end(form, {'render_rest': false}) }}
+                <div class="oocss-slideshow--slider"></div>
         </div>
     </section>
 {% endif %}

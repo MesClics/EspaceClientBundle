@@ -40,7 +40,7 @@
             {{ form_row(client_new_form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
         </div>
         {% if client is defined %}
-            {{ form_row(client_new_form.submit, {'label': 'enregistrer les modifications'}) }}
+            {{ form_row(client_new_form.submit, {'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}, 'label': 'enregistrer les modifications'}) }}
         {% else %}
             {{ form_row(client_new_form.submit, {'label': 'ajouter le client'}) }}
         {% endif %}

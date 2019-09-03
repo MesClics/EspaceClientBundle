@@ -42,11 +42,11 @@
                 {% endif %}
             {% endif %}
 
-            <div class="oocss-form-fieldset oocss-vertical">
-                {{ form_row(form.submit, {'label': 'enregistrer les modifications'}) }}
+            <div class="oocss-form-fieldset oocss-horizontal oocss-center-v">
+                {{ form_row(form.submit, {'attr': {'class': 'oocss-button oocss-headed-block oocss-horizontal oocss-s save'},'label': 'enregistrer les modifications'}) }}
 
-                <div>
-                    <a href="{{ path('mesclics_admin_client_projet_remove', {'client_id': projet.client.id, 'projet_id': projet.id}) }}" class="oocss-button oocss-headed-block oocss-horizontal oocss-s client-projets-remove">Supprimer le projet</a>
+                <div class="oocss-form-row oocss-justify-end">
+                    <a href="{{ path('mesclics_admin_client_projet_remove', {'client_id': projet.client.id, 'projet_id': projet.id}) }}" class="oocss-button oocss-headed-block oocss-discret oocss-horizontal oocss-s client-projets-remove">Supprimer le projet</a>
                 </div>
             </div>
             {{ form_row(form._token) }}

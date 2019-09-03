@@ -8,18 +8,17 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator;
 
 class MesClicsClientCreationListener{
-    /**
-     * @var MesClicsClientNumerator
-     */
     private $clientNumerator;
     private $apis_manager;
+    public $event_dispatcher;
     private $postUpdated = false;
     private $prospectHasChanged = false;
     private $nameStartHasChanged = false;
 
-    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager){
+    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager, EventDispatcher $event_dispatcher){
         $this->clientNumerator = $client_numerator;
         $this->apis_manager = $apis_manager;
+        $this->event_dispatcher = $event_dispatcher;
     }
 
     private function setPostUpdated($updated){
@@ -50,8 +49,12 @@ class MesClicsClientCreationListener{
             $numero = $this->clientNumerator->numeroAuto($entity, $em);
             $entity->setNumero($numero);
         }
-
+        // execute trello actions
         $this->executeTrelloActions("postPersist", array("client" => $entity, "entity_manager" => $em));
+
+        //add an action to the Navigator
+        $action = new Action("creation du client " . $entity->getNom(), array("client" => $entity));
+        $this->navigator->getChronology()->addAction($action);
     }
 
     public function postUpdate(LifecycleEventArgs $args){

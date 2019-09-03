@@ -1,6 +1,7 @@
 <?php
 namespace MesClics\EspaceClientBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\EspaceClientBundle\Entity\Contrat;
@@ -19,8 +20,26 @@ class ClientContratsController extends Controller{
     /**
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      */
-    public function postAction(Client $client, Request $request){
+    public function postAction(Client $client, ContratFormManager $form_manager, Request $request){
+        $contrat = new Contrat();
+        $form = $this->createForm(ContratType::class, $contrat, array('client' => $client));
 
+        if($request->isMethod('POST')){
+            $form_manager->handle($form);
+            if($form_manager->hasSucceeded()){
+                return $this->redirectToRoute('mesclics_admin_clients_contrat', array("client_id" => $client->getId(), "contrat_id" => $form_manager->getResult()->getId()));
+            }
+        }
+
+        $args = array(
+            "currentSection" => "client",
+            "subSection" => "contrat",
+            "client" => $client,
+            "contrat" => $contrat,
+            "contratForm" => $form->createView()
+        );
+
+        return $this->render('MesClicsEspaceClientBundle:Admin:client-contrat.html.twig', $args);
     }
 
     /**
@@ -31,9 +50,7 @@ class ClientContratsController extends Controller{
     public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, ContratAssocierProjetFormManager $contratAssocierProjetsFormManager, ContratDissocierProjetFormManager $contratDissocierProjetFormManager, Request $request){
         //on génère les formulaires :
         //MODIFICATION DE CONTRAT
-        $contratForm = $this->createForm(ContratType::class, $contrat, array(
-            'client' => $client
-        ));
+        $contratForm = $this->createForm(ContratType::class, $contrat);
 
         //ASSOCIATION DE PROJETS
         //on crée le formulaire
@@ -60,7 +77,7 @@ class ClientContratsController extends Controller{
         //si la requête est de type POST
         if($request->isMethod('POST')){
             //MODIFICATION DE CONTRAT
-            $contratFormManager->handle($contrat);
+            $contratFormManager->handle($contratForm);
             if($contratFormManager->hasSucceeded()){
                 return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
             }
@@ -91,5 +108,51 @@ class ClientContratsController extends Controller{
             'dissociationForms' => $dissociationForms
         );
         return $this->render('MesClicsEspaceClientBundle:Admin:client-contrat.html.twig', $args);
+    }
+
+    
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
+     */
+    public function removeAction(Contrat $contrat, EntityManagerInterface $em, Request $request){
+        if($request->isMethod('GET')){
+            $confirm = $request->query->get('remove');
+            if($confirm){
+                $args = array(
+                    "client_id" => $contrat->getClient()->getId()
+                );
+                $em->remove($contrat);
+                $em->flush();
+                // TODO: add a flash message
+                return $this->redirectToRoute('mesclics_admin_client_contrats', $args);
+            } else{
+                // TODO: get back to the original page (or close the confirm panel)
+            }
+        }
+
+        $args = array(
+            'currentSection' => 'client',
+            'subSection' => 'contrats',
+            'contrat' => $contrat,
+            'client' => $contrat->getClient(),
+            'popups' => array(
+                'remove' => array(
+                    'options' => array(
+                        'illustration' => array(
+                            'url' => '@mesclicsespaceclientbundle/images/icones/contrats/svg/remove.svg',
+                            'alt' => 'illustration de suppression de contrat',
+                            'title' => 'supprimer un contrat',
+                            'type' => 'svg',
+                            'class' => 'contrat-remove'
+                        ),
+                        'class' => 'alert'
+                    ),
+                    'template' => 'MesClicsEspaceClientBundle:PopUps:client-contrats-remove.html.twig'
+                )
+            )
+        );
+        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+
     }
 }
