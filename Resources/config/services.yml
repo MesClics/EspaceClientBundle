@@ -88,6 +88,7 @@ services:
         arguments:
             - "@mesclics_espace_client.client_numerator"
             - "@mesclics_utils.apis_manager"
+            - "@mesclics_navigation.navigator"
         tags:
             - { name: doctrine.event_listener, event: postPersist }
             - { name: doctrine.event_listener, event: postUpdate }

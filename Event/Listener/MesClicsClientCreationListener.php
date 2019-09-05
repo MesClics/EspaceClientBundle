@@ -4,21 +4,23 @@ namespace MesClics\EspaceClientBundle\Event\Listener;
 
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
+use MesClics\NavigationBundle\Navigator\Navigator;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator;
+use MesClics\NavigationBundle\Entity\Action;
 
 class MesClicsClientCreationListener{
     private $clientNumerator;
     private $apis_manager;
-    public $event_dispatcher;
+    private $navigator;
     private $postUpdated = false;
     private $prospectHasChanged = false;
     private $nameStartHasChanged = false;
 
-    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager, EventDispatcher $event_dispatcher){
+    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager, Navigator $navigator){
         $this->clientNumerator = $client_numerator;
         $this->apis_manager = $apis_manager;
-        $this->event_dispatcher = $event_dispatcher;
+        $this->navigator = $navigator;
     }
 
     private function setPostUpdated($updated){
@@ -52,9 +54,10 @@ class MesClicsClientCreationListener{
         // execute trello actions
         $this->executeTrelloActions("postPersist", array("client" => $entity, "entity_manager" => $em));
 
-        //add an action to the Navigator
+        //add a new action to Navigator's chronology
         $action = new Action("creation du client " . $entity->getNom(), array("client" => $entity));
-        $this->navigator->getChronology()->addAction($action);
+        $this->navigator->getUser()->getChronology()->addAction($action);
+        $this->navigator->getEm()->flush();
     }
 
     public function postUpdate(LifecycleEventArgs $args){
