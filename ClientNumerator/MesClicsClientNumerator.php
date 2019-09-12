@@ -2,68 +2,20 @@
 
 namespace MesClics\EspaceClientBundle\ClientNumerator;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use MesClics\EspaceClientBundle\Entity\Client;
 
 class MesClicsClientNumerator{
+    private $entity_manager;
 
-    // public function numeroAuto(Client $client, EntityManager $em, $nameStartHasChanged = false, $prospectHasChanged = false){
-    //     //s'il ne s'agit pas d'un nouveau client et que son statut prospect a changé
-    //     if($client->hasNumero() && $prospectHasChanged){
-    //         //si le nom du client commence tjs par les mêmes lettres
-    //         if(!$nameStartHasChanged){
-    //             //si le client est transformé en prospect
-    //             if($client->isProspect()){
-    //                 return $this->clientToProspect($client);
-    //             }
-    //             //si le propect est transformé en client
-    //             return $this->prospectToClient($client);
-    //         }
-    //     }
+    public function __construct(EntityManagerInterface $em){
+        $this->entity_manager = $em;
+    }
 
-    //     //on récupère le dernier numéro de client commençant par les 4 premiers caractères ('_'inclus)
-    //     //on extraie les initiales du client
-    //     $initiales = strtoupper(substr($client->getAlias(), 0, 3));
-    //     //on recherche le dernier client ayant les même initiales
-    //     $lastClientNumero = $em->getRepository("MesClicsEspaceClientBundle:Client")->lastClientNumeroBeginningWith($initiales);
-    //     var_dump($initiales, $lastClientNumero); die();
-
-    //     if(!$lastClientNumero){
-    //         $numeroDispo = '001';
-    //     } else{
-    //         //on incrémente le numéro si le début du nom a changé
-    //         if($nameStartHasChanged){
-    //             $lastNumero = intval(substr($lastClientNumero->getNumero(), 4));
-    //             $numeroDispo = str_pad(($lastNumero + 1), 3, '000', STR_PAD_LEFT);
-    //         } else{
-    //             $numeroDispo = str_pad(intval(substr($client->getNumero(), 4)), 3, '000', STR_PAD_LEFT);
-    //         }
-    //     }
-        
-    //     if($client->isProspect()){
-    //         return '_' . $initiales . $numeroDispo;
-    //     } else{
-    //         return $initiales . '_' . $numeroDispo;
-    //     }
-            
-    // }
-
-    public function numeroAuto($client, $em){     
-        //s'il ne s'agit pas d'un nouveau client et que son statut prospect a changé
-        // if($client->hasNumero() && $prospectHasChanged){
-        //     //si le nom du client commence tjs par les mêmes lettres
-        //     if(!$nameStartHasChanged){
-        //         //si le client est transformé en prospect
-        //         if($client->isProspect()){
-        //             return $this->clientToProspect($client);
-        //         }
-        //         //si le propect est transformé en client
-        //         return $this->prospectToClient($client);
-        //     }
-        // }
+    public function numeroAuto($client){
 
         //on définit les initiales à rechercher dans la bdd
-        $repo = $em->getRepository("MesClicsEspaceClientBundle:Client");
+        $repo = $this->entity_manager->getRepository("MesClicsEspaceClientBundle:Client");
         $initials = substr($client->getAlias(), 0, 3);
         $last_numero_client = $repo->lastClientBeginningWith($initials);
         if($last_numero_client){

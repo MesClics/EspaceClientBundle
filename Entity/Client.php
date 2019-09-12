@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="mesclics_client")
  * @ORM\Entity(repositoryClass="MesClics\EspaceClientBundle\Repository\ClientRepository")
- * @ORM\HasLifecycleCallbacks()
  */
 class Client
 {

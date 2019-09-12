@@ -10,6 +10,8 @@ use MesClics\EspaceClientBundle\Form\ProjetType;
 use MesClics\EspaceClientBundle\Form\ContratType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
 use MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
@@ -21,12 +23,21 @@ class ClientController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function getAction(Client $client, ClientFormManager $form_manager, Request $request){       
+    public function getAction(Client $client, ClientFormManager $form_manager, Request $request, EventDispatcherInterface $event_dispatcher){
+        //clone the initial client object:
+        $client_before_update = clone $client;
         //add update datas form
         $form = $this->createForm(ClientType::class, $client);
         $form_manager->handle($form);
         if($request->isMethod('POST')){
             if($form_manager->hasSucceeded()){
+
+            // dispatch a MesClicsClientUpdateEvent
+
+            if($client_before_update !== $form_manager->getResult()){
+                $event = new MesClicsClientUpdateEvent($client_before_update, $form_manager->getResult());
+                $event_dispatcher->dispatch('client.update', $event);
+            }
                 $this->redirectToRoute("mesclics_admin_client", array("client_id" => $client->getId()));
             }
         }
@@ -35,14 +46,13 @@ class ClientController extends Controller{
             'client' => $client,
             'client_new_form' => $form->createView()
         );
-
         return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
     }
 
     /**
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function postAction(ClientFormManager $client_form_manager, Request $request){
+    public function postAction(ClientFormManager $client_form_manager, Request $request, EventDispatcherInterface $ed){
         $client = new Client();
 
         //création du formulaire
@@ -55,6 +65,11 @@ class ClientController extends Controller{
                 $args = array(
                     'client_id' => $client_form_manager->getResult()->getID()
                 );
+
+                //TODO: dispatch client creation event
+                $event = new MesClicsClientCreationEvent($client_form_manager->getResult());
+                $ed->dispatch('client.update', $event);
+
                 return $this->redirectToRoute("mesclics_admin_client", $args);
             }
         }
@@ -72,11 +87,13 @@ class ClientController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function updateAction(Client $client, ClientFormManager $client_form_manager, Request $request){
+    public function updateAction(Client $client, ClientFormManager $client_form_manager, Request $request, EventDispatcherInterface $ed){
         $args = array(
             'currentSection' => 'clients',
             'client' => $client
         );
+
+        $client_before_update = clone $client;
         
         //on vérifie que le client n'a pas de contrat, auquel cas on ne pourrait pas modifier ses données
         if(empty($client->getContrats()->toArray())){
@@ -85,6 +102,12 @@ class ClientController extends Controller{
 
             if($request->isMethod('POST')){
                 $clientFormManager->handle($clientEditForm);
+
+                // dispatch MesClicsClientUpdateEvent
+                if($clientFormManager->hasSucceeded()){
+                    $event = new MesClicsClientUpdateEvent($client_before_update, $clientFormManager->getResult());
+                    $ed->dispatch($event);
+                }
             }
 
             $args['client_edit_form'] = $clientEditForm->createView();
