@@ -3,7 +3,7 @@
 namespace MesClics\EspaceClientBundle\Event;
 
 final class MesClicsClientEvents{
-    public const CREATION = 'client.creation';
-    public const UPDATE = 'client.update';
-    public const REMOVAL = 'client.removal';
+    public const CREATION = 'mesclics_client.creation';
+    public const UPDATE = 'mesclics_client.update';
+    public const REMOVAL = 'mesclics_client.removal';
 }

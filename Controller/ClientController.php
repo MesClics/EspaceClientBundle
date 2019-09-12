@@ -31,13 +31,11 @@ class ClientController extends Controller{
         $form_manager->handle($form);
         if($request->isMethod('POST')){
             if($form_manager->hasSucceeded()){
-
-            // dispatch a MesClicsClientUpdateEvent
-
-            if($client_before_update !== $form_manager->getResult()){
-                $event = new MesClicsClientUpdateEvent($client_before_update, $form_manager->getResult());
-                $event_dispatcher->dispatch('client.update', $event);
-            }
+                //dispatch a MesClicsClientUpdateEvent
+                if($client_before_update !== $form_manager->getResult()){
+                    $event = new MesClicsClientUpdateEvent($client_before_update, $form_manager->getResult());
+                    $event_dispatcher->dispatch('mesclics_client.update', $event);
+                }
                 $this->redirectToRoute("mesclics_admin_client", array("client_id" => $client->getId()));
             }
         }
@@ -52,7 +50,7 @@ class ClientController extends Controller{
     /**
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function postAction(ClientFormManager $client_form_manager, Request $request, EventDispatcherInterface $ed){
+    public function postAction(ClientFormManager $client_form_manager, Request $request, EventDispatcherInterface $event_dispatcher){
         $client = new Client();
 
         //création du formulaire
@@ -68,7 +66,7 @@ class ClientController extends Controller{
 
                 //TODO: dispatch client creation event
                 $event = new MesClicsClientCreationEvent($client_form_manager->getResult());
-                $ed->dispatch('client.update', $event);
+                $event_dispatcher->dispatch('mesclics_client.creation', $event);
 
                 return $this->redirectToRoute("mesclics_admin_client", $args);
             }
@@ -77,7 +75,7 @@ class ClientController extends Controller{
         $args = array(
             'currentSection' => 'clients',
             'subSection' => 'new',
-            'new_client_form' => $client_form->creatView()
+            'new_client_form' => $client_form->createView()
         );
 
         return $this->render('MesClicsEspaceClientBundle:Admin:clients.html.twig');
@@ -106,7 +104,7 @@ class ClientController extends Controller{
                 // dispatch MesClicsClientUpdateEvent
                 if($clientFormManager->hasSucceeded()){
                     $event = new MesClicsClientUpdateEvent($client_before_update, $clientFormManager->getResult());
-                    $ed->dispatch($event);
+                    $ed->dispatch('mesclics_client.update', $event);
                 }
             }
 

@@ -38,6 +38,7 @@ class MesClicsClientNumerator{
             $next_numero_full = strtoupper($initials).'_'.$next_numero;
         }
         
+        $client->setNumero($next_numero_full);
         return $next_numero_full;
     }
 
@@ -52,6 +53,7 @@ class MesClicsClientNumerator{
         $initiales = substr($client->getNumero(), 1, 3);
         $numero = $initiales . '_' . $chiffres;
         
+        $client->setNumero($numero);
         return $numero;
     }
 
@@ -66,6 +68,7 @@ class MesClicsClientNumerator{
         $initiales = substr($client->getNumero(), 0, 3);
         $numero = '_' . $initiales . $chiffres;
 
+        $client->setNumero($numero);
         return $numero;
     }
 }

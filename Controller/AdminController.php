@@ -1,22 +1,14 @@
 <?php
 namespace MesClics\EspaceClientBundle\Controller;
-
-use MesClics\UserBundle\Entity\User;
-use MesClics\UserBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
-use Symfony\Component\HttpFoundation\Response;
-use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ClientType;
-use MesClics\EspaceClientBundle\Form\ContratType;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
-use MesClics\EspaceClientBundle\Form\ClientEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use MesClics\EspaceClientBundle\Event\MesClicsClientCreationEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminController extends Controller{
 
@@ -24,7 +16,7 @@ class AdminController extends Controller{
     /**
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function clientsAction(ApisManager $apis_manager, Request $request){
+    public function clientsAction(ApisManager $apis_manager, Request $request, EventDispatcherInterface $event_dispatcher){
         //on récupère la liste des clients
         $em = $this->getDoctrine()->getManager();
         $clientRepo = $em->getRepository('MesClicsEspaceClientBundle:Client');
@@ -74,6 +66,12 @@ class AdminController extends Controller{
             //gestion du formulaire si requête de type post, on gère le formulaire
             $clientFormManager = $this->get('mesclics_espace_client.form_manager.client.new');
             $clientFormManager->handle($clientForm);
+
+            if($clientFormManager->hasSucceeded()){
+                //dispatch client creation event if client does still not have a number
+                $event = new MesClicsClientCreationEvent($clientFormManager->getResult());
+                $event_dispatcher->dispatch('mesclics_client.creation', $event);
+            }
 
                 //on redirige vers la page client
                 $args = array(

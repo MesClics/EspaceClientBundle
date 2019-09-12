@@ -3,6 +3,7 @@
 namespace MesClics\EspaceClientBundle\Event\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
+use MesClics\NavigationBundle\Entity\Action;
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
 use MesClics\NavigationBundle\Navigator\Navigator;
@@ -40,8 +41,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         $client = $event->getClient();
         //SET NUMERO AUTO
         if(!$client->hasNumero()){
-            $numero = $this->clientNumerator->numeroAuto($client);
-            $client->setNumero($numero);
+            $this->clientNumerator->numeroAuto($client);
         }
 
         // execute trello actions
@@ -49,7 +49,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         // $this->executeTrelloActions("postPersist", array("client" => $client, "entity_manager" => $this->entity_manager));
 
         //add a new action to Navigator's chronology
-        $action = new Action("creation du client " . $entity->getNom(), array("client" => $entity));
+        $action = new Action("creation du client " . $client->getNom(), array("client" => $client));
         $this->navigator->getUser()->getChronology()->addAction($action);
 
         //flush changes in database
@@ -65,7 +65,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
             } else{
                 $numero = $this->clientNumerator->clientToProspect($event->getAfterUpdate());
             }            
-            $event->getAfterUpdate()->setNumero($numero);
+            // $event->getAfterUpdate()->setNumero($numero);
 
             //TODO: update Trello card
             $this->trelloActionsOnClientProspectStatusChange($event->getBeforeUpdate(), $event->getAfterUpdate());
@@ -74,8 +74,9 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         // on name change
         if($event->hasChanged('nom')){
             //if 3 first letters change, reset client number
-            if(strtoupper(substr($event->getBeforeUpdate()->getNom(), 0, 3)) != strtoupper(substr($event->getAterUpdate()->getNom(), 0, 3))){
+            if(strtoupper(substr($event->getBeforeUpdate()->getNom(), 0, 3)) != strtoupper(substr($event->getAfterUpdate()->getNom(), 0, 3))){
                 $numero = $this->clientNumerator->numeroAuto($event->getAfterUpdate());
+                // $event->getAfterUpdate()->setNumero($numero);
                 // $this->nameStartHasChanged = true;
             }
 

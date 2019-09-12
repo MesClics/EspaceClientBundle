@@ -3,6 +3,7 @@
 namespace MesClics\EspaceClientBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use MesClics\EspaceClientBundle\Entity\Client;
 
 class MesClicsClientCreationEvent extends Event{
     
