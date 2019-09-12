@@ -62,10 +62,13 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
             //reset the client number
             if(!$event->getAfterUpdate()->isProspect()){
                 $numero = $this->clientNumerator->prospectToClient($event->getAfterUpdate());
+                $action = new Action("changement du statut prospect pour " . $event->getBeforeUpdate()->getNom() . " en statut client");
             } else{
                 $numero = $this->clientNumerator->clientToProspect($event->getAfterUpdate());
-            }            
-            // $event->getAfterUpdate()->setNumero($numero);
+                $action = new Action("changement du statut client pour " . $event->getBeforeUpdate()->getNom() . " en statut prospect");
+            }
+            
+            $this->navigator->getUser()->getChronology()->addAction($action);
 
             //TODO: update Trello card
             $this->trelloActionsOnClientProspectStatusChange($event->getBeforeUpdate(), $event->getAfterUpdate());
@@ -82,6 +85,10 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
 
             // TODO: update Trello card
             $this->trelloActionsOnClientNameChange($event->getBeforeUpdate(), $event->getAfterUpdate());
+
+            //add an Action to navigator
+            $action = new Action("changement du nom du client " . $event->getBeforeUpdate()->getNom() . " en " . $event->getAfterUpdate()->getNom());
+            $this->navigator->getUser()->getChronology()->addAction($action);
         }
 
         $this->entity_manager->flush();
