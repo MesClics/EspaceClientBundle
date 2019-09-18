@@ -8,6 +8,7 @@ use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
 use MesClics\NavigationBundle\Navigator\Navigator;
 use MesClics\EspaceClientBundle\Event\MesClicsClientEvents;
+use MesClics\EspaceClientBundle\Actions\MesClicsClientActions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientCreationEvent;
@@ -49,7 +50,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         // $this->executeTrelloActions("postPersist", array("client" => $client, "entity_manager" => $this->entity_manager));
 
         //add a new action to Navigator's chronology
-        $action = new Action("creation du client " . $client->getNom(), array("client" => $client));
+        $action = MesClicsClientActions::creation($client);
         $this->navigator->getUser()->getChronology()->addAction($action);
 
         //flush changes in database
@@ -62,10 +63,10 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
             //reset the client number
             if(!$event->getAfterUpdate()->isProspect()){
                 $numero = $this->clientNumerator->prospectToClient($event->getAfterUpdate());
-                $action = new Action("changement du statut prospect pour " . $event->getBeforeUpdate()->getNom() . " en statut client");
+                $action = MesClicsClientActions::prospectToClient($event->getBeforeUpdate(), $event->getAfterUpdate());
             } else{
                 $numero = $this->clientNumerator->clientToProspect($event->getAfterUpdate());
-                $action = new Action("changement du statut client pour " . $event->getBeforeUpdate()->getNom() . " en statut prospect");
+                $action = MesClicsClientActions::clientToProspect($event->getBeforeUpdate(), $event->getAfterUpdate());
             }
             
             $this->navigator->getUser()->getChronology()->addAction($action);
@@ -87,7 +88,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
             $this->trelloActionsOnClientNameChange($event->getBeforeUpdate(), $event->getAfterUpdate());
 
             //add an Action to navigator
-            $action = new Action("changement du nom du client " . $event->getBeforeUpdate()->getNom() . " en " . $event->getAfterUpdate()->getNom());
+            $action = MesClicsClientActions::nameChange($event->getBeforeUpdate(), $event->getAfterUpdate());
             $this->navigator->getUser()->getChronology()->addAction($action);
         }
 
