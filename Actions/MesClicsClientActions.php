@@ -5,7 +5,7 @@ use MesClics\NavigationBundle\Entity\Action;
 use MesClics\EspaceClientBundle\Entity\Client;
 
 class MesClicsClientActions{
-    public static function create(Client $client){
+    public static function creation(Client $client){
         $label = "creation du client " . $client->getNom();
         $objects = array (
             "client" => $client
