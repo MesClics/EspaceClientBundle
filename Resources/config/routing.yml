@@ -28,6 +28,10 @@ mesclics_admin_client_projet:
     path: /{client_id}/projets/{projet_id}/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:update }
 
+mesclics_admin_client_projet_delete:
+    path: /{client_id}/projets/{projet_id}/delete
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:delete }
+
 mesclics_admin_client_projet_remove:
     path: /{client_id}/projets/{projet_id}/remove/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:remove }

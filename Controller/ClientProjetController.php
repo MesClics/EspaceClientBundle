@@ -10,13 +10,25 @@ use MesClics\EspaceClientBundle\Form\ProjetType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use MesClics\EspaceClientBundle\Form\ProjetAssocierContratType;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Form\ProjetDissocierContratType;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetRemoveEvent;
+use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientProjetPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetAssocierContratFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetDissocierContratFormManager;
 
 class ClientProjetController extends Controller{
+
+    private $entity_manager;
+    private $event_dispatcher;
+
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $ed){
+        $this->entity_manager = $em;
+        $this->event_dispatcher = $ed;
+    }
 
     /**
      * @Security("has_role('ROLE_ADMIN')")
@@ -131,41 +143,36 @@ class ClientProjetController extends Controller{
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
      */
-    public function removeAction(Client $client, Projet $projet, EntityManagerInterface $em, Packages $assets_manager, Request $request){
-        if($request->isMethod("GET")){
-            if($request->query->get('remove')){
-                $redirect_args = array(
-                    "client_id" => $client->getId()
-                );
-                $em->remove($projet);
-                $em->flush();
-                // TODO: add a flash message
-                return $this->redirectToRoute('mesclics_admin_client_projets', $redirect_args);
-            } 
-        }
-
-        $args = array(
-            'currentSection' => 'client',
-            'subSection' => 'projets',
-            'projet' => $projet,
-            'client' => $client,
-            'popups' => array(
-                'remove' => array(
-                    'options' => array(
-                        'illustration' => array(
-                            'url' => '@mesclicsespaceclientbundle/images/icones/projets/svg/remove.svg',
-                            'alt' => 'illustration de suppression de projet',
-                            'title' => 'supprimer un projet',
-                            'type' => 'svg',
-                            'class' => 'projet-remove'
-                        ),
-                        'class' => 'alert'
-                    ),
-                    'template' => 'MesClicsEspaceClientBundle:PopUps:client-projets-remove.html.twig'
-                )
-            )
+    public function deleteAction(Client $client, Projet $projet){
+        //TODO: check if projet is from the right client
+        //TODO: check if user is part of the client's users
+        $redirect_args = array(
+            "client_id" => $client->getId()
         );
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+        $this->entity_manager->remove($projet);
+        $event = new MesClicsClientProjetRemoveEvent($projet);
+        $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::REMOVAL, $event);
+        $this->entity_manager->flush();
+        return $this->redirectToRoute('mesclics_admin_client_projets', $redirect_args);
+    }
+
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
+     * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
+     */
+    public function removeAction(Client $client, Projet $projet){
+        $popups = array();
+        MesClicsEspaceClientProjetPopups::onDelete($popups);
+        $args = array(
+            "popups" => $popups,
+            "client" => $client,
+            "projet" => $projet
+        );
+
+        $popup = $this->render("MesClicsBundle:PopUps:renderer.html.twig", $args);
+        return $popup;
     }
 
     public function addNewProjetForm(Client $client){
