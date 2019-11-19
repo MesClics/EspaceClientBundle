@@ -31,7 +31,7 @@
         <div class="oocss-form-fieldset oocss-horizontal">
             {{ form_row(form.submit, {'label': 'enregistrer les modifications', 'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}}) }}
             <div class="oocss-form-row oocss-justify-end">
-                <a href="{{ path('mesclics_admin_client_contrat_remove', {'client_id': contrat.client.id, 'contrat_id': contrat.id}) }}" class="oocss-button oocss-headed-block oocss-discret oocss-horizontal oocss-s client-contrats-remove">Supprimer le contrat</a>
+                <button data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': contrat.client.id, 'contrat_id': contrat.id})) }} class="oocss-button oocss-open-popup oocss-headed-block oocss-discret oocss-horizontal oocss-s client-contrats-remove">Supprimer le contrat</button>
             </div>
         </div>
         {{ form_row(form._token) }}
