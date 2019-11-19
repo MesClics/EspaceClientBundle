@@ -8,14 +8,29 @@ use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ContratType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Form\ContratAssocierProjetsType;
 use MesClics\EspaceClientBundle\Form\ContratDissocierProjetType;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
+use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager;
 
 class ClientContratsController extends Controller{
+
+    private $entity_manager;
+    private $session;
+    private $event_dispatcher;
+
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $ed, SessionInterface $session){
+        $this->entity_manager = $em;
+        $this->event_dispatcher = $ed;
+        $this->session = $session;
+    }
 
     /**
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
@@ -113,46 +128,40 @@ class ClientContratsController extends Controller{
     
     /**
      * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
      */
-    public function removeAction(Contrat $contrat, EntityManagerInterface $em, Request $request){
-        if($request->isMethod('GET')){
-            $confirm = $request->query->get('remove');
-            if($confirm){
-                $args = array(
-                    "client_id" => $contrat->getClient()->getId()
-                );
-                $em->remove($contrat);
-                $em->flush();
-                // TODO: add a flash message
-                return $this->redirectToRoute('mesclics_admin_client_contrats', $args);
-            } else{
-                // TODO: get back to the original page (or close the confirm panel)
-            }
-        }
+    public function deleteAction(Client $client, Contrat $contrat){
+        $this->entity_manager->remove($contrat);
+        
+        // dispatch event
+        $event = new MesClicsClientContratRemoveEvent($contrat);
+        $this->event_dispatcher->dispatch(MesClicsClientContratEvents::REMOVAL, $event);
+        $this->entity_manager->flush();
 
         $args = array(
-            'currentSection' => 'client',
-            'subSection' => 'contrats',
-            'contrat' => $contrat,
-            'client' => $contrat->getClient(),
-            'popups' => array(
-                'remove' => array(
-                    'options' => array(
-                        'illustration' => array(
-                            'url' => '@mesclicsespaceclientbundle/images/icones/contrats/svg/remove.svg',
-                            'alt' => 'illustration de suppression de contrat',
-                            'title' => 'supprimer un contrat',
-                            'type' => 'svg',
-                            'class' => 'contrat-remove'
-                        ),
-                        'class' => 'alert'
-                    ),
-                    'template' => 'MesClicsEspaceClientBundle:PopUps:client-contrats-remove.html.twig'
-                )
-            )
+            'client_id' => $client->getId()
         );
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
 
+        return $this->redirectToRoute('mesclics_admin_client_contrats', $args);
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
+     */
+    public function removeAction(Contrat $contrat){
+        $popups = array();
+
+        MesClicsEspaceClientContratPopups::onDelete($popups);
+
+        $args = array(
+            'client' => $contrat->getClient(),
+            'contrat' => $contrat,
+            'popups' => $popups
+        );
+
+        $popup = $this->render("MesClicsBundle:PopUps:renderer.html.twig", $args);
+        return $popup;
     }
 }

@@ -13,8 +13,8 @@
                 <th></th>
             </tr>
             {% for contrat in contrats %}
-                <tr class="oocss-table-row oocss-clickable-table-row">
-                    <td class="oocss-table-data"><a href="{{ path('mesclics_admin_client_contrat', { 'client_id' : client.id, 'contrat_id' : contrat.id }) }}">{{ contrat.numero }}</a></td>
+                <tr class="oocss-table-row oocss-clickable-table-row" data-link="{{ path('mesclics_admin_client_contrat', { 'client_id' : client.id, 'contrat_id' : contrat.id }) }}">
+                    <td class="oocss-table-data">{{ contrat.numero }}</td>
                     <td class="oocss-table-data">{{ contrat.type }}</td>
                     <td class="oocss-table-data oocss-vertical oocss-center-h">
                         {% if contrat.projets is not empty %}
@@ -30,9 +30,14 @@
                     <td class="oocss-table-data">{{ contrat.dateCreation|date('d/m/Y') }}</td>
                     <td class="oocss-table-data">{% if contrat.dateSignature %}{{ contrat.dateSignature|date('d/m/Y') }}{% endif %}</td>
                     <td class="oocss-table-data">
-                        <a class="oocss-input-button oocss-discret oocss-table-data-icon"
-                            href="{{ path('mesclics_admin_client_contrat_remove', {'client_id': client.id, 'contrat_id': contrat.id}) }}"
+                        <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup"
+                            data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': client.id, 'contrat_id': contrat.id})) }}
                             title="supprimer">
+                            {{ source('@mesclicsbundle/images/svg/trash.svg') }}
+                        </button>
+
+                        <a class="oocss-input-button oocss-discret oocss-table-data-icon" title="supprimer le projet"
+                            href={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': client.id, 'contrat_id': contrat.id})) }}>
                             {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                         </a>
                     </td>

@@ -23,30 +23,30 @@
             </tr>
 
             {% for item in clients %}
-            <tr class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}">
+            <tr class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}" data-link="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">
 
                 <td class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
-                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/></a>{% endif %}
+                   {% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/>{% endif %}
                 </td>
                 
                 <td class="oocss-table-data">
-                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}"></a>{{ item.numero }}</a>
+                    {{ item.numero }}
                 </td>
                 
                 <td class="oocss-table-data">
-                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.nom }}</a>
+                    {{ item.nom }}
                 </td>
                 
                 <td class="oocss-table-data none-on-small-screens">
-                    <a class="[ oocss-table-link ]" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.alias }}</a>
+                   {{ item.alias }}
                 </td>
                
                 <td class="oocss-table-data none-on-small-screens">
-                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{{ item.updatedAt|date('d/m/Y') }}</a>
+                   {{ item.updatedAt|date('d/m/Y') }}
                 </td>
              
                 <td class="oocss-table-data">
-                    <a class="oocss-table-link" href="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">{% if item.prospect %}&#10003;{% endif %}</a>
+                    {% if item.prospect %}&#10003;{% endif %}
                 </td>
             
             </tr>
