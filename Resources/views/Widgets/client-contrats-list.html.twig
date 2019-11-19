@@ -35,11 +35,6 @@
                             title="supprimer">
                             {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                         </button>
-
-                        <a class="oocss-input-button oocss-discret oocss-table-data-icon" title="supprimer le projet"
-                            href={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': client.id, 'contrat_id': contrat.id})) }}>
-                            {{ source('@mesclicsbundle/images/svg/trash.svg') }}
-                        </a>
                     </td>
                 </tr>
             {% endfor %} 
