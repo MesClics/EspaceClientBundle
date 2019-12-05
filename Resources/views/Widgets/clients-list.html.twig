@@ -12,45 +12,45 @@
                 </button>
             </div>
         </div>
-        <table class="oocss-table oocss-full-container-width oocss-sortable clients-list-filterable">
-            <tr class="oocss-table-head-row">
-                <th class="none-on-small-screens">logo</th>
-                <th class="oocss-sortable">numero</th>
-                <th class="oocss-sortable">nom</th>
-                <th class="none-on-small-screens">alias</th>
-                <th class="none-on-small-screens oocss-sortable">dernière modification</th>
-                <th class="oocss-sortable">prospect</th>
-            </tr>
+        <div class="oocss-table oocss-full-container-width oocss-sortable clients-list-filterable">
+            <div class="oocss-table-head-row">
+                <span class="oocss-table-head none-on-small-screens">logo</span>
+                <span class="oocss-table-head oocss-sortable">numero</span>
+                <span class="oocss-table-head oocss-sortable">nom</span>
+                <span class="oocss-table-head none-on-small-screens">alias</span>
+                <span class="oocss-table-head none-on-small-screens oocss-sortable">dernière modification</span>
+                <span class="oocss-table-head oocss-sortable">prospect</span>
+            </div>
 
             {% for item in clients %}
-            <tr class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}" data-link="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">
+                <div class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}" data-link="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">
 
-                <td class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
-                   {% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/>{% endif %}
-                </td>
+                    <span class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
+                    {% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/>{% endif %}
+                    </span>
+                    
+                    <span class="oocss-table-data">
+                        {{ item.numero }}
+                    </span>
+                    
+                    <span class="oocss-table-data" data-column-width:"2fr">
+                        {{ item.nom|upper }}
+                    </span>
+                    
+                    <span class="oocss-table-data none-on-small-screens">
+                    {{ item.alias }}
+                    </span>
                 
-                <td class="oocss-table-data">
-                    {{ item.numero }}
-                </td>
+                    <span class="oocss-table-data none-on-small-screens">
+                    {{ item.updatedAt|date('d/m/Y') }}
+                    </span>
                 
-                <td class="oocss-table-data">
-                    {{ item.nom }}
-                </td>
+                    <span class="oocss-table-data">
+                        {% if item.prospect %}&#10003;{% endif %}
+                    </span>
                 
-                <td class="oocss-table-data none-on-small-screens">
-                   {{ item.alias }}
-                </td>
-               
-                <td class="oocss-table-data none-on-small-screens">
-                   {{ item.updatedAt|date('d/m/Y') }}
-                </td>
-             
-                <td class="oocss-table-data">
-                    {% if item.prospect %}&#10003;{% endif %}
-                </td>
-            
-            </tr>
+                </div>
             {% endfor %}
-        </table>
+        </div>
     </div>
 </section>

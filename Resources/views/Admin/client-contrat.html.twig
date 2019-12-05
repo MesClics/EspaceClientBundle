@@ -30,7 +30,6 @@
     {% with {'form': contratForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrats-new.html.twig" %}{% endwith %}
 {% endif %}
 
-{% if contratAssocierProjetsForm is defined %}
-    {% with {'form': contratAssocierProjetsForm} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-associer-projet.html.twig" %}{% endwith %} 
-{% endif %}
+{% with {'projets': contrat.projets|default(null), 'projetsToAttach': unattachedProjets|default(null)} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrat-projets.html.twig" %}{% endwith %}
+
 {% endblock deskMain %}

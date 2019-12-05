@@ -1,0 +1,14 @@
+{% extends "MesClicsBundle:Popups:layout.html.twig" %}
+{% block popupHeader %}
+<h2>Attention !</h2>
+{% endblock popupHeader %}
+
+{% block popupContent %}
+    <p class="oocss-instruction oocss-block oocss-full-container-width oocss-center-h">Êtes-vous sûr de vouloir retirer le projet <span class="highlight">{{ projet.nom }}</span> du contrat {{ projet.contrat.type }} n°<span class="highlight">{{ projet.contrat.numero }}</span>?</iv class="oocss-center-h">
+    
+    <div class="oocss-center-h">
+        <a class="oocss-button oocss-discret"
+            href="{{ path('mesclics_admin_client_projet_detach_confirm', {'client_id': client.id, 'projet_id': projet.id}) }}">Oui</a>
+        <button class="oocss-button oocss-discret oocss-close" data-target-class="popup">Annuler</button>
+    </div>
+{% endblock popupContent %}

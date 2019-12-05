@@ -1,4 +1,4 @@
-<section class="oocss-widget large highlight client-contrats">
+<section class="oocss-widget medium highlight client-contrats">
     <div class="oocss-widget--head">
         <h2 class="oocss-widget--title">Contrat n° {{ contrat.numero }}</h2>
     </div>
@@ -11,23 +11,8 @@
                 <span class="oocss-label">dernière modification</span>
                 <span>le {{ contrat.lastUpdate|default("")|date("d/m/Y") }} à {{ contrat.lastUpdate|default("")|date("H\\hi") }}</span>
             </div>
-        </div>        {{ form_row(form.type) }}{% if contrat.projets is not empty %}
-        {# TODO: ajouter le formulaire de dissociation de projet #}
-        <div class="oocss-form-row oocss-full-container-width">
-            <span class="oocss-label">Les projets suivants sont associés au contrat</span>
-            <ul>
-                {% for projet in contrat.projets %}
-                <li class="oocss-block oocss-horizontal">
-                    <span class="oocss-headed-block client-projets oocss-s oocss-horizontal">{{ projet.nom }} (créé le {{ projet.dateCreation|date("d/m/Y") }})</span>
-                    <a class="oocss-button oocss-headed-block oocss-s oocss-discret oocss-table-data-icon oocss-justify-end oocss-center-v client-contrats-projets-unlink">dissocier</a>
-                </li>
-                {% endfor %}
-            </ul>
         </div>
-        {% endif %}
-
-        {{ form_row(form.projets, {'label': 'associer un ou des projet(s) au contrat', 'widget_attr': {'class': 'oocss-full-container-width'}, 'help': 'CTRL + clic pour sélectionner plusieurs projets'}) }}
-
+        {{ form_row(form.type) }}
         <div class="oocss-form-fieldset oocss-horizontal">
             {{ form_row(form.submit, {'label': 'enregistrer les modifications', 'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}}) }}
             <div class="oocss-form-row oocss-justify-end">

@@ -4,47 +4,48 @@
     </div>
 
     <div class="oocss-widget--content">
-        <table class="oocss-table oocss-full-container-width">
-            <tr class="oocss-table-row">
-                <th class="none-on-small-screens">créé le</th>
-                <th class="none-on-small-screens">modifié le</th>
-                <th>nom</th>
-                <th>type</th>
-                <th>contrat</th>
-                <th>terminé</th>
-            </tr>
+        <div class="oocss-table oocss-full-container-width">
+            <div class="oocss-table-row">
+                <span class="oocss-table-head none-on-small-screens">créé le</span>
+                <span class="oocss-table-head none-on-small-screens">modifié le</span>
+                <span class="oocss-table-head">nom</span>
+                <span class="oocss-table-head">type</span>
+                <span class="oocss-table-head">contrat</span>
+                <span class="oocss-table-head">terminé</span>
+                <span class="oocss-table-head"></span>
+            </div>
             {% for projet in projets %}
-            <tr class="oocss-table-row oocss-clickable-table-row">
-                <td class="oocss-table-data none-on-small-screens">
+            <div class="oocss-table-row oocss-clickable-table-row">
+                <span class="oocss-table-data none-on-small-screens">
                     {% if projet.dateCreation is not null %}
                         {{ projet.dateCreation|date("d/m/Y") }}{{ projet.dateCreation|date(" à h\\hm") }}
                     {% else %}
                         -
                     {% endif %}
-                </td>
-                <td class="oocss-table-data none-on-small-screens">
+                </span>
+                <span class="oocss-table-data none-on-small-screens">
                     {% if projet.lastUpdate is not null %}
                         {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à h\\hm") }}
                     {% else %}
                         -
                     {% endif %}
-                </td>
-                <td class="oocss-table-data"><a href="{{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}">{{ projet.nom }}</a>
-                </td>
-                <td class="oocss-table-data">{{ projet.type }}</td>
-                <td class="oocss-table-data">
+                </span>
+                <span class="oocss-table-data"><a href="{{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}">{{ projet.nom }}</a>
+                </span>
+                <span class="oocss-table-data">{{ projet.type }}</span>
+                <span class="oocss-table-data">
                     {{ projet.contrat.numero|default("-") }}
-                </td>
-                <td class="oocss-table-data">
+                </span>
+                <span class="oocss-table-data">
                     {% if projet.closed %}&#10003;{% else %} - {% endif %}
-                </td>
-                <td class="oocss-table-data">
+                </span>
+                <span class="oocss-table-data">
                     <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" title="supprimer le projet" data-popup-path= {{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': client.id, 'projet_id': projet.id})) }}>
                         {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                     </button>
-                </td>
-            </tr>
+                </span>
+            </div>
             {% endfor %}
-        </table>
+        </div>
     </div>
 </section>

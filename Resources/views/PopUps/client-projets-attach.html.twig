@@ -1,0 +1,16 @@
+{% extends "MesClicsBundle:Popups:layout.html.twig" %}
+{% block popupHeader %}
+<h2>Merci de confirmer</h2>
+
+{% endblock popupHeader %}
+
+{% block popupContent %}
+<p class="oocss-instruction oocss-block oocss-full-container-width oocss-center-h">Vous êtes sur le point d'associer le
+    projet <span class="highlight">{{ projet.nom }}</span> au
+    contrat {{ contrat.type }} n°<span class="highlight">{{ contrat.numero }}</span></p>
+<div class="oocss-center-h">
+    <a class="oocss-button oocss-discret"
+        href="{{ path('mesclics_admin_client_projet_attach_confirm', {'contrat_id': contrat.id, 'projet_id': projet.id}) }}">Associer</a>
+    <button class="oocss-button oocss-discret oocss-close" data-target-class="popup">Annuler</button>
+</div>
+{% endblock popupContent %}
