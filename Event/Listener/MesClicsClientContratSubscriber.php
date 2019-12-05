@@ -39,8 +39,14 @@ class MesClicsClientContratSubscriber implements EventSubscriberInterface{
     }
 
     public function onUpdate(MesClicsClientContratUpdateEvent $event){
-        // TODO : add a flash message
-        dump($event); die();
+        //add a flash message
+        $label = "success";
+        $message = "Le contrat n°" . $event->getBeforeUpdate()->getNumero() . " a bien été modifié.";
+        $this->addFlash($label, $message);
+
+        // add navigator's chronology action
+        $action = MesClicsClientContratActions::onUpdate($event->getBeforeUpdate(), $event->getAfterUpdate());
+       $this->navigator->addAction($action);
     }
 
     public function onRemoval(MesClicsClientContratRemoveEvent $event){
@@ -51,7 +57,7 @@ class MesClicsClientContratSubscriber implements EventSubscriberInterface{
 
         //ADD ACTION TO NAVIGATOR
         $action = MesClicsClientContratActions::onRemoval($event->getContrat());
-        $this->navigator->getUser()->getChronology()->addAction($action);
+       $this->navigator->addAction($action);
     }
 
     public function onSignature(MesClicsClientContratSignatureEvent $event){

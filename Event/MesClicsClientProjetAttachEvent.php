@@ -2,8 +2,10 @@
 namespace MesClics\EspaceClientBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use MesClics\EspaceClientBundle\Entity\Projet;
+use MesClics\EspaceClientBundle\Entity\Contrat;
 
-class MesClicsClientProjetAssociationToContractEvent extends Event{
+class MesClicsClientProjetAttachEvent extends Event{
     private $projet;
     private $contrat;
     

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\EspaceClientBundle\Entity\Projet;
+use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ProjetType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,6 +16,8 @@ use MesClics\EspaceClientBundle\Form\ProjetDissocierContratType;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetRemoveEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientProjetPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetAssocierContratFormManager;
@@ -181,5 +184,73 @@ class ClientProjetController extends Controller{
 
         $form = $this->createForm(ProjetType::class, $projet);
         return $form;
+    }
+
+    /**
+     * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
+     * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
+     */
+    public function attachAction(Projet $projet, Contrat $contrat){
+        // TODO: check if user can detach projects
+        $popups = array();
+        MesClicsEspaceClientProjetPopups::onAttach($popups);
+        $args = array(
+            "popups" => $popups,
+            "contrat" => $contrat,
+            "projet" => $projet
+        );
+
+        return $this->render("MesClicsBundle:PopUps:renderer.html.twig", $args);
+    }
+
+     /**
+     * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
+     * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
+     */
+    public function confirmAttachAction(Projet $projet, Contrat $contrat){
+        $contrat->addProjet($projet);
+
+        $event = new MesClicsClientProjetAttachEvent($projet, $contrat);
+        $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::ATTACHMENT, $event);
+        
+        $this->entity_manager->flush();
+
+        return $this->redirectToRoute("mesclics_admin_client_contrat", array("client_id" => $contrat->getClient()->getId(), "contrat_id" => $contrat->getId()));
+    }
+
+    /**
+     * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
+     * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
+     */
+    public function detachAction(Client $client, Projet $projet){
+        // TODO: check if user can detach projects
+        $popups = array();
+        MesClicsEspaceClientProjetPopups::onDetach($popups);
+        $args = array(
+            "popups" => $popups,
+            "client" => $client,
+            "projet" => $projet
+        );
+
+        return $this->render("MesClicsBundle:PopUps:renderer.html.twig", $args);
+    }
+
+     /**
+     * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
+     * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
+     */
+    public function confirmDetachAction(Client $client, Projet $projet){
+        $contrat = $projet->getContrat();
+        $contrat->removeProjet($projet);
+        
+        // dispatch event
+        $event = new MesClicsClientProjetDetachEvent($projet, $contrat);
+        $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::DETACHMENT, $event);
+
+        $this->entity_manager->flush();
+
+        
+
+        return $this->redirectToRoute("mesclics_admin_client_contrat", array("client_id" => $client->getId(), "contrat_id" => $contrat->getId()));
     }
 }

@@ -33,4 +33,10 @@ class ProjetRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb;
     }
+
+    public function getProjetsWithNoContrat(Client $client){
+        $qb = $this->getProjetsWithNoContratQB($client);
+
+        return $qb->getQuery()->getResult();
+    }
 }

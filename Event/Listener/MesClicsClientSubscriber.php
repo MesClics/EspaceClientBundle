@@ -51,7 +51,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
 
         //add a new action to Navigator's chronology
         $action = MesClicsClientActions::creation($client);
-        $this->navigator->getUser()->getChronology()->addAction($action);
+       $this->navigator->addAction($action);
 
         //flush changes in database
         $this->entity_manager->flush();
@@ -69,7 +69,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
                 $action = MesClicsClientActions::clientToProspect($event->getBeforeUpdate(), $event->getAfterUpdate());
             }
             
-            $this->navigator->getUser()->getChronology()->addAction($action);
+           $this->navigator->addAction($action);
 
             //TODO: update Trello card
             $this->trelloActionsOnClientProspectStatusChange($event->getBeforeUpdate(), $event->getAfterUpdate());
@@ -89,7 +89,7 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
 
             //add an Action to navigator
             $action = MesClicsClientActions::nameChange($event->getBeforeUpdate(), $event->getAfterUpdate());
-            $this->navigator->getUser()->getChronology()->addAction($action);
+           $this->navigator->addAction($action);
         }
 
         $this->entity_manager->flush();

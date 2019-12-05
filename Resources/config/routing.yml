@@ -29,12 +29,29 @@ mesclics_admin_client_projet:
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:update }
 
 mesclics_admin_client_projet_delete:
-    path: /{client_id}/projets/{projet_id}/delete
+    path: /{client_id}/projets/{projet_id}/delete/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:delete }
 
 mesclics_admin_client_projet_remove:
     path: /{client_id}/projets/{projet_id}/remove/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:remove }
+
+mesclics_admin_client_projet_attach_confirm:
+    path: /{contrat_id}/projets/{projet_id}/attach/confirm/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:confirmAttach }
+
+mesclics_admin_client_projet_attach:
+    path: /{contrat_id}/projets/{projet_id}/attach/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:attach }
+    
+mesclics_admin_client_projet_detach_confirm:
+    path: /{client_id}/projets/{projet_id}/detach/confirm/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:confirmDetach }
+
+mesclics_admin_client_projet_detach:
+    path: /{client_id}/projets/{projet_id}/detach/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:detach }
+
 
 # CONTRATS
 mesclics_admin_client_contrats:

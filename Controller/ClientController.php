@@ -1,6 +1,7 @@
 <?php
 namespace MesClics\EspaceClientBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\EspaceClientBundle\Entity\Projet;
@@ -8,16 +9,28 @@ use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ClientType;
 use MesClics\EspaceClientBundle\Form\ProjetType;
 use MesClics\EspaceClientBundle\Form\ContratType;
+use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 
 class ClientController extends Controller{
+
+    private $entity_manager;
+    private $event_dispatcher;
+
+
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $ed){
+        $this->entity_manager = $ed;
+        $this->event_dispatcher = $ed;
+    }
 
     /**
      * @Security("has_role('ROLE_ADMIN')")
@@ -155,28 +168,30 @@ class ClientController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function contratsAction(Client $client, ContratFormManager $contrat_form_manager, Request $request){
+    public function contratsAction(Client $client, Request $request){
         //récupération des contrats du client
         $contrats = $client->getContrats();
 
-        //on crée un objet qui sera hydraté par le formulaire
-        $contrat = new Contrat();
-        $contrat->setClient($client);
-        //on génère le formulaire
-        $contratForm = $this->createForm(ContratType::class, $contrat);
-
-        
-        //on gère le formulaire
-        //si la requête est de type POST
+        // new contrat widget
+        $contratDTO = new ContratDTO();
+        $contratDTO->setClient($client);
+        $contratForm = $this->createForm(ContratType::class, $contratDTO);
+        //handle form
         if($request->isMethod('POST')){
-            //on passe le client au manager, et on gère le formulaire
-            $contrat_form_manager
-                ->setClient($client)
-                ->handle($contratForm);
+            $contratForm->handleRequest($request);
+            if($contratForm->isSubmitted() && $contratForm->isValid()){
+                $contrat = new Contrat();
+                $this->entity_manager->persist($contrat);
+                $contratForm->getData()->mapTo($contrat);
 
-                if($contrat_form_manager->hasSucceeded()){
-                    return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat_form_manager->getResult()->getClient()->getId(), 'contrat_id' => $contrat_form_manager->getResult()->getId()));
-                }
+                $event = new MesClicsClientContratCreationEvent($contrat);
+                $this->event_dispatcher->dispacth(MesClicsClientContratEvents::CREATION, $event);
+
+                $this->entity_manager->flush();
+                
+                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat->getClient()->getId(), 'contrat_id' => $contrat->getId()));
+            }
+            
         }
 
         //on génère la vue

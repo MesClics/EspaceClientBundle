@@ -6,10 +6,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
 use MesClics\EspaceClientBundle\Actions\MesClicsClientProjetActions;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetCreationEvent;
-use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAssociationToContractEvent;
 
 class MesClicsClientProjetSubscriber implements EventSubscriberInterface{
     protected $navigator;
@@ -25,7 +26,8 @@ class MesClicsClientProjetSubscriber implements EventSubscriberInterface{
             MesClicsClientProjetEvents::CREATION => 'onCreation',
             MesClicsClientProjetEvents::UPDATE  => 'onUpdate',
             MesClicsClientProjetEvents::REMOVAL  => 'onRemoval',
-            MesClicsClientProjetEvents::ASSOCIATION_TO_CONTRACT  => 'onAssociationToContract'
+            MesClicsClientProjetEvents::ATTACHMENT  => 'onAttachment',
+            MesClicsClientProjetEvents::DETACHMENT  => 'onDetachment'
         );
     }
 
@@ -49,10 +51,27 @@ class MesClicsClientProjetSubscriber implements EventSubscriberInterface{
         // add action to Navigator's chronology
         $action  = MesClicsClientProjetActions::removal($event->getProjet());
 
-        $this->navigator->getUser()->getChronology()->addAction($action);
+       $this->navigator->addAction($action);
     }
 
-    public function onAssociationToContract(MesClicsClientProjetAssociationToContractEvent $event){
-        dump($event); die();
+    public function onAttachment(MesClicsClientProjetAttachEvent $event){
+        // add a flash Message
+        $label = "success";
+        $message = "Le projet " . $event->getProjet()->getType() . " intitulé " . $event->getProjet()->getNom() . " a bien été associé au contrat " . $event->getContrat()->getNumero();
+        $this->addFlash($label, $message);
+        // add action to Navigator's chronology
+        $action = MesClicsClientProjetActions::attachment($event->getProjet(), $event->getContrat());
+
+       $this->navigator->addAction($action);
+    }
+
+    public function onDetachment(MesClicsClientProjetDetachEvent $event){
+        // add a flash message
+        $label = "success";
+        $message = "Le projet " . $event->getProjet()->getType() . " intitulé " . $event->getProjet()->getNom() . " a bien été dissocié du contrat " . $event->getContrat()->getNumero();
+        $this->addFlash($label, $message);
+        // add an action to Navigaotr's chronology
+        $action = MesClicsClientProjetActions::detachment($event->getProjet(), $event->getContrat());
+        $this->navigator->addAction($action);
     }
 }

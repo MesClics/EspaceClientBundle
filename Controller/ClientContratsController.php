@@ -4,8 +4,10 @@ namespace MesClics\EspaceClientBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
+use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ContratType;
+use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -16,6 +18,7 @@ use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager;
@@ -63,65 +66,45 @@ class ClientContratsController extends Controller{
      * @ParamConverter("contrat", options={"mapping": {"contrat_id": "id"}})
      */
     public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, ContratAssocierProjetFormManager $contratAssocierProjetsFormManager, ContratDissocierProjetFormManager $contratDissocierProjetFormManager, Request $request){
-        //on génère les formulaires :
-        //MODIFICATION DE CONTRAT
-        $contratForm = $this->createForm(ContratType::class, $contrat);
-
-        //ASSOCIATION DE PROJETS
-        //on crée le formulaire
-        $contratAssocierProjetsForm = $this->createForm(ContratAssocierProjetsType::class, $contrat, array(
-            'client' => $client
-        ));
-    
-        //DISSOCIATION DE PROJET DU CONTRAT
-        //on récupère les projets du contrat
-        $projets = $contrat->getProjets();
-        $dissociationForms = array();
-        foreach($projets as $projet){
-            //on génère le formulaire bouton de dissociation
-            ${'dissociation'.$projet->getId()} = $this->createForm(ContratDissocierProjetType::class, $contrat, array(
-                'projet' => $projet 
-            ));
-            //on ajoute le formulaire dans un tableau
-            $key = 'dissociation'.$projet->getId();
-            $value = ${'dissociation'.$projet->getId()}->createView();
-            $dissociationForms[$key] = $value;
-        }
-
-        //on gère les formulaires
-        //si la requête est de type POST
-        if($request->isMethod('POST')){
-            //MODIFICATION DE CONTRAT
-            $contratFormManager->handle($contratForm);
-            if($contratFormManager->hasSucceeded()){
-                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
-            }
-            //ASSOCIATION DE PROJETS
-            $contratAssocierProjetsFormManager->setContrat($contrat)->handle($contratAssocierProjetsForm);
-            
-            //DISSOCIATION DE PROJET
-            foreach($projets as $projet){
-                if(isset(${'dissociation'.$projet->getId()})){
-
-                    ${'contratDissocierProjet'.$projet->getId().'FormManager'} = $contratDissocierProjetFormManager;
-                    ${'contratDissocierProjet'.$projet->getId().'FormManager'}->handle(${'dissociation'.$projet->getId()});
-
-                }
-            }
-
-            return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
-        }
+        // TODO: on vérifie que l'utilisateur courant peut géréer les contrats
 
         $args = array(
             'currentSection' => 'clients',
             'subSection' => 'contrat',
             'client' => $client,
             'contrat_id' => $contrat->getId(),
-            'contrat' => $contrat,
-            'contratForm' => $contratForm->createView(),
-            'contratAssocierProjetsForm' => $contratAssocierProjetsForm->createView(),
-            'dissociationForms' => $dissociationForms
+            'contrat' => $contrat
         );
+
+        // on génère les formulaires
+        // MODIFICATION DE CONTRAT
+        $contratDTO = new ContratDTO();
+        $contratDTO->mapFrom($contrat);
+        $contratForm = $this->createForm(ContratType::class, $contratDTO);
+        $args["contratForm"] = $contratForm->createView();
+
+        //ASSOCIATION DE PROJETS
+        // check if there are some unattached projects for this client
+        $unattached_projets = $this->entity_manager->getRepository(Projet::class)->getProjetsWithNoContrat($client);
+        $args["unattachedProjets"] = $unattached_projets;
+        
+        //on gère le formulaire
+        //si la requête est de type POST
+        if($request->isMethod('POST')){
+            //MODIFICATION DE CONTRAT
+            $contratForm->handleRequest($request);
+            if($contratForm->isSubmitted() && $contratForm->isValid()){
+                $old_contrat = clone $contrat;
+                $contrat_dto = $contratForm->getData();
+                $contrat_dto->mapTo($contrat);
+
+                $event = new MesClicsClientContratUpdateEvent($old_contrat, $contrat);
+                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::UPDATE, $event);
+
+                $this->entity_manager->flush();
+                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
+            }
+        }
         return $this->render('MesClicsEspaceClientBundle:Admin:client-contrat.html.twig', $args);
     }
 
@@ -132,6 +115,7 @@ class ClientContratsController extends Controller{
      * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
      */
     public function deleteAction(Client $client, Contrat $contrat){
+        //TODO: check if user can handle contrats
         $this->entity_manager->remove($contrat);
         
         // dispatch event
@@ -152,7 +136,6 @@ class ClientContratsController extends Controller{
      */
     public function removeAction(Contrat $contrat){
         $popups = array();
-
         MesClicsEspaceClientContratPopups::onDelete($popups);
 
         $args = array(

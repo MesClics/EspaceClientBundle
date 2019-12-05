@@ -44,7 +44,7 @@ class ContratAssocierProjetsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MesClics\EspaceClientBundle\Entity\Contrat'
+            'data_class' => ContratAttachProjetDTO::class
         ));
         $resolver->setRequired(array(
             'client'
