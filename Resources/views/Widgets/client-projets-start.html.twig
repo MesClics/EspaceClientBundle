@@ -10,17 +10,13 @@
                 prestations : la réalisation d'une maquette, l'intégration de la maquette, la création d'une base de
                 données, la mise en ligne etc...), d'une identité visuelle (qui comperterait entre autres prestations :
                 la réalisation d'une charte graphique, d'un logo, de cartes de viste, de papier à en-tête, d'enveloppes
-                etc...) ou d'un pack abonnement de service-après-vente (qui comporterait entre autres prestitions : le
+                etc...) ou d'un pack abonnement de service-après-vente (qui comporterait entre autres prestations : le
                 suivi statistique de l'utilisation du site, la mise-à-jour mensuelle du contenu éditorial, la sauvegarde
                 quotidienne de la base de données etc...)</p>
         </div>
 
         <img class="oocss-s oocss-image oocss-full-container-width" src={{ client.image.url }}
             alt={{ client.image.alt }} title={{ client.image.title|default('logo du client') }} />
-        <p class="oocss-instruction">Vous n'avez pas encore de projets avec {{ client.nom }}.</p>
-        <p class="oocss-instruction">
-            <a class="oocss-button oocss-headed-block oocss-s client-projets-new"
-                href="{{ path('mesclics_admin_client_projets_add', {'client_id': client.id})}}">Ajouter un projet</a>
-        </p>
+        <p class="oocss-instruction">Vous n'avez pas encore de projets avec {{ client.nom }}. Commencez par en ajouter un.</p>
     </div>
 </section>
