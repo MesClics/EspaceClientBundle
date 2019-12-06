@@ -15,7 +15,7 @@
                 <span class="oocss-table-head"></span>
             </div>
             {% for projet in projets %}
-            <div class="oocss-table-row oocss-clickable-table-row">
+            <div class="oocss-table-row oocss-clickable-table-row" data-link={{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}>
                 <span class="oocss-table-data none-on-small-screens">
                     {% if projet.dateCreation is not null %}
                         {{ projet.dateCreation|date("d/m/Y") }}{{ projet.dateCreation|date(" à h\\hm") }}
@@ -30,7 +30,7 @@
                         -
                     {% endif %}
                 </span>
-                <span class="oocss-table-data"><a href="{{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}">{{ projet.nom }}</a>
+                <span class="oocss-table-data">{{ projet.nom }}</a>
                 </span>
                 <span class="oocss-table-data">{{ projet.type }}</span>
                 <span class="oocss-table-data">
