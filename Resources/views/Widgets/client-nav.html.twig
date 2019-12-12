@@ -6,10 +6,10 @@
             </div>
             <ul class="[ oocss-sub_section-nav-bloc--content ]">
                 <li>
-                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-projets" href="{{ path('mesclics_admin_client_projets', {'client_id': client.id}) }}">projets</a>
+                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-projets" href="{{ path('mesclics_admin_client_projets', {'client_id': client.id}) }}">projets {% if client.projets is not empty %}<span class="oocss-index oocss-index__d__lateral">{{ client.projets|length }}</span>{% endif %}</a>
                 </li>
                 <li>
-                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-contrats" href="{{ path('mesclics_admin_client_contrats', {'client_id': client.id}) }}">contrats</a>
+                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-contrats" href="{{ path('mesclics_admin_client_contrats', {'client_id': client.id}) }}">contrats {% if client.contrats is not empty %}<span class="oocss-index oocss-index__d__lateral">{{ client.contrats|length }}</span>{% endif %}</a>
                 </li>
             </ul>
         </li>
