@@ -1,10 +1,15 @@
 <section class="oocss-widget oocss-discret not-closable small">
+    {% if client.image %}
+        <div class="oocss-widget--head oocss-center-h">
+            <h2><img class="oocss-image oocss-m" src={{ client.image.url }} alt={{ client.image.alt }} title={{ client.image.title|default(client.image.alt) }}></h2>
+        </div>
+    {% endif %}
     <ul class="oocss-widget--content oocss-full-container-width oocss-sub_section--nav">
-        <li class="[ oocss-full-container-width oocss-sub_section-nav--bloc ]">
-            <div class="[ oocss-sub_section-nav-bloc--head ]">
+        <li class="oocss-full-container-width oocss-sub_section-nav--bloc">
+            <div class="oocss-sub_section-nav-bloc--head">
                 <h3>Comptabilité client</h3>
             </div>
-            <ul class="[ oocss-sub_section-nav-bloc--content ]">
+            <ul class="oocss-sub_section-nav-bloc--content">
                 <li>
                     <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-projets" href="{{ path('mesclics_admin_client_projets', {'client_id': client.id}) }}">projets {% if client.projets is not empty %}<span class="oocss-index oocss-index__d__lateral">{{ client.projets|length }}</span>{% endif %}</a>
                 </li>
@@ -13,11 +18,11 @@
                 </li>
             </ul>
         </li>
-        <li class="[ oocss-sub_section-nav--bloc ]">
-            <div class="[ oocss-sub_section-nav-bloc--head ]">
+        <li class="oocss-sub_section-nav--bloc">
+            <div class="oocss-sub_section-nav-bloc--head">
                 <h3>Espace Client</h3>
             </div>
-            <ul class="[ oocss-sub_section-nav-bloc--content ]">
+            <ul class="oocss-sub_section-nav-bloc--content">
             </ul>
         </li>
     </ul>

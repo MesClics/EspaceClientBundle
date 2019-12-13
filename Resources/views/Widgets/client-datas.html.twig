@@ -8,36 +8,8 @@
                 <span class="oocss-label">Numéro client</span>
                 <span>{{ client.numero }}</span>
             </div>
-            {% if client.image %}
-                <div class="oocss-form-row">
-                    <img class="oocss-image oocss-m" src={{ client.image.url }} alt={{ client.image.alt }}
-                        title={{ client.image.title|default(client.image.alt) }}>
-                </div>
-            {% endif %}
         </div>
         
         {% with {'isSlideshow': false } %}{% include "MesClicsEspaceClientBundle:Widgets:client-form.html.twig" %}{% endwith %}
-    
-        {% if client.trelloList %}
-            <div class="oocss-form-row">
-                <span class="oocss-label">Liens Trello</span> 
-                <ul class="oocss-block oocss-horizontal">
-                    <li>
-                        <a class="oocss-button oocss-discret" href='https://trello.com/b/{{client.trelloList.idBoard}}/l/{{client.trelloList.id}}' target="_blank">infos</a>
-                    </li>
-                    <li>
-                        <a class="oocss-button oocss-discret" href='https://trello.com/b/{{client.trelloList.idBoard}}/l/{{client.trelloList.id}}' target="_blank">chrono</a>
-                    </li>
-                </ul>
-            </div>
-        {% endif %}
-
-        {% if client.website %}
-            <div class="oocss-form-row">
-                <span class="oocss-label">Website</span>
-                <span><a class="oocss-button oocss-discret" href={{ client.website }} target="_blank">Voir le site</a></span>
-            </div>
-        {% endif %}
-    
     </div>
 </section>

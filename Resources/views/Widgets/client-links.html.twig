@@ -1,0 +1,45 @@
+<section class="oocss-widget small highlight2 client-links">
+    <div class="oocss-widget--head">
+        <h2 class="oocss-widget--title">Liens</h2>
+    </div>
+
+    <div class="oocss-widget--content">
+        {% if client.trelloList %}
+        <div class="oocss-widget--content-zone">
+            <h3>Liens Trello</h3>
+            <ul class="oocss-block oocss-horizontal">
+                <li class="oocss-block">
+                    <a class="oocss-button oocss-discret"
+                        href='https://trello.com/b/{{client.trelloList.idBoard}}/l/{{client.trelloList.id}}'
+                        target="_blank">infos</a>
+                </li>
+                <li class="oocss-block">
+                    <a class="oocss-button oocss-discret"
+                        href='https://trello.com/b/{{client.trelloList.idBoard}}/l/{{client.trelloList.id}}'
+                        target="_blank">chrono</a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if client.website %}
+            <div class="oocss-widget--content-zone">
+                <h3>Website</h3>
+                <span class="oocss-block"><a class="oocss-button oocss-discret" href={{ client.website }} target="_blank">Voir le site</a></span>
+            </div>
+        {% endif %}
+
+        {% if client.socials is defined and client.socials is not empty %}
+            <div class="oocss-widget--content-zone">
+                <h3>Réseaux sociaux</h3>
+                <ul class="oocss-block oocss-horizontal">
+                    {% for social in client.socials %}
+                        <li>
+                            <a href={{ social.url }} target="_blank">{{ social.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</section>
