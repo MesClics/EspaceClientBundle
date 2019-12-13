@@ -12,13 +12,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use MesClics\EspaceClientBundle\Form\ContratAssocierProjetsType;
-use MesClics\EspaceClientBundle\Form\ContratDissocierProjetType;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager;
@@ -33,6 +32,44 @@ class ClientContratsController extends Controller{
         $this->entity_manager = $em;
         $this->event_dispatcher = $ed;
         $this->session = $session;
+    }
+
+    
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
+     */
+    public function contratsAction(Client $client, Request $request){
+        // new contrat widget
+        $contratDTO = new ContratDTO();
+        $contratDTO->setClient($client);
+        $contratForm = $this->createForm(ContratType::class, $contratDTO);
+        //handle form
+        if($request->isMethod('POST')){
+            $contratForm->handleRequest($request);
+            if($contratForm->isSubmitted() && $contratForm->isValid()){
+                $contrat = new Contrat();
+                $this->entity_manager->persist($contrat);
+                $contratForm->getData()->mapTo($contrat);
+
+                $event = new MesClicsClientContratCreationEvent($contrat);
+                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::CREATION, $event);
+
+                $this->entity_manager->flush();
+                
+                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat->getClient()->getId(), 'contrat_id' => $contrat->getId()));
+            }
+            
+        }
+
+        //on génère la vue
+        $args = array(
+            'currentSection' => 'clients',
+            'subSection' => 'contrats',
+            'client' => $client,
+            'contratForm' => $contratForm->createView()
+        );
+        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
     }
 
     /**
@@ -66,8 +103,6 @@ class ClientContratsController extends Controller{
      * @ParamConverter("contrat", options={"mapping": {"contrat_id": "id"}})
      */
     public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, ContratAssocierProjetFormManager $contratAssocierProjetsFormManager, ContratDissocierProjetFormManager $contratDissocierProjetFormManager, Request $request){
-        // TODO: on vérifie que l'utilisateur courant peut géréer les contrats
-
         $args = array(
             'currentSection' => 'clients',
             'subSection' => 'contrat',
@@ -115,7 +150,6 @@ class ClientContratsController extends Controller{
      * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
      */
     public function deleteAction(Client $client, Contrat $contrat){
-        //TODO: check if user can handle contrats
         $this->entity_manager->remove($contrat);
         
         // dispatch event
