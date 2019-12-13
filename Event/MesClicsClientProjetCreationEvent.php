@@ -2,6 +2,7 @@
 namespace MesClics\EspaceClientBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use MesClics\EspaceClientBundle\Entity\Projet;
 
 class MesClicsClientProjetCreationEvent extends Event{
     private $projet;
