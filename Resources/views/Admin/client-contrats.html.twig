@@ -1,5 +1,5 @@
-{% if contrats is defined and contrats is not empty %}
-    {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-list.html.twig" %}
+{% if client.contrats is not empty %}
+   {% with {'contrats' : client.contrats} %}{% include "MesClicsEspaceClientBundle:Widgets:client-contrats-list.html.twig" %}{% endwith %}
 {% else %}
     {% include "MesClicsEspaceClientBundle:Widgets:client-contrats-start.html.twig" %}
 {% endif %}

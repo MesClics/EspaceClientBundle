@@ -15,6 +15,13 @@ class ContratDTO extends DataTransportObjectToEntity{
     private $last_update;
     // private $projets;
 
+    public function __construct(Client $client = null){
+        prent::__construct();
+        if($client){
+            $this->client = $client;
+        }
+    }
+
     public function getMappingArray(){
         return array(
             "client" => new MappingArrayItem("client", array("getClient", "setClient")),

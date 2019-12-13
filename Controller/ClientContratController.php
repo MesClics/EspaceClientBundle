@@ -22,7 +22,7 @@ use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager;
 use MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager;
 
-class ClientContratsController extends Controller{
+class ClientContratController extends Controller{
 
     private $entity_manager;
     private $session;
@@ -41,8 +41,7 @@ class ClientContratsController extends Controller{
      */
     public function contratsAction(Client $client, Request $request){
         // new contrat widget
-        $contratDTO = new ContratDTO();
-        $contratDTO->setClient($client);
+        $contratDTO = new ContratDTO($client);
         $contratForm = $this->createForm(ContratType::class, $contratDTO);
         //handle form
         if($request->isMethod('POST')){
@@ -73,15 +72,27 @@ class ClientContratsController extends Controller{
     }
 
     /**
+     * @Security("hasRole('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      */
-    public function postAction(Client $client, ContratFormManager $form_manager, Request $request){
-        $contrat = new Contrat();
-        $form = $this->createForm(ContratType::class, $contrat, array('client' => $client));
+    public function postAction(Client $client, Request $request){
+        $contratDTO = new ContratDTO($client);
+        $form = $this->createForm(ContratType::class, $contratDTO);
 
         if($request->isMethod('POST')){
-            $form_manager->handle($form);
-            if($form_manager->hasSucceeded()){
+            $form->handleRequest($request);
+            if($form->isSumbitted() && $form->isValid()){
+                $contrat = new Contrat();
+
+                $this->entity_manager->persist($contrat);
+
+                $contratDTO->mapTo($contrat);
+
+                $event = new MesClicsClientContratCreationEvent($contrat);
+                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::CREATION, $event);
+                
+                $this->entity_manager->flush();
+                
                 return $this->redirectToRoute('mesclics_admin_clients_contrat', array("client_id" => $client->getId(), "contrat_id" => $form_manager->getResult()->getId()));
             }
         }

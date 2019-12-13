@@ -9,16 +9,19 @@ use MesClics\EspaceClientBundle\Actions\MesClicsClientContratActions;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
+use MesClics\EspaceClientBundle\ContratNumerator\MesClicsContratNumerator;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratSignatureEvent;
 
 class MesClicsClientContratSubscriber implements EventSubscriberInterface{
 
     private $session;
     private $navigator;
+    private $contrat_numerator;
 
-    public function __construct(SessionInterface $session, Navigator $navigator){
+    public function __construct(SessionInterface $session, Navigator $navigator, MesClicsContratNumerator $contrat_numerator){
         $this->session = $session;
         $this->navigator = $navigator;
+        $this->contrat_numerator = $contrat_numerator;
     }
 
     public static function getSubscribedEvents(){
@@ -35,7 +38,14 @@ class MesClicsClientContratSubscriber implements EventSubscriberInterface{
     }
 
     public function onCreation(MesClicsClientContratCreationEvent $event){
-        dump($event); die();
+        $contrat = $event->getContrat();
+        $this->contrat_numerator->numeroAuto($contrat);
+        $label = "success";
+        $message = "Le contrat de type " . $contrat->getType() . " a bien été créé sous le numéro " . $contrat->getNumero() . ".";
+        $this->addFlash($label, $message);
+
+        $action = MesClicsClientContratActions::onCreation($contrat);
+        $this->navigator->addAction($action);
     }
 
     public function onUpdate(MesClicsClientContratUpdateEvent $event){
@@ -46,7 +56,7 @@ class MesClicsClientContratSubscriber implements EventSubscriberInterface{
 
         // add navigator's chronology action
         $action = MesClicsClientContratActions::onUpdate($event->getBeforeUpdate(), $event->getAfterUpdate());
-       $this->navigator->addAction($action);
+        $this->navigator->addAction($action);
     }
 
     public function onRemoval(MesClicsClientContratRemoveEvent $event){

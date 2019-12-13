@@ -29,23 +29,6 @@ class ContratType extends AbstractType
         $builder
         ->add('type', TextType::class)
         ->add('dateSignature', DateTimeType::class, array('required' => false))
-        // ->add('projets', EntityType::class, array(
-        //     'class' => 'MesClicsEspaceClientBundle:Projet',
-        //     'query_builder' => function(ProjetRepository $repo) use($client){
-        //         return $repo->getProjetsWithNoContratQB($client);
-        //     },
-        //     'property_path' => 'projets',
-        //     'choice_label' => function(Projet $projet){
-        //         return $projet->getSelectLabel();
-        //     },
-        //     'choice_attr' => function(Projet $projet, $key, $index){
-        //         return ['class' => 'oocss-form-input-button',
-        //                 'title' => $projet->getNom()];
-        //     },
-        //     'expanded' => false,
-        //     'multiple' => true,
-        //     'required' => false
-        // ))
         ->add('submit', SubmitType::class)
         ;
     }
