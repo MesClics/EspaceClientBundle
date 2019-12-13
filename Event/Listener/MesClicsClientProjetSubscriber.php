@@ -36,11 +36,23 @@ class MesClicsClientProjetSubscriber implements EventSubscriberInterface{
     }
 
     public function onCreation(MesClicsClientProjetCreationEvent $event){
-        dump($event); die();
+        // add a flash Message
+        $label = "success";
+        $message = "Votre nouveau projet " . $event->getProjet()->getType() . " intitulé " . $event->getProjet()->getNom() . " a bien été créé.";
+        $this->addFlash($label, $message);
+        // add action to Navigator's Chronology
+        $action = MesClicsClientProjetActions::creation($event->getProjet());
+        $this->navigator->addAction($action);
     }
 
     public function onUpdate(MesClicsClientProjetUpdateEvent $event){
-        dump($event); die();
+        $label = "success";
+        $message = "Votre projet " . $event->getAfterUpdate()->getType() . " intitulé " . $event->getAfterUpdate()->getNom() . " a bien été modifié.";
+        
+        $this->addFlash($label, $message);
+
+        $action = MesClicsClientProjetActions::update($event->getBeforeUpdate(), $event->getAfterUpdate());
+        $this->navigator->addAction($action);
     }
 
     public function onRemoval(MesClicsClientProjetRemoveEvent $event){
@@ -50,8 +62,7 @@ class MesClicsClientProjetSubscriber implements EventSubscriberInterface{
         $this->addFlash($label, $message);
         // add action to Navigator's chronology
         $action  = MesClicsClientProjetActions::removal($event->getProjet());
-
-       $this->navigator->addAction($action);
+        $this->navigator->addAction($action);
     }
 
     public function onAttachment(MesClicsClientProjetAttachEvent $event){

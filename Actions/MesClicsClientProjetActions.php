@@ -7,6 +7,25 @@ use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 
 class MesClicsClientProjetActions{
+    public function creation(Projet $projet){
+        $label = "création du projet " . $projet->getNom() . " pour le client " . $projet->getClient()->getNom() . " (" . $projet->getClient()->getNumero() .").";
+        $objects = array(
+            "projet" => $projet
+        );
+
+        return new Action($label, $objects);
+    }
+
+    public function update(Projet $before_update, Projet $after_update){
+        $label = "modification du projet " . $after_update->getNom() . " pour le client " . $after_update->getClient()->getNom() . " (" . $after_update->getClient()->getNumero() . ").";
+        $objects = array(
+            "before_update" => $before_update,
+            "after_update" => $after_update
+        );
+
+        return new Action($label, $objects);
+    }
+
     public function removal(Projet $projet){
         $label = "suppression du projet " . $projet->getNom() . " pour le client " . $projet->getClient()->getNom() . " (" . $projet->getClient()->getNumero() .").";
         $objects = array(

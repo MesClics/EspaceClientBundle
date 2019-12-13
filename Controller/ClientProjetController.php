@@ -8,20 +8,18 @@ use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ProjetType;
+use MesClics\EspaceClientBundle\Form\DTO\ProjetDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use MesClics\EspaceClientBundle\Form\ProjetAssocierContratType;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use MesClics\EspaceClientBundle\Form\ProjetDissocierContratType;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
-use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetRemoveEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetUpdateEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientProjetCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientProjetPopups;
-use MesClics\EspaceClientBundle\Form\FormManager\ProjetAssocierContratFormManager;
-use MesClics\EspaceClientBundle\Form\FormManager\ProjetDissocierContratFormManager;
 
 class ClientProjetController extends Controller{
 
@@ -32,55 +30,72 @@ class ClientProjetController extends Controller{
         $this->entity_manager = $em;
         $this->event_dispatcher = $ed;
     }
+    
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
+     */
+    public function projetsAction(Client $client, Request $request){
+        //AJOUT DE PROJET
+        //on crée un objet qui sera hydraté par le formulaire
+        $projetDTO = new ProjetDTO($client);
+        // on génère le formulaire
+        $projetForm = $this->createForm(ProjetType::class, $projetDTO);
+        //si la requête est de type POST, on gère le formulaire
+        if($request->isMethod('POST')){
+            $projetForm->handleRequest($request);
+
+            if($projetForm->isSubmitted() && $projetForm->isValid()){
+                $projet = new Projet();
+                $this->entity_manager->persist($projet);
+                $projetForm->getData()->mapTo($projet);
+                $event = new MesClicsClientProjetCreationEvent($projet);
+                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::CREATION, $event);
+                $this->entity_manager->flush();
+                
+                return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet->getId()));
+            }
+        }
+                
+        $args = array(
+            'currentSection' => 'client',
+            'subSection' => 'projets',
+            'client' => $client,
+            'projetsForm' => $projetForm->createView()
+        );
+
+        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+    }
 
     /**
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("projet", options={"mapping": {"projet_id": "id"}})
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function updateAction(Client $client, Projet $projet, ProjetFormManager $projetFormManager, ProjetAssocierContratFormManager $projetAssocierContratFormManager, ProjetDissocierContratFormManager $projetDissocierContratFormManager, Request $request){
+    public function updateAction(Client $client, Projet $projet, Request $request){
         //on génère le formulaire de modification de projet
-        $projet_form = $this->createForm(ProjetType::class, $projet);
-        //on gère le formulaire
-        if($request->isMethod('POST')){
-            $projetFormManager->handle($projet_form);
+        $projetDTO = new ProjetDTO();
+        $projetDTO->mapFrom($projet);
 
-            if($projetFormManager->hasSucceeded()){
+        $form = $this->createForm(ProjetType::class, $projetDTO);
+
+        if($request->isMethod('POST')){
+            $form->handleRequest($request);
+            $before_update = clone $projet;
+            if($form->isSubmitted() && $form->isValid()){
+                $after_update = $form->getData();
+                $after_update->mapTo($projet);
+                // TODO: dispatch update events;
+                $event = new MesClicsClientProjetUpdateEvent($before_update, $projet);
+                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::UPDATE, $event);
+                $this->entity_manager->flush();
+
+
                 $redirect_args = array(
-                    "client_id" => $client->getId(),
-                    "projet_id" => $projet->getId()
+                    'client_id' => $client->getId(),
+                    'projet_id' => $projet->getId(),
                 );
-                return $this->redirectToRoute("mesclics_admin_client_projet", $redirect_args);
-            }
-        }
-        //on génère les formulaires d'association / dissociation de contrat
-        //on check si le projet est déjà associé à un contrat
-        $hasContrat = $projet->getContrat();
-        if(!$hasContrat){
-            $projetAssocierContratForm = $this->createForm(ProjetAssocierContratType::class, $projet);
-            //si la requête est de type Post
-            if($request->isMethod('POST')){
-                //on appelle le Projet Form Manager
-                $projetAssocierContratFormManager->handle($projetAssocierContratForm);
-                if($projetAssocierContratFormManager->hasSucceeded()){
-                    $redirect_args = array(
-                        'client_id' => $client->getId(),
-                        'projet_id' => $projet->getId()
-                    );
-                    return $this->redirectToRoute('mesclics_admin_client_projet', $redirect_args);
-                }
-            }
-        } else{ 
-            $projetDissocierContratForm = $this->createForm(ProjetDissocierContratType::class, $projet);
-            if($request->isMethod('POST')){
-                $projetDissocierContratFormManager->handle($projetDissocierContratForm);
-                if($projetDissocierContratFormManager->hasSucceeded()){
-                    $redirect_args = array(
-                        'client_id' => $client->getId(),
-                        'projet_id' => $projet->getId()
-                    );
-                    return $this->redirectToRoute('mesclics_admin_client_projet', $redirect_args);
-                }
+                return $this->redirectToRoute('mesclics_admin_client_projet', $redirect_args);
             }
         }
 
@@ -91,15 +106,8 @@ class ClientProjetController extends Controller{
             'mainContent' => 'client-projet',
             'projet' => $projet,
             'client' => $client,
-            'projetForm' => $projet_form->createView()
+            'projetForm' => $form->createView()
         );
-
-        if(isset($projetAssocierContratForm)){
-            $args['projetAssocierContratForm'] = $projetAssocierContratForm->createView();
-        }
-        if(isset($projetDissocierContratForm)){
-            $args['projetDissocierContratForm'] = $projetDissocierContratForm->createView();
-        }
 
         return $this->render('MesClicsEspaceClientBundle:Admin:client-projet.html.twig', $args);
     }
@@ -108,15 +116,22 @@ class ClientProjetController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      */
-    public function postAction(Client $client, ProjetFormManager $form_manager, Request $request){
-        $projet = new Projet();
-        $projet->setClient($client);
-        $form = $this->createForm(ProjetType::class, $projet);
+    public function postAction(Client $client, Request $request){
+        $projetDTO = new ProjetDTO($client);
+        $form = $this->createForm(ProjetType::class, $projetDTO);
 
         if($request->getMethod('POST')){
-            $form_manager->handle($form);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                $projet = new Post();
+                $this->entity_manager->persist($projet);
+                $projetDTO->mapTo($projet);
 
-            if($form_manager->hasSucceeded()){
+                $event = new MesClicsClientProjetCreationEvent($projet);
+                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::CREATION, $projet);
+
+                $this->entity_manager->flush();
+
                 $redirect_args = array(
                     'currentSection' => 'clients',
                     'subSection' => 'projets',
@@ -147,8 +162,6 @@ class ClientProjetController extends Controller{
      * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
      */
     public function deleteAction(Client $client, Projet $projet){
-        //TODO: check if projet is from the right client
-        //TODO: check if user is part of the client's users
         $redirect_args = array(
             "client_id" => $client->getId()
         );
@@ -207,7 +220,7 @@ class ClientProjetController extends Controller{
      * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
      * @ParamConverter("contrat", options={"mapping":{"contrat_id": "id"}})
      */
-    public function confirmAttachAction(Projet $projet, Contrat $contrat){
+    public function proceedAttachAction(Projet $projet, Contrat $contrat){
         $contrat->addProjet($projet);
 
         $event = new MesClicsClientProjetAttachEvent($projet, $contrat);
@@ -239,7 +252,7 @@ class ClientProjetController extends Controller{
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      * @ParamConverter("projet", options={"mapping":{"projet_id": "id"}})
      */
-    public function confirmDetachAction(Client $client, Projet $projet){
+    public function proceedDetachAction(Client $client, Projet $projet){
         $contrat = $projet->getContrat();
         $contrat->removeProjet($projet);
         
