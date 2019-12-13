@@ -18,7 +18,7 @@ mesclics_admin_client_update:
 # PROJETS
 mesclics_admin_client_projets:
     path: /{client_id}/projets/
-    defaults: { _controller: MesClicsEspaceClientBundle:Client:projets }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:projets }
 
 mesclics_admin_client_projets_add:
     path: /{client_id}/projets/new/
@@ -37,16 +37,16 @@ mesclics_admin_client_projet_remove:
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:remove }
 
 mesclics_admin_client_projet_attach_confirm:
-    path: /{contrat_id}/projets/{projet_id}/attach/confirm/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:confirmAttach }
+    path: /{contrat_id}/projets/{projet_id}/attach/proceed/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:proceedAttach }
 
 mesclics_admin_client_projet_attach:
     path: /{contrat_id}/projets/{projet_id}/attach/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:attach }
     
 mesclics_admin_client_projet_detach_confirm:
-    path: /{client_id}/projets/{projet_id}/detach/confirm/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:confirmDetach }
+    path: /{client_id}/projets/{projet_id}/detach/proceed/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:proceedDetach }
 
 mesclics_admin_client_projet_detach:
     path: /{client_id}/projets/{projet_id}/detach/
@@ -56,23 +56,23 @@ mesclics_admin_client_projet_detach:
 # CONTRATS
 mesclics_admin_client_contrats:
     path: /{client_id}/contrats/
-    defaults: { _controller: MesClicsEspaceClientBundle:Client:contrats }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrat:contrats }
 
 mesclics_admin_client_contrats_add:
     path: /{client_id}/contrats/new/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:post }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrat:post }
 
 mesclics_admin_client_contrat:
     path: /{client_id}/contrats/{contrat_id}/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:get }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrat:get }
 
 mesclics_admin_client_contrat_delete:
     path: /{client_id}/contrats/{contrat_id}/delete/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:delete }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrat:delete }
 
 mesclics_admin_client_contrat_remove:
     path: /{client_id}/contrats/{contrat_id}/remove/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrats:remove }
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientContrat:remove }
 
 #espace_client
 mesclics_espace_client:
