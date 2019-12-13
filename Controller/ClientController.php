@@ -4,22 +4,13 @@ namespace MesClics\EspaceClientBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
-use MesClics\EspaceClientBundle\Entity\Projet;
-use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ClientType;
-use MesClics\EspaceClientBundle\Form\ProjetType;
-use MesClics\EspaceClientBundle\Form\ContratType;
-use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
-use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
 use MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager;
-use MesClics\EspaceClientBundle\Form\FormManager\ProjetFormManager;
-use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 
 class ClientController extends Controller{
 
@@ -28,7 +19,7 @@ class ClientController extends Controller{
 
 
     public function __construct(EntityManagerInterface $em, EventDispatcherInterface $ed){
-        $this->entity_manager = $ed;
+        $this->entity_manager = $em;
         $this->event_dispatcher = $ed;
     }
 
@@ -126,83 +117,5 @@ class ClientController extends Controller{
             $request->getSession()->getFlashBag()->add('error', 'Le client a déjà signé un ou plusieurs contrats. Il est donc impossible de modifier ses données. Veuillez créer un nouveau client.');
         }
         return $this->render('MesClicsEspaceClientBundle:Admin:clients.html.twig', $args);
-    }
-
-    
-    //CLIENTS > PROJETS
-    /**
-     * @Security("has_role('ROLE_ADMIN')")
-     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
-     */
-    public function projetsAction(Client $client, ProjetFormManager $projet_form_manager, Request $request){
-        //AJOUT DE PROJET
-        //on crée un objet qui sera hydraté par le formulaire
-        $projet = new Projet();
-        $projet->setClient($client);
-        //on génère le formulaire
-        $projetForm = $this->createForm(ProjetType::class, $projet);
-        //si la requête est de type POST, on gère le formulaire
-        if($request->isMethod('POST')){
-            $projet_form_manager->handle($projetForm);
-
-            if($projet_form_manager->hasSucceeded()){
-                return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet_form_manager->getResult()->getId()));
-            }
-        }
-                
-        $args = array(
-            'currentSection' => 'client',
-            'subSection' => 'projets',
-            'client' => $client,
-            'projetsForm' => $projetForm->createView()
-        );
-
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
-    }
-
-    
-
-
-    //CLIENTS > CONTRATS
-    /**
-     * @Security("has_role('ROLE_ADMIN')")
-     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
-     */
-    public function contratsAction(Client $client, Request $request){
-        //récupération des contrats du client
-        $contrats = $client->getContrats();
-
-        // new contrat widget
-        $contratDTO = new ContratDTO();
-        $contratDTO->setClient($client);
-        $contratForm = $this->createForm(ContratType::class, $contratDTO);
-        //handle form
-        if($request->isMethod('POST')){
-            $contratForm->handleRequest($request);
-            if($contratForm->isSubmitted() && $contratForm->isValid()){
-                $contrat = new Contrat();
-                $this->entity_manager->persist($contrat);
-                $contratForm->getData()->mapTo($contrat);
-
-                $event = new MesClicsClientContratCreationEvent($contrat);
-                $this->event_dispatcher->dispacth(MesClicsClientContratEvents::CREATION, $event);
-
-                $this->entity_manager->flush();
-                
-                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat->getClient()->getId(), 'contrat_id' => $contrat->getId()));
-            }
-            
-        }
-
-        //on génère la vue
-        $args = array(
-            'currentSection' => 'clients',
-            'mainContent' => 'client-contrats',
-            'subSection' => 'contrats',
-            'client' => $client,
-            'contrats' => $contrats,
-            'contratForm' => $contratForm->createView()
-        );
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
     }
 }
