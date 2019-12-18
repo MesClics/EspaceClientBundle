@@ -19,8 +19,6 @@ use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
-use MesClics\EspaceClientBundle\Form\FormManager\ContratAssocierProjetFormManager;
-use MesClics\EspaceClientBundle\Form\FormManager\ContratDissocierProjetFormManager;
 
 class ClientContratController extends Controller{
 
@@ -113,7 +111,7 @@ class ClientContratController extends Controller{
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      * @ParamConverter("contrat", options={"mapping": {"contrat_id": "id"}})
      */
-    public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, ContratAssocierProjetFormManager $contratAssocierProjetsFormManager, ContratDissocierProjetFormManager $contratDissocierProjetFormManager, Request $request){
+    public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, Request $request){
         $args = array(
             'currentSection' => 'clients',
             'subSection' => 'contrat',

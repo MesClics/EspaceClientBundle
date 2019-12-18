@@ -13,7 +13,6 @@ class ContratDTO extends DataTransportObjectToEntity{
     private $type;
     private $date_signature;
     private $last_update;
-    // private $projets;
 
     public function __construct(Client $client = null){
         prent::__construct();
@@ -26,8 +25,7 @@ class ContratDTO extends DataTransportObjectToEntity{
         return array(
             "client" => new MappingArrayItem("client", array("getClient", "setClient")),
             "type" => new MappingArrayItem("type", array("getType", "setType")),
-            "date_signature" => new MappingArrayItem("date_signature", array("getDateSignature", "setDateSignature")),
-            // "projets" => new MappingArrayIterableItem("projets", array("getProjets", "addProjet", null))
+            "date_signature" => new MappingArrayItem("date_signature", array("getDateSignature", "setDateSignature"))
         );
     }
 
@@ -58,19 +56,6 @@ class ContratDTO extends DataTransportObjectToEntity{
     public function setLastUpdate(\DateTime $date){
         $this->last_update = $date;
     }
-
-    // public function addProjet(Projet $projet){
-    //     $this->projets[] = $projet;
-    // }
-
-    // public function removeProjet(Projet $projet){
-    //     foreach($this->projets as $key => $curr){
-    //         if($curr === $projet){
-    //             unset($this->projets[$key]);
-    //             break;
-    //         }
-    //     }
-    // }
 
     public function getProjets(){
         return $this->projets;

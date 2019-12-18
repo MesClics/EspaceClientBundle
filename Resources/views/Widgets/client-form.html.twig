@@ -4,7 +4,7 @@
         {{ form_errors(client_new_form) }}
         {{ form_row(client_new_form.prospect, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nouveau client est-il un prospect?', 'widget_attr': {'class': 'oocss-full-container-width'}})
         }}
-        {{ form_row(client_new_form.nom, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nom du client est', 'widget_attr': {'class': 'oocss-full-container-width'}})
+        {{ form_row(client_new_form.name, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nom du client est', 'widget_attr': {'class': 'oocss-full-container-width'}})
         }}
         <div class="oocss-slideshow--step">
             <label class="oocss-label">Le logo du client</label>
@@ -17,8 +17,9 @@
         {{ form_row(client_new_form.website, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'quelle est l\'adresse du site internet du client ?', 'widget_attr': {'class': 'oocss-full-container-width'}})
         }}
         {{ form_row(client_new_form.submit, {'attr' : {'class': 'oocss-slideshow--step'}, 'label': 'ajouter le client'}) }}
-        {{ form_rest(client_new_form) }}
-    {{ form_end(client_new_form)}}
+        {{ form_row(client_new_form._token) }}
+        {# {{ form_rest(client_new_form) }} #}
+    {{ form_end(client_new_form, {'render_rest': false})}}
 
     <div class="oocss-slideshow--slider">
     </div>
@@ -30,7 +31,7 @@
         {{ form_row(client_new_form.prospect, {'label': 'prospect'}) }}
         <div class="oocss-form-fieldset oocss-vertical oocss-block oocss-full-container-width">
             <label class="oocss-label">Coordonnées</label>
-            {{ form_row(client_new_form.nom, {'attr': {'class': 'oocss-full-container-width'}, 'label': 'nom du client', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
+            {{ form_row(client_new_form.name, {'attr': {'class': 'oocss-full-container-width'}, 'label': 'nom du client', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
             {{ form_row(client_new_form.website, {'attr': {'class': 'oocss-full-container-width oocss-slideshow--step'}, 'label': 'url du site internet du client', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
         </div>
         <div class="oocss-fieldset">
@@ -45,6 +46,6 @@
             {{ form_row(client_new_form.submit, {'label': 'ajouter le client'}) }}
         {% endif %}
                     
-        {{ form_rest(client_new_form) }}
-    {{ form_end(client_new_form) }}
+        {{ form_row(client_new_form._token) }}
+    {{ form_end(client_new_form, {'render_rest': false}) }}
 {% endif %}

@@ -7,8 +7,10 @@ use MesClics\NavigationBundle\Entity\Action;
 use MesClics\EspaceClientBundle\Entity\Client;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
 use MesClics\NavigationBundle\Navigator\Navigator;
+use MesClics\UtilsBundle\Functions\MesClicsFunctions;
 use MesClics\EspaceClientBundle\Event\MesClicsClientEvents;
 use MesClics\EspaceClientBundle\Actions\MesClicsClientActions;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientCreationEvent;
@@ -22,12 +24,14 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
     private $postUpdated = false;
     private $prospectHasChanged = false;
     private $nameStartHasChanged = false;
+    private $session;
 
-    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager, Navigator $navigator, EntityManagerInterface $em){
+    public function __construct(MesClicsClientNumerator $client_numerator, ApisManager $apis_manager, Navigator $navigator, EntityManagerInterface $em, SessionInterface $session){
         $this->clientNumerator = $client_numerator;
         $this->apis_manager = $apis_manager;
         $this->navigator = $navigator;
         $this->entity_manager = $em;
+        $this->session = $session;
     }
 
     public static function getSubscribedEvents(){
@@ -58,15 +62,22 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
     }
 
     public function onUpdate(MesClicsClientUpdateEvent $event){
+        $label = 'success';
+        $message = 'Le client ' . $event->getAfterUpdate()->getNom() . ' a bien été modifié.';
+
         // on prospect status change
         if($event->hasChanged('prospect')){
             //reset the client number
             if(!$event->getAfterUpdate()->isProspect()){
                 $numero = $this->clientNumerator->prospectToClient($event->getAfterUpdate());
                 $action = MesClicsClientActions::prospectToClient($event->getBeforeUpdate(), $event->getAfterUpdate());
+
+                $message .= ' Etant passé du statut de prospect à client son numéro a changé et est désormais : ' . $event->getAfterUpdate()->getNumero() . '.';
             } else{
                 $numero = $this->clientNumerator->clientToProspect($event->getAfterUpdate());
                 $action = MesClicsClientActions::clientToProspect($event->getBeforeUpdate(), $event->getAfterUpdate());
+
+                $message .= ' Etant passé du statut de client à prospect son numéro a changé et est désormais : ' . $event->getAfterUpdate()->getNumero() . '.';
             }
             
            $this->navigator->addAction($action);
@@ -80,8 +91,8 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
             //if 3 first letters change, reset client number
             if(strtoupper(substr($event->getBeforeUpdate()->getNom(), 0, 3)) != strtoupper(substr($event->getAfterUpdate()->getNom(), 0, 3))){
                 $numero = $this->clientNumerator->numeroAuto($event->getAfterUpdate());
-                // $event->getAfterUpdate()->setNumero($numero);
-                // $this->nameStartHasChanged = true;
+
+                $message .= ' Ayant changé de nom, le client a également changé de numéro (' . $event->getBeforeUpdate()->getNumero() . ' est devenu ' . $event->getAfterUpdate()->getNumero() . ').';
             }
 
             // TODO: update Trello card
@@ -92,10 +103,15 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
            $this->navigator->addAction($action);
         }
 
-        $this->entity_manager->flush();
+        MesClicsFunctions::addFlash($label, $message, $this->session);
     }
 
-    public function removal(Event $event){}
+    public function removal(Event $event){
+        $label = 'success';
+        $message = 'Le client ' . $event->getClient()->getNom() . ' a bien été supprimé.';
+
+        MesClicsFunctions::addFlash($label, $message, $this->session);
+    }
 
     private function trelloActionsOnClientCreation(Client $client){
         //ADD TRELLO LIST

@@ -3,6 +3,7 @@
 namespace MesClics\EspaceClientBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use MesClics\UtilsBundle\Links\Link;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -420,6 +421,18 @@ class Client
 
         return $this;
     }
+
+    public function getSocials(){
+        return $this->socials;
+    }
+
+    public function addSocial(Link $link){
+        $this->socials->add($link);
+    }
+
+    public function removeLink(Link $link){
+        $this->socials->remove($link);
+    }
     
 
     /**
@@ -429,5 +442,6 @@ class Client
         $this->contrats = new ArrayCollection();
         $this->projets = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->socials = new ArrayCollection();
     }
 }

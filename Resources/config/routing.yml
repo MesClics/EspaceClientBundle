@@ -1,19 +1,11 @@
 #admin
 mesclics_admin_clients:
     path: /
-    defaults: { _controller: MesClicsEspaceClientBundle:Admin:clients }
+    defaults: { _controller: MesClicsEspaceClientBundle:Client:clients }
 
 mesclics_admin_client:
     path:   /{client_id}/
     defaults: { _controller: MesClicsEspaceClientBundle:Client:get }
-
-mesclics_admin_client_add:
-    path: /add/
-    defaults: { _controller: MesClicsEspaceClientBundle:Client:post }
-
-mesclics_admin_client_update:
-    path: /{client_id}/edit/
-    defaults: { _controller: MesClicsEspaceClientBundle:Client:update }
 
 # PROJETS
 mesclics_admin_client_projets:
