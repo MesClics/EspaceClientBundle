@@ -20,6 +20,7 @@
                 <span class="oocss-table-head none-on-small-screens">alias</span>
                 <span class="oocss-table-head none-on-small-screens oocss-sortable">dernière modification</span>
                 <span class="oocss-table-head oocss-sortable">prospect</span>
+                <span class="oocss-table-head"></span>
             </div>
 
             {% for item in clients %}
@@ -47,6 +48,15 @@
                 
                     <span class="oocss-table-data">
                         {% if item.prospect %}&#10003;{% endif %}
+                    </span>
+                    
+                    <span class="oocss-table-data">
+                        <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" title="supprimer le client"
+                            data-popup-path={{ absolute_url(path('mesclics_admin_client_remove', {'client_id': item.id})) }}>
+                            {{ source('@mesclicsbundle/images/svg/trash.svg') }}
+                        </button>
+
+                        <!-- <a href={{ path("mesclics_admin_client_remove", {'client_id': item.id}) }}>supprimer test</a> -->
                     </span>
                 
                 </div>

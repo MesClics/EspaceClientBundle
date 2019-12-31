@@ -42,4 +42,18 @@ class MesClicsClientActions{
 
         return new Action($label, $objects);
     }
+
+    public static function removal(Client $client){
+        if($client->isProspect()){
+            $statut = "prospect";
+        } else{
+            $statut = "client";
+        }
+        $label = "suppression du " . $statut . " " . $client->getNom();
+        $objects = array(
+            "client" => $client
+        );
+
+        return new Action($label, $objects);
+    }
 }

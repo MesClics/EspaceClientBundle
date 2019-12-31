@@ -13,9 +13,11 @@ use MesClics\EspaceClientBundle\Event\MesClicsClientEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientRemovalEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientCreationEvent;
 use MesClics\EspaceClientBundle\Form\FormManager\ClientFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientClientPopups;
 
 class ClientController extends Controller{
 
@@ -132,5 +134,36 @@ class ClientController extends Controller{
                 'client_new_form' => $form->createView()
             );
             return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
+     */
+    public function removeAction(Client $client){
+        $popups = array();
+        MesClicsEspaceClientClientPopups::onRemoval($popups);
+
+        $args = array(
+            "client" => $client,
+            "popups" => $popups
+        );
+
+        $popup = $this->render('MesClicsBundle:PopUps:renderer.html.twig', $args);
+
+        return $popup;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
+     */
+    public function deleteAction(Client $client){
+        $this->entity_manager->remove($client);
+        $event = new MesClicsClientRemovalEvent($client);
+        $this->event_dispatcher->dispatch(MesClicsClientEvents::REMOVAL, $event);
+        $this->entity_manager->flush();
+
+        return $this->redirectToRoute('mesclics_admin_clients');
     }
 }

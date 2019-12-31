@@ -13,6 +13,7 @@ use MesClics\EspaceClientBundle\Actions\MesClicsClientActions;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientUpdateEvent;
+use MesClics\EspaceClientBundle\Event\MesClicsClientRemovalEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientCreationEvent;
 use MesClics\EspaceClientBundle\ClientNumerator\MesClicsClientNumerator;
 
@@ -106,7 +107,10 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         MesClicsFunctions::addFlash($label, $message, $this->session);
     }
 
-    public function removal(Event $event){
+    public function onRemoval(MesClicsClientRemovalEvent $event){
+        $action = MesClicsClientActions::removal($event->getClient());
+        $this->navigator->addAction($action);
+        
         $label = 'success';
         $message = 'Le client ' . $event->getClient()->getNom() . ' a bien été supprimé.';
 
