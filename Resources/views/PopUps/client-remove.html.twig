@@ -10,7 +10,7 @@
     {% set statut = "client" %}
 {% endif %}
 <p class="oocss-instruction oocss-block oocss-full-container-width oocss-center-h">Êtes-vous sûr de vouloir supprimer le
-    client "{{ client.nom }}" ?</p>
+    client <span class="highlight">{{ client.nom }}</span> ?</p>
 <div class="oocss-center-h">
     <a class="oocss-button oocss-discret" href="{{ path('mesclics_admin_client_delete', {'client_id': client.id}) }}">Oui</a>
     <button class="oocss-button oocss-discret oocss-close" data-target-class="popup">Annuler</button>
