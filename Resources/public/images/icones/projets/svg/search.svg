@@ -1,0 +1,13 @@
+<svg width="64.73mm" height="64.73mm" version="1.1" viewBox="0 0 64.73 64.73" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(-59.105 -62.04)">
+  <g transform="translate(-201.71 -382.29)">
+   <g transform="translate(4.2763 134.97)">
+    <rect x="256.54" y="309.36" width="64.73" height="64.73" style="fill:none;paint-order:stroke fill markers"/>
+    <g transform="translate(-.75595 70.304)">
+     <path transform="matrix(.26458 0 0 .26458 257.3 239.05)" d="m48.908 46.27v129.21l47.605 22.9h2.2578 2.3848l46.057-24.855-0.45117-0.82617h0.7539v-110.87l38.223 16.912v46.713h10.002v-53.225l-53.318-23.592-43.68 21.016-49.834-23.379zm10.002 15.738 34.865 16.359v107.6l-34.865-16.779v-107.18zm78.602 0.089844v105.29l-33.742 18.211v-107.27l33.742-16.232zm50.881 71.318c-8.5078 0-16.268 3.4694-21.857 9.0586-5.5892 5.5892-9.0586 13.35-9.0586 21.857 0 8.5079 3.4694 16.276 9.0586 21.865 5.5892 5.5892 13.35 9.0488 21.857 9.0488 6.6801 0 12.564-2.5834 17.635-6.207l21.084 21.074 7.0644-7.0703-21.076-21.076c3.6236-5.0704 6.209-10.955 6.209-17.635 0-8.5078-3.4616-16.268-9.0508-21.857-5.5892-5.5892-13.357-9.0586-21.865-9.0586zm0 9.9961c5.8056 0 11.002 2.3361 14.793 6.127 3.7909 3.7908 6.127 8.9874 6.127 14.793 0 5.8057-2.3361 11.002-6.127 14.793-3.7909 3.7909-8.9873 6.127-14.793 6.127-5.8057 0-11.002-2.3361-14.793-6.127s-6.1191-8.9874-6.1191-14.793c0-5.8056 2.3283-11.002 6.1191-14.793 3.7908-3.7909 8.9873-6.127 14.793-6.127z" style="color-rendering:auto;color:#000000;dominant-baseline:auto;fill-rule:evenodd;fill:#f5f5f5;font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;image-rendering:auto;isolation:auto;mix-blend-mode:normal;shape-padding:0;shape-rendering:auto;solid-color:#000000;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+     <g transform="matrix(.48196 -.13345 .1331 .48479 289.64 125.65)" style="stroke-width:1.9944"></g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

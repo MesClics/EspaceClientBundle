@@ -1,0 +1,16 @@
+<svg width="64.73mm" height="64.73mm" version="1.1" viewBox="0 0 64.73 64.73" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(21.782 51.353)">
+  <g transform="translate(-272.73 -83.771)">
+   <g transform="matrix(.78508 0 0 .57454 402.69 -125.88)" style="stroke-width:1.489">
+    <path d="m-177.08 296.19v59.094l16.121 10.598h1.9492l13.818-9.3223 18.164 10.982v-59.031l-18.266-11.047-14.711 9.6719zm33.801 7.0957 12.312 7.4453v49.824l-12.312-7.4434zm-29.861 0.10937 11.18 7.166v49.947l-11.18-7.3496zm25.922 0.0508v49.729l-10.803 7.2871v-49.914z" style="color-rendering:auto;color:#000000;dominant-baseline:auto;fill-rule:evenodd;fill:#f5f5f5;font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;image-rendering:auto;isolation:auto;mix-blend-mode:normal;shape-padding:0;shape-rendering:auto;solid-color:#000000;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+   </g>
+   <g transform="translate(62.133 -204.22)">
+    <g transform="translate(2.8617 204.22)">
+     <g transform="translate(66.817)">
+      <rect x="119.14" y="32.418" width="64.73" height="64.73" style="fill:none;paint-order:stroke fill markers"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

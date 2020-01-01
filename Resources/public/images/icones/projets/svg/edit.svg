@@ -1,0 +1,18 @@
+<svg width="64.73mm" height="64.73mm" version="1.1" viewBox="0 0 64.73 64.73" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(465.53 -116.47)">
+  <g transform="translate(-716.78 -52.283)">
+   <rect x="251.25" y="168.75" width="64.73" height="64.73" style="fill:none;paint-order:stroke fill markers"/>
+   <path transform="matrix(.26458 0 0 .26458 251.25 168.75)" d="m48.91 44.812v129.2l47.598 22.906h2.2676 2.3848l46.047-24.863-0.44336-0.82617h0.7461v-110.87l38.23 16.926v46.705h9.9961v-53.217l-53.312-23.592-43.678 21.016-49.836-23.377zm10.002 15.738 34.857 16.35v107.6l-34.857-16.771v-107.18zm78.604 0.072266v105.3l-33.742 18.211v-107.27l33.742-16.24zm77.018 63.604-39.795 19.064 3.252 6.7305-1.6484 4.6816-4.4863 2.1504-7.0801-2.4746-14.607 41.514 9.457 3.3066 12.598-35.801 16.494 34.188 9.0332-4.3281-16.5-34.184 35.93 12.555 3.3164-9.4219-35.936-12.549 34.316-16.432-4.3438-9z" style="color-rendering:auto;color:#000000;dominant-baseline:auto;fill-rule:evenodd;fill:#f5f5f5;font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;image-rendering:auto;isolation:auto;mix-blend-mode:normal;shape-padding:0;shape-rendering:auto;solid-color:#000000;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+   <g transform="matrix(1.1436 0 0 1.1426 101.71 -32.778)" style="stroke-width:.87484">
+    <g style="stroke-width:.87484">
+     <g transform="matrix(1.0481 0 0 1.045 246.42 2.8713)" style="stroke-width:.83593">
+      <path d="m-72.926 200.61-3.2252 9.1989" style="fill:none;stroke-width:2.2117;stroke:#f5f5f5"/>
+      <path d="m-62.036 203.02-9.1989-3.2252" style="fill:none;stroke-width:2.2117;stroke:#f5f5f5"/>
+      <path d="m-67.688 209.34-4.224-8.7852" style="fill:none;stroke-width:2.2117;stroke:#f5f5f5"/>
+      <path d="m-71.292 198.79 8.7852-4.224" style="fill:none;stroke-width:2.2117;stroke:#f5f5f5"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>
