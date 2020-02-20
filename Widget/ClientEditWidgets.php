@@ -1,0 +1,25 @@
+<?php
+namespace MesClics\EspaceClientBundle\Widget;
+
+use MesClics\UtilsBundle\Widget\WidgetsContainer;
+use MesClics\EspaceClientBundle\Widget\ClientEditWidget;
+use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
+use MesClics\EspaceClientBundle\Widget\Handler\ClientEditWidgetHandler;
+
+
+class ClientEditWidgets extends WidgetsContainer{
+    protected $client_edit_handler;
+    
+    public function __construct(ClientEditWidgetHandler $cewh){
+        parent::__construct();        
+        $this->client_edit_handler = $cewh;
+    }
+
+    public function initialize($params = array()){
+        $this->addWidget(new ClientNavWidget($params['client']));
+        $this->addWidget(new ClientEditWidget($params['client'], $this->client_edit_handler));
+
+        $this->getWidget('clients_nav')->addClass("oocss-discret small");
+        $this->getWidget('client_edit')->addClass("client-edit");
+    }
+}

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use MesClics\UtilsBundle\Links\Link;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use MesClics\UtilsBundle\Functions\MesClicsFunctions;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -163,6 +164,10 @@ class Client
      */
     public function getAlias()
     {
+        // auto_alias
+        if(!$this->alias){
+           $this->alias = MesClicsFunctions::string_to_camel($this->nom);
+        }
         return $this->alias;
     }
 

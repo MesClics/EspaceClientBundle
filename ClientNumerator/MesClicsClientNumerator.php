@@ -13,10 +13,9 @@ class MesClicsClientNumerator{
     }
 
     public function numeroAuto($client){
-
         //on définit les initiales à rechercher dans la bdd
         $repo = $this->entity_manager->getRepository("MesClicsEspaceClientBundle:Client");
-        $initials = substr($client->getAlias(), 0, 3);
+        $initials = substr($client->getAlias(true), 0, 3);
         $last_numero_client = $repo->lastClientBeginningWith($initials);
         if($last_numero_client){
             $last_numero_full = $last_numero_client->getNumero();

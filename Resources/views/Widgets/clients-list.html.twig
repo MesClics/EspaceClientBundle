@@ -1,66 +1,66 @@
-<section class="oocss-widget large clients-list">
-    <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Liste des clients</h2>
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
+{% block widgetContent %}
+    <div class="oocss-widget--content-zone">
+        <div class="oocss-filters oocss-block oocss-horizontal"
+            data-filters="name:prospect/class:isProspect|name:client/class:isClient"
+            data-filters-target-class="clients-list-filterable" data-filters-title="h3/filtrer">
+            <button class="oocss-filters-button oocss-legend--item">
+                <span class="oocss-index oocss-filters-button-class"></span>
+                <span data-filters-button-textContent></span>
+            </button>
+        </div>
     </div>
-
-    <div class="oocss-widget--content">
-        <div class="oocss-widget--content-zone">
-            <div class="oocss-filters oocss-block oocss-horizontal" data-filters="name:prospect/class:isProspect|name:client/class:isClient" data-filters-target-class="clients-list-filterable" data-filters-title="h3/filtrer">
-                <button class="oocss-filters-button oocss-legend--item">
-                    <span class="oocss-index oocss-filters-button-class"></span>
-                    <span data-filters-button-textContent></span>
+    <div class="oocss-table oocss-full-container-width oocss-sortable clients-list-filterable">
+        <div class="oocss-table-head-row">
+            <span class="oocss-table-head none-on-small-screens">logo</span>
+            <span class="oocss-table-head oocss-sortable">numero</span>
+            <span class="oocss-table-head oocss-sortable">nom</span>
+            <span class="oocss-table-head none-on-small-screens">alias</span>
+            <span class="oocss-table-head none-on-small-screens oocss-sortable">dernière modification</span>
+            <span class="oocss-table-head oocss-sortable">prospect</span>
+            <span class="oocss-table-head"></span>
+        </div>
+    
+        {% for item in widget.clients %}
+        <div class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}"
+            data-link="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">
+    
+            <span class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
+                {% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s"
+                    src="{{ item.image.url }}" alt="{{ item.image.alt }}" />{% endif %}
+            </span>
+    
+            <span class="oocss-table-data">
+                {{ item.numero }}
+            </span>
+    
+            <span class="oocss-table-data" data-column-width:"2fr">
+                {{ item.nom|upper }}
+            </span>
+    
+            <span class="oocss-table-data none-on-small-screens">
+                {{ item.alias }}
+            </span>
+    
+            <span class="oocss-table-data none-on-small-screens">
+                {{ item.updatedAt|date('d/m/Y') }}
+            </span>
+    
+            <span class="oocss-table-data">
+                {% if item.prospect %}&#10003;{% endif %}
+            </span>
+    
+            <span class="oocss-table-data">
+                <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup"
+                    title="supprimer le client"
+                    data-popup-path={{ absolute_url(path('mesclics_admin_client_remove', {'client_id': item.id})) }}>
+                    {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                 </button>
-            </div>
+    
+                <!-- <a href={{ path("mesclics_admin_client_remove", {'client_id': item.id}) }}>supprimer test</a> -->
+            </span>
+    
         </div>
-        <div class="oocss-table oocss-full-container-width oocss-sortable clients-list-filterable">
-            <div class="oocss-table-head-row">
-                <span class="oocss-table-head none-on-small-screens">logo</span>
-                <span class="oocss-table-head oocss-sortable">numero</span>
-                <span class="oocss-table-head oocss-sortable">nom</span>
-                <span class="oocss-table-head none-on-small-screens">alias</span>
-                <span class="oocss-table-head none-on-small-screens oocss-sortable">dernière modification</span>
-                <span class="oocss-table-head oocss-sortable">prospect</span>
-                <span class="oocss-table-head"></span>
-            </div>
-
-            {% for item in clients %}
-                <div class="oocss-table-row oocss-clickable-table-row oocss-filterable {% if item.prospect %}isProspect{% else %}isClient{% endif %}" data-link="{{ path('mesclics_admin_client', { 'client_id' : item.id }) }}">
-
-                    <span class="oocss-table-data oocss-table-data__d__discret none-on-small-screens">
-                    {% if item.image is defined and item.image is not null %}<img class="oocss-image oocss-s" src="{{ item.image.url }}" alt="{{ item.image.alt }}"/>{% endif %}
-                    </span>
-                    
-                    <span class="oocss-table-data">
-                        {{ item.numero }}
-                    </span>
-                    
-                    <span class="oocss-table-data" data-column-width:"2fr">
-                        {{ item.nom|upper }}
-                    </span>
-                    
-                    <span class="oocss-table-data none-on-small-screens">
-                    {{ item.alias }}
-                    </span>
-                
-                    <span class="oocss-table-data none-on-small-screens">
-                    {{ item.updatedAt|date('d/m/Y') }}
-                    </span>
-                
-                    <span class="oocss-table-data">
-                        {% if item.prospect %}&#10003;{% endif %}
-                    </span>
-                    
-                    <span class="oocss-table-data">
-                        <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" title="supprimer le client"
-                            data-popup-path={{ absolute_url(path('mesclics_admin_client_remove', {'client_id': item.id})) }}>
-                            {{ source('@mesclicsbundle/images/svg/trash.svg') }}
-                        </button>
-
-                        <!-- <a href={{ path("mesclics_admin_client_remove", {'client_id': item.id}) }}>supprimer test</a> -->
-                    </span>
-                
-                </div>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-</section>
+{% endblock widgetContent %}

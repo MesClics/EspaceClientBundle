@@ -54,9 +54,11 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
         $this->trelloActionsOnClientCreation($client);
         // $this->executeTrelloActions("postPersist", array("client" => $client, "entity_manager" => $this->entity_manager));
 
+        // TODO:add a flash message
+        
         //add a new action to Navigator's chronology
         $action = MesClicsClientActions::creation($client);
-       $this->navigator->addAction($action);
+        $this->navigator->addAction($action);
 
         //flush changes in database
         $this->entity_manager->flush();
@@ -89,6 +91,10 @@ class MesClicsClientSubscriber implements EventSubscriberInterface{
 
         // on name change
         if($event->hasChanged('nom')){
+            // change alias
+            $alias = MesClicsFunctions::string_to_camel($event->getAfterUpdate()->getNom());
+            $event->getAfterUpdate()->setAlias($alias);   
+
             //if 3 first letters change, reset client number
             if(strtoupper(substr($event->getBeforeUpdate()->getNom(), 0, 3)) != strtoupper(substr($event->getAfterUpdate()->getNom(), 0, 3))){
                 $numero = $this->clientNumerator->numeroAuto($event->getAfterUpdate());

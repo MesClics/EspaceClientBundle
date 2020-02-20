@@ -8,7 +8,9 @@ use MesClics\EspaceClientBundle\Form\ClientType;
 use MesClics\UtilsBundle\ApisManager\ApisManager;
 use MesClics\EspaceClientBundle\Form\DTO\ClientDTO;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use MesClics\EspaceClientBundle\Widget\ClientEditWidgets;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use MesClics\EspaceClientBundle\Widget\ClientsHomeWidgets;
 use MesClics\EspaceClientBundle\Event\MesClicsClientEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,32 +31,14 @@ class ClientController extends Controller{
         $this->entity_manager = $em;
         $this->event_dispatcher = $ed;
     }
-
-    public function generateClientForm(Client $client = null){
-        
-        $clientDTO = new ClientDTO();
-        if($client){
-            $clientDTO->mapFrom($client);
-        }
-
-        $form = $this->createForm(ClientType::class, $clientDTO);
-
-        return $form;
-    }
-
     
     //CLIENTS
     /**
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function clientsAction(ApisManager $apis_manager, Request $request){
-        $clientRepo = $this->entity_manager->getRepository('MesClicsEspaceClientBundle:Client');
-        $clients = $clientRepo->getClientsList();
-        
+    public function clientsAction(ClientsHomeWidgets $widgets, ApisManager $apis_manager, Request $request){        
         $trello_api = $apis_manager->getApi('trello');
 
-        //DEBUG: remise à zero des éléments enregistrés en tant que paramètres de session pour l'api Trello
-        // $this->container->get('session')->remove('_trello');
         //GET CLIENTS BOARD
         $boards_options = array(
             'fields' => array(
@@ -71,69 +55,46 @@ class ClientController extends Controller{
         );
         $trelloClientsBoard = $trello_api->getBoardByName("CLIENTS", $boards_options);
 
-        //WIDGET Ajouter un client
-        //création du formulaire
-        $clientForm = $this->generateClientForm(null, $request);
-        
-        if($request->isMethod('POST')){
+        // return $this->render('MesClicsAdminBundle:Panel:clients.html.twig', $args);
+        $widgets->initialize();
+        $widgets->getWidget('clients_list')->addClass('large');
+        $widgets->getWidget('client_creation')->addClass('highlight2 small');
+        $widgets->getWidget('client_creation')->addVariable('isSlideshow', true);
+        $widgets->handleRequest($request);
 
-            $clientForm->handleRequest($request);
-
-            if($clientForm->isSubmitted() && $clientForm->isValid()){
-                $client = new Client();
-                $clientDTO = $clientForm->getData();
-                $clientDTO->mapTo($client);
-                $this->entity_manager->persist($client);
-                $event = new MesClicsClientCreationEvent($client);
-                $this->entity_manager->flush();
-                $this->event_dispatcher->dispatch(MesClicsClientEvents::CREATION, $event);
-                return $this->redirectToRoute("mesclics_admin_client", array("client_id" => $client->getId()));
-            }
-        }
-
-        //on génère la vue
         $args = array(
-            'clients' => $clients,
-            'client_new_form' => $clientForm->createView(),
-            'currentSection' => 'clients',
+            "navRails" => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients')
+            ),
+            "widgets" => $widgets->getWidgets(),
             'trelloClientsBoard' => $trelloClientsBoard
         );
 
-        return $this->render('MesClicsAdminBundle:Panel:clients.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function getAction(Client $client, Request $request){
-        $form = $this->generateClientForm($client);
+    public function getAction(Client $client, ClientEditWidgets $widgets, Request $request){
+        $params = array(
+            'client' => $client
+        );
+        $widgets->initialize($params);
+        $widgets->getWidget('client_edit')->addClass("medium");
+        $widgets->getWidget('client_edit')->addVariable("submit_label", "enregistrer les modifications");
+        $widgets->handleRequest($request);
 
-        if($request->isMethod('POST')){
-            $form->handleRequest($request);
+        $args = array(
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array('client_id' => $client->getId()))
+            ),
+            'widgets' => $widgets->getWidgets()
+        );
 
-            if($form->isSubmitted() && $form->isValid()){
-                $before_update = clone $client;
-                $clientDTO = $form->getData();
-                $clientDTO->mapTo($client);
-
-                if($client !== $before_update){
-                    $event = new MesClicsClientUpdateEvent($before_update, $client);
-                    $this->event_dispatcher->dispatch(MesClicsClientEvents::UPDATE, $event);
-                    $this->entity_manager->flush();
-                }
-                
-                $this->redirectToRoute("mesclics_admin_client", array("client_id" => $client->getId()));
-            }
-        }
-
-
-            $args = array(
-                'currentSection' => 'clients',
-                'client' => $client,
-                'client_new_form' => $form->createView()
-            );
-            return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
