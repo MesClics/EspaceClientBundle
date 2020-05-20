@@ -82,7 +82,11 @@ class ClientController extends Controller{
         $widgets->initialize($params);
         $widgets->getWidget('client_edit')->addClass("medium");
         $widgets->getWidget('client_edit')->addVariable("submit_label", "enregistrer les modifications");
-        $widgets->handleRequest($request);
+        $res = $widgets->handleRequest($request);
+
+        if($res && $res instanceof Client && $res !== $client){
+            return $this->redirectToRoute('mesclics_admin_client', array('client_id' => $res->getId()));
+        }
 
         $args = array(
             'navRails' => array(

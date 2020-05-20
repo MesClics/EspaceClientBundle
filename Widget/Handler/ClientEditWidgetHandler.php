@@ -31,7 +31,7 @@ class ClientEditWidgetHandler extends WidgetHandler{
                     $this->entity_manager->flush();
                 }
 
-                return $this->redirectToRoute('mesclics_admin_client', array('client_id'=>$widget->getClient()->getId()));
+                return $client;
             }
         }
     }
