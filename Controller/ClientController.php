@@ -54,7 +54,11 @@ class ClientController extends Controller{
         $widgets->getWidget('clients_list')->addClass('large');
         $widgets->getWidget('client_creation')->addClass('highlight2 small');
         $widgets->getWidget('client_creation')->addVariable('isSlideshow', true);
-        $widgets->handleRequest($request);
+        $res = $widgets->handleRequest($request);
+
+        if($res && $res instanceof Client){
+            return $this->redirectToRoute('mesclics_admin_client', array('client_id' => $res->getId()));
+        }
 
         $args = array(
             "navRails" => array(

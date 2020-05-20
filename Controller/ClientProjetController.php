@@ -9,10 +9,13 @@ use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ProjetType;
 use MesClics\EspaceClientBundle\Form\DTO\ProjetDTO;
+use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use MesClics\EspaceClientBundle\Widget\ClientProjetsWidgets;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
+use MesClics\EspaceClientBundle\Widget\Handler\ClientProjetWidgets;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;
@@ -35,36 +38,27 @@ class ClientProjetController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function projetsAction(Client $client, Request $request){
-        //AJOUT DE PROJET
-        //on crée un objet qui sera hydraté par le formulaire
-        $projetDTO = new ProjetDTO($client);
-        // on génère le formulaire
-        $projetForm = $this->createForm(ProjetType::class, $projetDTO);
-        //si la requête est de type POST, on gère le formulaire
-        if($request->isMethod('POST')){
-            $projetForm->handleRequest($request);
-
-            if($projetForm->isSubmitted() && $projetForm->isValid()){
-                $projet = new Projet();
-                $this->entity_manager->persist($projet);
-                $projetForm->getData()->mapTo($projet);
-                $event = new MesClicsClientProjetCreationEvent($projet);
-                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::CREATION, $event);
-                $this->entity_manager->flush();
-                
-                return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet->getId()));
-            }
+    public function projetsAction(Client $client, ClientProjetsWidgets $widgets, Request $request){
+        //Widgets
+        $widgets_params = array(
+            'client' => $client
+        );
+        $widgets->initialize($widgets_params);
+        $res = $widgets->handleRequest($request);
+        
+        if($res && $res instanceof Projet){
+            return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $res->getId()));
         }
-                
         $args = array(
-            'currentSection' => 'client',
-            'subSection' => 'projets',
-            'client' => $client,
-            'projetsForm' => $projetForm->createView()
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array('client_id' => $client->getId())),
+                'projets' => $this->generateUrl('mesclics_admin_client_projets', array('client_id' => $client->getId()))
+            ),
+            'widgets' => $widgets->getWidgets()
         );
 
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
@@ -72,88 +66,25 @@ class ClientProjetController extends Controller{
      * @ParamConverter("projet", options={"mapping": {"projet_id": "id"}})
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function updateAction(Client $client, Projet $projet, Request $request){
-        //on génère le formulaire de modification de projet
-        $projetDTO = new ProjetDTO();
-        $projetDTO->mapFrom($projet);
-
-        $form = $this->createForm(ProjetType::class, $projetDTO);
-
-        if($request->isMethod('POST')){
-            $form->handleRequest($request);
-            $before_update = clone $projet;
-            if($form->isSubmitted() && $form->isValid()){
-                $after_update = $form->getData();
-                $after_update->mapTo($projet);
-                // TODO: dispatch update events;
-                $event = new MesClicsClientProjetUpdateEvent($before_update, $projet);
-                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::UPDATE, $event);
-                $this->entity_manager->flush();
-
-
-                $redirect_args = array(
-                    'client_id' => $client->getId(),
-                    'projet_id' => $projet->getId(),
-                );
-                return $this->redirectToRoute('mesclics_admin_client_projet', $redirect_args);
-            }
-        }
+    public function updateAction(Client $client, Projet $projet, ClientProjetWidgets $widgets, Request $request){
+        $params = array(
+            'client' => $client,
+            'projet' => $projet
+        );
+        $widgets->initialize($params);
+        $widgets->handleRequest($request);
 
         //on génère la vue
         $args = array(
-            'currentSection' => 'clients',
-            'subSection' => 'projets',
-            'mainContent' => 'client-projet',
-            'projet' => $projet,
-            'client' => $client,
-            'projetForm' => $form->createView()
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array('client_id' => $client->getId())),
+                $projet->getNom() => $this->generateUrl('mesclics_admin_client_projet', array('client_id' => $client->getId(), 'projet_id' => $projet->getId()))
+            ),
+            'widgets' => $widgets->getWidgets()
         );
 
-        return $this->render('MesClicsEspaceClientBundle:Admin:client-projet.html.twig', $args);
-    }
-
-    /**
-     * @Security("has_role('ROLE_ADMIN')")
-     * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
-     */
-    public function postAction(Client $client, Request $request){
-        $projetDTO = new ProjetDTO($client);
-        $form = $this->createForm(ProjetType::class, $projetDTO);
-
-        if($request->getMethod('POST')){
-            $form->handleRequest($request);
-            if($form->isSubmitted() && $form->isValid()){
-                $projet = new Post();
-                $this->entity_manager->persist($projet);
-                $projetDTO->mapTo($projet);
-
-                $event = new MesClicsClientProjetCreationEvent($projet);
-                $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::CREATION, $projet);
-
-                $this->entity_manager->flush();
-
-                $redirect_args = array(
-                    'currentSection' => 'clients',
-                    'subSection' => 'projets',
-                    'mainContent' => 'client-projet',
-                    'currentProjet' => $projet,
-                    'client_id' => $client->getId(),
-                    'projet_id' => $projet->getId()
-                );
-                return $this->redirectToRoute('mesclics_admin_client_projet', $redirect_args);
-            }
-        }
-
-        $args = array(
-            'currentSection' => 'clients',
-            'subSection' => 'projets',
-            'mainContent' => 'client-projet',
-            'currentProjet' => $projet,
-            'client' => $client,
-            'projetForm' => $form->createView()
-        );
-
-        return $this->render('MesClicsEspaceClientBundle:Admin:client-projet.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
@@ -192,7 +123,7 @@ class ClientProjetController extends Controller{
     }
 
     public function addNewProjetForm(Client $client){
-        $projet = new Projet();
+        $projet = new ProjetDTO();
         $projet->setClient($args['client']);
 
         $form = $this->createForm(ProjetType::class, $projet);
@@ -261,8 +192,6 @@ class ClientProjetController extends Controller{
         $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::DETACHMENT, $event);
 
         $this->entity_manager->flush();
-
-        
 
         return $this->redirectToRoute("mesclics_admin_client_contrat", array("client_id" => $client->getId(), "contrat_id" => $contrat->getId()));
     }

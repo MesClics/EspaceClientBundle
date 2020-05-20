@@ -16,10 +16,6 @@ mesclics_admin_client_delete:
     defaults: { _controller: MesClicsEspaceClientBundle:Client:delete }
 
 # PROJETS
-mesclics_admin_client_projets:
-    path: /{client_id}/projets/
-    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:projets }
-
 mesclics_admin_client_projets_add:
     path: /{client_id}/projets/new/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:post }
@@ -51,6 +47,10 @@ mesclics_admin_client_projet_detach_confirm:
 mesclics_admin_client_projet_detach:
     path: /{client_id}/projets/{projet_id}/detach/
     defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:detach }
+
+mesclics_admin_client_projets:
+    path: /{client_id}/projets/
+    defaults: { _controller: MesClicsEspaceClientBundle:ClientProjet:projets }
 
 
 # CONTRATS

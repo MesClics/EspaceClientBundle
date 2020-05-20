@@ -15,7 +15,7 @@ class ContratDTO extends DataTransportObjectToEntity{
     private $last_update;
 
     public function __construct(Client $client = null){
-        prent::__construct();
+        parent::__construct();
         if($client){
             $this->client = $client;
         }

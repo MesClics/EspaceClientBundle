@@ -29,8 +29,7 @@ class ClientCreationWidgetHandler extends WidgetHandler{
                 $event = new MesClicsClientCreationEvent($client);
                 $this->event_dispatcher->dispatch(MesClicsClientEvents::CREATION, $event);
                 $this->entity_manager->flush();
-
-                return $this->redirectToRoute('mesclics_admin_client', array("client_id" => $client->getId()));
+                return $client;
             }
         }
     }
