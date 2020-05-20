@@ -8,15 +8,15 @@
             <p class="">Un projet est un ensemble de prestations et produits réalisés dans un même cadre pour le client.
                 Il peut s'agir, par exemple, de la réalisation d'un site internet (qui comporterait entre autres
                 prestations : la réalisation d'une maquette, l'intégration de la maquette, la création d'une base de
-                données, la mise en ligne etc...), d'une identité visuelle (qui comperterait entre autres prestations :
+                données, la mise en ligne etc...), d'une identité visuelle (qui comporterait entre autres prestations :
                 la réalisation d'une charte graphique, d'un logo, de cartes de viste, de papier à en-tête, d'enveloppes
                 etc...) ou d'un pack abonnement de service-après-vente (qui comporterait entre autres prestations : le
                 suivi statistique de l'utilisation du site, la mise-à-jour mensuelle du contenu éditorial, la sauvegarde
                 quotidienne de la base de données etc...)</p>
         </div>
 
-        <img class="oocss-s oocss-image oocss-full-container-width" src={{ client.image.url }}
-            alt={{ client.image.alt }} title={{ client.image.title|default('logo du client') }} />
-        <p class="oocss-instruction">Vous n'avez pas encore de projets avec {{ client.nom }}. Commencez par en ajouter un.</p>
+        <img class="oocss-s oocss-image oocss-full-container-width" src={{ widget.client.image.url }}
+            alt={{ widget.client.image.alt }} title={{ widget.client.image.title|default('logo du client') }} />
+        <p class="oocss-instruction">Vous n'avez pas encore de projets avec {{ widget.client.nom }}. Commencez par en ajouter un.</p>
     </div>
 </section>

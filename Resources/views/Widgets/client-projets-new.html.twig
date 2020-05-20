@@ -1,38 +1,5 @@
-{% if isSlideshow is defined and isSlideshow %}
-    <section class="oocss-widget small client-projets-new">
-        <div class="oocss-widget--head">
-            <h2 class="oocss-widget--title">Ajouter un projet</h2>
-        </div>
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
 
-        <div class="oocss-widget--content oocss-full-container-width">
-            <img class="oocss-s oocss-image oocss-full-container-width" src={{ client.image.url }} alt={{ client.image.alt }} title={{ client.image.title }}/>
-            <div class="oocss-slideshow">
-                {{ form_start(form, {'attr': {'class': 'oocss-slideshow--content oocss-full-container-width'}}) }}
-                    {{ form_row(form.type, {'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'De quel type de projet s\'agit-il ?', 'attr': {'class': 'oocss-slideshow--step'}, 'help': 'ex: Website, Logo, Charte Graphique etc...'}) }}
-                    {{ form_row(form.nom, {'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'Donnez un nom au projet', 'attr': {'class': 'oocss-slideshow--step'}}) }}
-                    {{ form_row(form.submit, {'attr': {'class': 'oocss-slideshow--step oocss-center-all'}, 'label': 'créer le nouveau projet'}) }}
-                    {{ form_row(form._token)}}
-                {{ form_end(form, {'render_rest': false}) }}
-                <div class="oocss-slideshow--slider"></div>
-            </div>
-        </div>
-    </section>
-
-{% else %}
-    <section class="oocss-widget large highlight client-projets-new">
-        <div class="oocss-widget--head">
-            <h2 class="oocss-widget--title">Ajouter un projet</h2>
-        </div>
-        <div class="oocss-widget--content">
-            {{ form_start(form) }}
-                {{ form_row(form.type, {'attr': {'class': 'oocss-full-container-width'}, 'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'De quel type de projet s\'agit-il ?', 'help': 'par ex : web, design, conseil etc...'}) }}
-                {{ form_row(form.nom, {'attr': {'class': 'oocss-full-container-width'}, 'widget_attr': {'class': 'oocss-full-container-width'}, 'label': 'Quel nom donner au projet ?'}) }}
-                {% if projet.id is defined %}
-                    {{ form_row(form.isClosed, {'attr': {'invertLabel': true}, 'label': 'Clore le projet'}) }}   
-                {% endif %}
-                {{ form_row(form.submit, {'label': 'créer le projet'}) }}
-                {{ form_row(form._token) }}
-            {{ form_end(form, {'render_rest': false}) }}
-        </div>
-    </section>
-{% endif %}
+{% block widgetContent %}
+    {% include "MesClicsEspaceClientBundle:Widgets:client-projet-form.html.twig" with {'form': widget.form.createView()} %}
+{% endblock widgetContent %}

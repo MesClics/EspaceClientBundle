@@ -1,6 +1,6 @@
 <section class="oocss-widget large client-projets">
     <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Projets</h2>    
+        <h2 class="oocss-widget--title">Projets</h2>
     </div>
 
     <div class="oocss-widget--content">
@@ -15,19 +15,20 @@
                 <span class="oocss-table-head"></span>
             </div>
             {% for projet in projets %}
-            <div class="oocss-table-row oocss-clickable-table-row" data-link={{path('mesclics_admin_client_projet', { 'client_id' : client.id, 'projet_id' : projet.id })}}>
+            <div class="oocss-table-row oocss-clickable-table-row"
+                data-link={{path('mesclics_admin_client_projet', { 'client_id' : widget.client.id, 'projet_id' : projet.id })}}>
                 <span class="oocss-table-data none-on-small-screens">
                     {% if projet.dateCreation is not null %}
-                        {{ projet.dateCreation|date("d/m/Y") }}{{ projet.dateCreation|date(" à h\\hm") }}
+                    {{ projet.dateCreation|date("d/m/Y") }}{{ projet.dateCreation|date(" à h\\hm") }}
                     {% else %}
-                        -
+                    -
                     {% endif %}
                 </span>
                 <span class="oocss-table-data none-on-small-screens">
                     {% if projet.lastUpdate is not null %}
-                        {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à h\\hm") }}
+                    {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à h\\hm") }}
                     {% else %}
-                        -
+                    -
                     {% endif %}
                 </span>
                 <span class="oocss-table-data">{{ projet.nom }}</a>
@@ -40,7 +41,9 @@
                     {% if projet.closed %}&#10003;{% else %} - {% endif %}
                 </span>
                 <span class="oocss-table-data">
-                    <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" title="supprimer le projet" data-popup-path= {{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': client.id, 'projet_id': projet.id})) }}>
+                    <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup"
+                        title="supprimer le projet"
+                        data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': widget.client.id, 'projet_id': projet.id})) }}>
                         {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                     </button>
                 </span>
