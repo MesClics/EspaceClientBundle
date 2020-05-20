@@ -31,7 +31,7 @@ class ClientEditWidgetHandler extends WidgetHandler{
                     $this->entity_manager->flush();
                 }
 
-                return $client;
+                return $widget->getClient();
             }
         }
     }
