@@ -23,9 +23,6 @@ class ClientProjetsWidgets extends WidgetsContainer{
         } else{
             $this->addWidget(new ClientProjetsListWidget($params['client']));
         }
-
-        // PIN:
-        // TODO: create widget;
         $this->addWidget(new ClientProjetCreationWidget($params['client'], $this->projet_creation_handler));
         $this->getWidget('client_projet_creation')->addVariable('isSlideshow', true);
         $this->getWidget('client_projet_creation')->addClass('small');
