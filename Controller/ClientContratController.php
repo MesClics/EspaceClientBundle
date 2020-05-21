@@ -9,6 +9,7 @@ use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ContratType;
 use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use MesClics\EspaceClientBundle\Widget\ClientContratWidgets;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -37,36 +38,27 @@ class ClientContratController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function contratsAction(Client $client, Request $request){
-        // new contrat widget
-        $contratDTO = new ContratDTO($client);
-        $contratForm = $this->createForm(ContratType::class, $contratDTO);
-        //handle form
-        if($request->isMethod('POST')){
-            $contratForm->handleRequest($request);
-            if($contratForm->isSubmitted() && $contratForm->isValid()){
-                $contrat = new Contrat();
-                $this->entity_manager->persist($contrat);
-                $contratForm->getData()->mapTo($contrat);
+    public function contratsAction(Client $client, ClientContratWidgets $widgets, Request $request){
+        $params = array(
+            'client' => $client
+        );
+        $widgets->initialize($params);
+        $res = $widgets->handleRequest($request);
 
-                $event = new MesClicsClientContratCreationEvent($contrat);
-                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::CREATION, $event);
-
-                $this->entity_manager->flush();
-                
-                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $contrat->getClient()->getId(), 'contrat_id' => $contrat->getId()));
-            }
-            
+        if($res && $res instanceof Contrat){
+            return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $res->getClient()->getId(), 'contrat_id' => $res->getId()));
         }
 
         //on génère la vue
         $args = array(
-            'currentSection' => 'clients',
-            'subSection' => 'contrats',
-            'client' => $client,
-            'contratForm' => $contratForm->createView()
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array("client_id" => $client->getId())),
+                'contrats' => $this->generateUrl('mesclics_admin_client_contrats', array("client_id" => $client->getId()))
+            ),
+            'widgets' => $widgets->getWidgets()
         );
-        return $this->render('MesClicsAdminBundle:Panel:client.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
