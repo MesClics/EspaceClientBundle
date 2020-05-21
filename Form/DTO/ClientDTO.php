@@ -43,7 +43,7 @@ class ClientDTO extends DataTransportObjectToEntity{
     }
 
     public function setProspect($prospect){
-        $this->prospect = boolval($prospect);
+        $this->prospect = $prospect;
     }
 
     public function getImage(){

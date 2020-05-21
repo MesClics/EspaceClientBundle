@@ -216,7 +216,7 @@ class Client
      */
     public function isProspect()
     {
-        return $this->prospect;
+        return boolval($this->prospect);
     }
 
     public function getImage(){
