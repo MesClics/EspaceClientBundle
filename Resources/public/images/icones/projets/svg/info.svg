@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64.73mm" height="64.73mm" version="1.1" viewBox="0 0 64.73 64.73" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(-43.986 -121.85)">
+  <g transform="translate(-811.64 193.64)">
+   <g transform="translate(594.8 -516.12)">
+    <g transform="translate(4.2763 134.97)">
+     <rect x="256.54" y="309.36" width="64.73" height="64.73" fill="none" style="paint-order:stroke fill markers"/>
+     <g transform="translate(-.75595 70.304)">
+      <path transform="matrix(.26458 0 0 .26458 -653.64 326.42)" d="m3491.8-283.94v129.21l47.606 22.898h4.6426l46.057-24.855-0.4512-0.82617h0.752v-110.87l38.225 16.912v46.713h10.002v-53.223l-53.318-23.594-43.68 21.018zm10.002 15.738 34.865 16.357v107.6l-34.865-16.779zm78.602 0.0879v105.29l-33.742 18.213v-107.28zm37.375 68.744c-4.875 0-9.1406 1-12.797 3-3.6562 2-6.4374 4.5312-8.3437 7.5938-1.9062 3.0313-2.8594 6.0313-2.8594 9 0 1.4375 0.5938 2.7813 1.7813 4.0312 1.2187 1.2188 2.7031 1.8281 4.4531 1.8281 2.9688 0 4.9844-1.7656 6.0469-5.2969 1.125-3.375 2.5-5.9219 4.125-7.6406 1.625-1.75 4.1562-2.625 7.5937-2.625 2.9375 0 5.3281 0.8594 7.1719 2.5781 1.875 1.7188 2.8125 3.8281 2.8125 6.3281 0 1.2813-0.3125 2.4688-0.9375 3.5625-0.5937 1.0937-1.3437 2.0937-2.25 3-0.875 0.87498-2.3125 2.1875-4.3125 3.9375-2.2813 2-4.0938 3.7344-5.4375 5.2031-1.3438 1.4375-2.4219 3.125-3.2344 5.0625-0.8125 1.9062-1.2187 4.1719-1.2187 6.7969 0 2.0938 0.5469 3.6719 1.6406 4.7344 1.125 1.0625 2.5 1.5938 4.125 1.5938 3.125 0 4.9844-1.625 5.5781-4.875 0.3438-1.5312 0.5938-2.5937 0.75-3.1875 0.1875-0.625 0.4375-1.2344 0.75-1.8281 0.3125-0.62501 0.7813-1.2969 1.4063-2.0156 0.6562-0.75001 1.5156-1.6094 2.5781-2.5781 3.8438-3.4375 6.5-5.875 7.9687-7.3125 1.5-1.4688 2.7813-3.2031 3.8438-5.2031 1.0938-2 1.6406-4.3282 1.6406-6.9844 0-3.375-0.9531-6.5-2.8594-9.375-1.875-2.875-4.5468-5.1406-8.0156-6.7969-3.4687-1.6875-7.4687-2.5312-12-2.5312zm-1.125 56.953c-2 0-3.6875 0.67188-5.0625 2.0156-1.375 1.3438-2.0625 3-2.0625 4.9688 0 2.2187 0.7032 3.9531 2.1094 5.2031 1.4375 1.2187 3.1094 1.8281 5.0156 1.8281 1.8438 0 3.4688-0.62501 4.875-1.875 1.4063-1.25 2.1094-2.9688 2.1094-5.1562 0-1.9688-0.6719-3.625-2.0156-4.9688-1.3438-1.3437-3-2.0156-4.9688-2.0156z" color="#000000" color-rendering="auto" dominant-baseline="auto" fill="#f5f5f5" fill-rule="evenodd" image-rendering="auto" shape-rendering="auto" solid-color="#000000" stop-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;font-variation-settings:normal;inline-size:0;isolation:auto;mix-blend-mode:normal;shape-margin:0;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+      <g transform="matrix(.48196 -.13345 .1331 .48479 289.64 125.65)" stroke-width="1.9944"></g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>
