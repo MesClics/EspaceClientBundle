@@ -1,30 +1,29 @@
 {% if widget.variables.isSlideshow is defined and widget.variables.isSlideshow %}
-<div class="oocss-slideshow">
-    {{ form_start(form, {'attr': {'class': 'oocss-slideshow--content'}}) }}
-        {{ form_errors(form) }}
-        {{ form_row(form.prospect, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nouveau client est-il un prospect?', 'widget_attr': {'class': 'oocss-full-container-width'}})
-        }}
-        {{ form_row(form.name, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nom du client est', 'widget_attr': {'class': 'oocss-full-container-width'}})
-        }}
-        <div class="oocss-slideshow--step">
-            <label class="oocss-label">Le logo du client</label>
-            {{ form_row(form.image.url, {'label': 'url', 'widget_attr': {'class': 'oocss-full-container-width'}})
+    <div class="oocss-slideshow">
+        {{ form_start(form, {'attr': {'class': 'oocss-slideshow--content'}}) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.prospect, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nouveau client est-il un prospect?', 'widget_attr': {'class': 'oocss-full-container-width'}})
             }}
-            {{ form_row(form.image.alt, {'label': 'texte alternatif', 'widget_attr': {'class': 'oocss-full-container-width'}})}}
-            {{ form_row(form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}})
+            {{ form_row(form.name, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'le nom du client est', 'widget_attr': {'class': 'oocss-full-container-width'}})
             }}
+            <div class="oocss-slideshow--step">
+                <label class="oocss-label">Le logo du client</label>
+                {{ form_row(form.image.url, {'label': 'url', 'widget_attr': {'class': 'oocss-full-container-width'}})
+                }}
+                {{ form_row(form.image.alt, {'label': 'texte alternatif', 'widget_attr': {'class': 'oocss-full-container-width'}})}}
+                {{ form_row(form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}})
+                }}
+            </div>
+            {{ form_row(form.website, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'quelle est l\'adresse du site internet du client ?', 'widget_attr': {'class': 'oocss-full-container-width'}})
+            }}
+            {{ form_row(form.submit, {'attr' : {'class': 'oocss-slideshow--step'}, 'label': 'ajouter le client'}) }}
+            {{ form_row(form._token) }}
+            {# {{ form_rest(form) }} #}
+        {{ form_end(form, {'render_rest': false})}}
+
+        <div class="oocss-slideshow--slider">
         </div>
-        {{ form_row(form.website, {'attr': {'class': 'oocss-slideshow--step'}, 'label': 'quelle est l\'adresse du site internet du client ?', 'widget_attr': {'class': 'oocss-full-container-width'}})
-        }}
-        {{ form_row(form.submit, {'attr' : {'class': 'oocss-slideshow--step'}, 'label': 'ajouter le client'}) }}
-        {{ form_row(form._token) }}
-        {# {{ form_rest(form) }} #}
-    {{ form_end(form, {'render_rest': false})}}
-
-    <div class="oocss-slideshow--slider">
     </div>
-</div>
-
 {% else %}
     {{ form_start(form) }}
         {{ form_errors(form) }}
@@ -40,8 +39,15 @@
             {{ form_row(form.image.alt, {'label': 'texte alternatif', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
             {{ form_row(form.image.title, {'label': 'légende de l\'image', 'widget_attr': {'class': 'oocss-full-container-width'}}) }}
         </div>
-        {% if client is defined %}
-            {{ form_row(form.submit, {'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}, 'label': 'enregistrer les modifications'}) }}
+        {% if widget.client is defined %}
+            <div class="oocss-form-fieldset oocss-horizontal oocss-center-v">
+                {{ form_row(form.submit, {'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}, 'label': 'enregistrer les modifications'}) }}
+
+                <div class="oocss-form-row oocss-justify-end">
+                    <button data-popup-path={{ absolute_url(path('mesclics_admin_client_remove', {'client_id': widget.client.id})) }} 
+                    class="oocss-button oocss-open-popup oocss-headed-block oocss-discret oocss-horizontal oocss-s client-remove">Supprimer le client</button>
+                </div>
+            </div>
         {% else %}
             {{ form_row(form.submit, {'label': submit_label|default('ajouter le client')}) }}
         {% endif %}
