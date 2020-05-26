@@ -41,11 +41,11 @@
                     {% if projet.closed %}&#10003;{% else %} - {% endif %}
                 </span>
                 <span class="oocss-table-data">
-                    <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup"
-                        title="supprimer le projet"
-                        data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': widget.client.id, 'projet_id': projet.id})) }}>
-                        {{ source('@mesclicsbundle/images/svg/trash.svg') }}
-                    </button>
+                    {% if not projet.closed %}
+                        <button data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': widget.client.id, 'projet_id': projet.id})) }} title="supprimer le projet" class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" >
+                            {{ source('@mesclicsbundle/images/svg/trash.svg') }}
+                        </button>
+                    {% endif %}
                 </span>
             </div>
             {% endfor %}
