@@ -12,6 +12,7 @@ use MesClics\EspaceClientBundle\Form\DTO\ProjetDTO;
 use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MesClics\EspaceClientBundle\Widget\ClientProjetsWidgets;
+use MesClics\EspaceClientBundle\Widget\ClientProjetEditWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
@@ -72,7 +73,11 @@ class ClientProjetController extends Controller{
             'projet' => $projet
         );
         $widgets->initialize($params);
-        $widgets->handleRequest($request);
+        $widget = $widgets->handleRequest($request);
+
+        if($widget && $widget instanceof ClientProjetEditWidget){
+            return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $widget->getProjet()->getClient()->getId(), 'projet_id' => $widget->getProjet()->getId()));
+        }
 
         //on génère la vue
         $args = array(
