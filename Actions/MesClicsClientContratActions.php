@@ -29,7 +29,7 @@ final class MesClicsClientContratActions{
     }
 
     public static function onUpdate(Contrat $beforeUpdate, Contrat $afterUpdate){
-        $label = "modification du contrat n°" . $afterUpdate->getNumero() . " pour le client " . $afterUpdate->getClient()->getNom() . "(" . $contrat->getClient()->getNumero() . ").";
+        $label = "modification du contrat n°" . $afterUpdate->getNumero() . " pour le client " . $afterUpdate->getClient()->getNom() . "(" . $afterUpdate->getClient()->getNumero() . ").";
         $objects = array(
             "before_update" => $beforeUpdate,
             "after_update" => $afterUpdate

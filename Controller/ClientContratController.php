@@ -8,18 +8,21 @@ use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ContratType;
 use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
+use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MesClics\EspaceClientBundle\Widget\ClientContratWidgets;
+use MesClics\EspaceClientBundle\Widget\ClientContratsWidgets;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratEvents;
-use MesClics\EspaceClientBundle\Form\FormManager\ContratFormManager;
+use MesClics\EspaceClientBundle\Widget\ClientContratCreationWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
+use MesClics\EspaceClientBundle\Widget\Handler\ClientContratCreationWidgetHandler;
 
 class ClientContratController extends Controller{
 
@@ -38,7 +41,7 @@ class ClientContratController extends Controller{
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      */
-    public function contratsAction(Client $client, ClientContratWidgets $widgets, Request $request){
+    public function contratsAction(Client $client, ClientContratsWidgets $widgets, Request $request){
         $params = array(
             'client' => $client
         );
@@ -62,40 +65,34 @@ class ClientContratController extends Controller{
     }
 
     /**
-     * @Security("hasRole('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping":{"client_id": "id"}})
      */
-    public function postAction(Client $client, Request $request){
-        $contratDTO = new ContratDTO($client);
-        $form = $this->createForm(ContratType::class, $contratDTO);
+    public function postAction(Client $client, ClientContratCreationWidgetHandler $handler, Request $request){
+        $nav_widget = new ClientNavWidget($client);
+        $widget = new ClientContratCreationWidget($client, $handler);
+        $res = $widget->handleRequest($request);
 
-        if($request->isMethod('POST')){
-            $form->handleRequest($request);
-            if($form->isSumbitted() && $form->isValid()){
-                $contrat = new Contrat();
+        $widgets = array(
+            $nav_widget,
+            $widget
+        );
 
-                $this->entity_manager->persist($contrat);
-
-                $contratDTO->mapTo($contrat);
-
-                $event = new MesClicsClientContratCreationEvent($contrat);
-                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::CREATION, $event);
-                
-                $this->entity_manager->flush();
-                
-                return $this->redirectToRoute('mesclics_admin_clients_contrat', array("client_id" => $client->getId(), "contrat_id" => $form_manager->getResult()->getId()));
-            }
+        if($res && $res instanceof Contrat){
+            return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $res->getClient()->getId(), 'contrat_id' => $res->getId()));
         }
 
         $args = array(
-            "currentSection" => "client",
-            "subSection" => "contrat",
-            "client" => $client,
-            "contrat" => $contrat,
-            "contratForm" => $form->createView()
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array('client_id' => $client->getId())),
+                'contrats' => $this->generateUrl('mesclics_admin_client_contrats', array('client_id' => $client->getId())),
+                'nouveau contrat' => $this->generateUrl('mesclics_admin_client_contrats_add', array('client_id' => $client->getId()))
+            ),
+            'widgets' => $widgets
         );
 
-        return $this->render('MesClicsEspaceClientBundle:Admin:client-contrat.html.twig', $args);
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     /**
@@ -103,45 +100,50 @@ class ClientContratController extends Controller{
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
      * @ParamConverter("contrat", options={"mapping": {"contrat_id": "id"}})
      */
-    public function getAction(Client $client, Contrat $contrat, ContratFormManager $contratFormManager, Request $request){
+    public function getAction(Client $client, Contrat $contrat, ClientContratWidgets $widgets, Request $request){
+        $params = array(
+            'contrat' => $contrat,
+            'client' => $client
+        );
+        $widgets->initialize($params);
+        
+        $res = $widgets->handleRequest($request);
+
         $args = array(
-            'currentSection' => 'clients',
-            'subSection' => 'contrat',
-            'client' => $client,
-            'contrat_id' => $contrat->getId(),
-            'contrat' => $contrat
+            'navRails' => array(
+                'clients' => $this->generateUrl('mesclics_admin_clients'),
+                $client->getNom() => $this->generateUrl('mesclics_admin_client', array('client_id' => $client->getId())),
+                'contrats' => $this->generateUrl('mesclics_admin_client_contrats', array('client_id' => $client->getId())),
+                $contrat->getNumero() => $this->generateUrl('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()))
+            ),
+            'widgets' => $widgets->getWidgets()
         );
 
         // on génère les formulaires
-        // MODIFICATION DE CONTRAT
-        $contratDTO = new ContratDTO();
-        $contratDTO->mapFrom($contrat);
-        $contratForm = $this->createForm(ContratType::class, $contratDTO);
-        $args["contratForm"] = $contratForm->createView();
 
-        //ASSOCIATION DE PROJETS
-        // check if there are some unattached projects for this client
-        $unattached_projets = $this->entity_manager->getRepository(Projet::class)->getProjetsWithNoContrat($client);
-        $args["unattachedProjets"] = $unattached_projets;
+        // //ASSOCIATION DE PROJETS
+        // // check if there are some unattached projects for this client
+        // $unattached_projets = $this->entity_manager->getRepository(Projet::class)->getProjetsWithNoContrat($client);
+        // $args["unattachedProjets"] = $unattached_projets;
         
-        //on gère le formulaire
-        //si la requête est de type POST
-        if($request->isMethod('POST')){
-            //MODIFICATION DE CONTRAT
-            $contratForm->handleRequest($request);
-            if($contratForm->isSubmitted() && $contratForm->isValid()){
-                $old_contrat = clone $contrat;
-                $contrat_dto = $contratForm->getData();
-                $contrat_dto->mapTo($contrat);
+        // //on gère le formulaire
+        // //si la requête est de type POST
+        // if($request->isMethod('POST')){
+        //     //MODIFICATION DE CONTRAT
+        //     $contratForm->handleRequest($request);
+        //     if($contratForm->isSubmitted() && $contratForm->isValid()){
+        //         $old_contrat = clone $contrat;
+        //         $contrat_dto = $contratForm->getData();
+        //         $contrat_dto->mapTo($contrat);
 
-                $event = new MesClicsClientContratUpdateEvent($old_contrat, $contrat);
-                $this->event_dispatcher->dispatch(MesClicsClientContratEvents::UPDATE, $event);
+        //         $event = new MesClicsClientContratUpdateEvent($old_contrat, $contrat);
+        //         $this->event_dispatcher->dispatch(MesClicsClientContratEvents::UPDATE, $event);
 
-                $this->entity_manager->flush();
-                return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
-            }
-        }
-        return $this->render('MesClicsEspaceClientBundle:Admin:client-contrat.html.twig', $args);
+        //         $this->entity_manager->flush();
+        //         return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
+        //     }
+        // }
+        return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 
     

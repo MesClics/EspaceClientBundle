@@ -12,8 +12,8 @@
                 <span class="oocss-table-head">date de signature</span>
                 <span class="oocss-table-head"></span>
             </div>
-            {% for contrat in contrats %}
-                <div class="oocss-table-row oocss-clickable-table-row" data-link="{{ path('mesclics_admin_client_contrat', { 'client_id' : client.id, 'contrat_id' : contrat.id }) }}">
+            {% for contrat in widget.contrats %}
+                <div class="oocss-table-row oocss-clickable-table-row" data-link="{{ path('mesclics_admin_client_contrat', { 'client_id' : contrat.client.id, 'contrat_id' : contrat.id }) }}">
                     <span class="oocss-table-data">{{ contrat.numero }}</span>
                     <span class="oocss-table-data">{{ contrat.type }}</span>
                     <span class="oocss-table-data oocss-vertical oocss-center-h">
@@ -30,9 +30,7 @@
                     <span class="oocss-table-data">{{ contrat.dateCreation|date('d/m/Y') }}</span>
                     <span class="oocss-table-data">{% if contrat.dateSignature %}{{ contrat.dateSignature|date('d/m/Y') }}{% endif %}</span>
                     <span class="oocss-table-data">
-                        <button class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup"
-                            data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': client.id, 'contrat_id': contrat.id})) }}
-                            title="supprimer">
+                        <button data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': contrat.client.id, 'contrat_id': contrat.id})) }} title="supprimer" class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup">
                             {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                         </button>
                     </span>

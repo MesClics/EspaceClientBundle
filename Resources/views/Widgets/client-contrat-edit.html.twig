@@ -1,6 +1,7 @@
+{% set form = widget.form.createView() %}
 <section class="oocss-widget medium highlight client-contrats">
     <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Contrat n° {{ contrat.numero }}</h2>
+        <h2 class="oocss-widget--title">Contrat n° {{ widget.contrat.numero }}</h2>
     </div>
 
     <div class="oocss-widget--content">
@@ -9,14 +10,14 @@
             {{ form_row(form.dateSignature, {'label': 'date de signature'}) }}
             <div class="oocss-form-row oocss-justify-end">
                 <span class="oocss-label">dernière modification</span>
-                <span>le {{ contrat.lastUpdate|default("")|date("d/m/Y") }} à {{ contrat.lastUpdate|default("")|date("H\\hi") }}</span>
+                <span>le {{ widget.contrat.lastUpdate|default("")|date("d/m/Y") }} à {{ widget.contrat.lastUpdate|default("")|date("H\\hi") }}</span>
             </div>
         </div>
         {{ form_row(form.type) }}
         <div class="oocss-form-fieldset oocss-horizontal">
             {{ form_row(form.submit, {'label': 'enregistrer les modifications', 'attr': {'class': 'oocss-headed-block oocss-horizontal oocss-s save'}}) }}
             <div class="oocss-form-row oocss-justify-end">
-                <button data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': contrat.client.id, 'contrat_id': contrat.id})) }} class="oocss-button oocss-open-popup oocss-headed-block oocss-discret oocss-horizontal oocss-s client-contrats-remove">Supprimer le contrat</button>
+                <button data-popup-path={{ absolute_url(path('mesclics_admin_client_contrat_remove', {'client_id': widget.contrat.client.id, 'contrat_id': widget.contrat.id})) }} class="oocss-button oocss-open-popup oocss-headed-block oocss-discret oocss-horizontal oocss-s client-contrats-remove">Supprimer le contrat</button>
             </div>
         </div>
         {{ form_row(form._token) }}
