@@ -73,10 +73,10 @@ class ClientProjetController extends Controller{
             'projet' => $projet
         );
         $widgets->initialize($params);
-        $widget = $widgets->handleRequest($request);
+        $res = $widgets->handleRequest($request);
 
-        if($widget && $widget instanceof ClientProjetEditWidget){
-            return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $widget->getProjet()->getClient()->getId(), 'projet_id' => $widget->getProjet()->getId()));
+        if($res && $res instanceof Projet){
+            return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $res->getClient()->getId(), 'projet_id' => $res->getId()));
         }
 
         //on génère la vue

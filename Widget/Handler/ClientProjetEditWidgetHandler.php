@@ -28,7 +28,7 @@ class ClientProjetEditWidgetHandler extends WidgetHandler{
                     $event = new MesClicsClientProjetUpdateEvent($before_update, $widget->getProjet());
                     $this->event_dispatcher->dispatch(MesClicsClientProjetEvents::UPDATE, $event);
                     $this->entity_manager->flush();
-                    return $this->redirectToRoute('mesclics_admin_client_projet', array('client_id' => $widget->getProjet()->getClient()->getId(), 'projet_id' => $widget->getProjet()->getId()));
+                    return $widget->getProjet();
                 }
             }
         }
