@@ -29,7 +29,7 @@ class ClientContratsWidgets extends WidgetsContainer{
             $this
                 ->addWidget(new ClientContratsStartWidget($params['client']))
                     ->getWidget('client_contrats_info')
-                        ->addClasses(['medium', 'highlight2', 'client-contrats-infos'])
+                        ->addClasses(['medium', 'highlight2', 'client-contrats-info'])
                         ->setTitle('par où commencer ?');
         }
 
