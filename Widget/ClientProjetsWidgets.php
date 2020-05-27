@@ -19,7 +19,11 @@ class ClientProjetsWidgets extends WidgetsContainer{
     public function initialize($params = array()){
         $this->addWidget(new ClientNavWidget($params['client']));
         if($params['client']->getProjets()->isEmpty()){
-            $this->addWidget(new ClientProjetsStartWidget($params['client']));
+            $this
+                ->addWidget(new ClientProjetsStartWidget($params['client']))
+                ->getWidget('client_projets_start')
+                    ->addClasses(['client-projets-info', 'highlight2', 'medium'])
+                    ->setTitle('par où commencer ?');
         } else{
             $this->addWidget(new ClientProjetsListWidget($params['client']));
         }

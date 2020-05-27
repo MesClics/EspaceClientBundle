@@ -16,7 +16,7 @@ use MesClics\EspaceClientBundle\Widget\ClientProjetEditWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
-use MesClics\EspaceClientBundle\Widget\Handler\ClientProjetWidgets;
+use MesClics\EspaceClientBundle\Widget\ClientProjetWidgets;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;

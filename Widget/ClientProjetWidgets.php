@@ -1,6 +1,6 @@
 <?php
 
-namespace MesClics\EspaceClientBundle\Widget\Handler;
+namespace MesClics\EspaceClientBundle\Widget;
 
 use MesClics\UtilsBundle\Widget\WidgetsContainer;
 use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
