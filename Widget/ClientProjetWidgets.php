@@ -16,7 +16,11 @@ class ClientProjetWidgets extends WidgetsContainer{
     }
 
     public function initialize($params = array()){
-        $this->addWidget(new ClientNavWidget($params['client']));
+        $this
+            ->addWidget(new ClientNavWidget($params['client']))
+                ->getWidget('clients_nav')
+                    ->addClasses(['oocss-discret', 'not-closable', 'small']);
+                    
         $this->addWidget(new ClientProjetEditWidget($params['projet'], $this->projet_widget_handler));
 
         $this->getWidget('client_projet')->addClasses(['highlight', 'client-projet-edit']);

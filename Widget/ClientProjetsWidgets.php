@@ -17,7 +17,11 @@ class ClientProjetsWidgets extends WidgetsContainer{
     }
 
     public function initialize($params = array()){
-        $this->addWidget(new ClientNavWidget($params['client']));
+        $this
+            ->addWidget(new ClientNavWidget($params['client']))
+                ->getWidget('clients_nav')
+                    ->addClasses(['oocss-discret', 'not-closable', 'small']);
+
         if($params['client']->getProjets()->isEmpty()){
             $this
                 ->addWidget(new ClientProjetsStartWidget($params['client']))
@@ -25,7 +29,11 @@ class ClientProjetsWidgets extends WidgetsContainer{
                     ->addClasses(['client-projets-info', 'highlight2', 'medium'])
                     ->setTitle('par où commencer ?');
         } else{
-            $this->addWidget(new ClientProjetsListWidget($params['client']));
+            $this
+                ->addWidget(new ClientProjetsListWidget($params['client']))
+                ->getWidget('client_projets')
+                    ->addClasses(['client-projets', 'large'])
+                    ->setTitle('projets');
         }
         $this->addWidget(new ClientProjetCreationWidget($params['client'], $this->projet_creation_handler));
         $this->getWidget('client_projet_creation')->addVariable('isSlideshow', true);

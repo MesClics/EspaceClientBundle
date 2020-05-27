@@ -70,6 +70,8 @@ class ClientContratController extends Controller{
      */
     public function postAction(Client $client, ClientContratCreationWidgetHandler $handler, Request $request){
         $nav_widget = new ClientNavWidget($client);
+        $nav_widget->addClasses(['oocss-discret', 'not-closable', 'small']);
+        
         $widget = new ClientContratCreationWidget($client, $handler);
         $res = $widget->handleRequest($request);
 

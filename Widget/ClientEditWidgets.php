@@ -16,10 +16,14 @@ class ClientEditWidgets extends WidgetsContainer{
     }
 
     public function initialize($params = array()){
-        $this->addWidget(new ClientNavWidget($params['client']));
-        $this->addWidget(new ClientEditWidget($params['client'], $this->client_edit_handler));
+        $this
+            ->addWidget(new ClientNavWidget($params['client']))
+                ->getWidget('clients_nav')
+                    ->addClasses(['oocss-discret', 'not-closable', 'small']);
 
-        $this->getWidget('clients_nav')->addClass("oocss-discret small");
-        $this->getWidget('client_edit')->addClass("client-edit");
+        $this
+            ->addWidget(new ClientEditWidget($params['client'], $this->client_edit_handler))
+            ->getWidget('client_edit')->addClass("client-edit")
+                ->addClasses(['medium', 'highlight', 'client-edit']);
     }
 }

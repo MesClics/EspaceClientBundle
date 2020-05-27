@@ -19,8 +19,15 @@ class ClientContratWidgets extends WidgetsContainer{
     }
     
     public function initialize($params = array()){
-        $this->addWidget(new ClientNavWidget($params['client']));
-        $this->addWidget(new ClientContratEditWidget($params['contrat'], $this->contrat_edit_handler));
+        $this
+            ->addWidget(new ClientNavWidget($params['client']))
+                ->getWidget('clients_nav')
+                    ->addClasses(['oocss-discret', 'not-closable', 'small']);
+        $this
+            ->addWidget(new ClientContratEditWidget($params['contrat'], $this->contrat_edit_handler))
+                ->getWidget('client_contrat')
+                    ->addClasses(['medium', 'highlight', 'client-contrat-edit'])
+                    ->setTitle('Contrat n°' . $params['contrat']->getNumero());
 
         if($params['client']->getProjets()){
             $this

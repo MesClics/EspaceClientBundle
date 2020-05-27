@@ -14,6 +14,7 @@ class ClientCreationWidgets extends WidgetsContainer{
     }
 
     public function initialize($params = array()){
-        $this->addWidget(new ClientCreationWidget($this->client_creation_handler));
+        $this
+            ->addWidget(new ClientCreationWidget($this->client_creation_handler));
     }
 }

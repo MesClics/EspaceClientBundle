@@ -1,14 +1,13 @@
-<section class="client-edit oocss-widget medium highlight">
-    <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">{{ widget.client.nom }} {% if widget.client.prospect %} (PROSPECT) {% endif %}</h2>
-    </div>
-    <div class="oocss-widget--content">
-        <div class="oocss-form-fieldset oocss-horizontal">
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
+{% block widgetTitle %}
+    <h2 class="oocss-widget--title">{{ widget.client.nom }} {% if widget.client.prospect %} (PROSPECT) {% endif %}</h2>
+{% endblock widgetTitle %}
+{% block widgetContent %}
+    <div class="oocss-form-fieldset oocss-horizontal">
             <div class="oocss-form-row">
                 <span class="oocss-label">Numéro client</span>
                 <span>{{ widget.client.numero }}</span>
             </div>
         </div>
         {% include "MesClicsEspaceClientBundle:Widgets:client-form.html.twig" with {'form': widget.form.createView()} %}
-    </div>
-</section>
+{% endblock widgetContent %}

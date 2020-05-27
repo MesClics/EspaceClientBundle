@@ -16,13 +16,15 @@ class ClientContratsWidgets extends WidgetsContainer{
 
     public function initialize($params = array()){
         $this
-            ->addWidget(new ClientNavWidget($params['client']));
+            ->addWidget(new ClientNavWidget($params['client']))
+                ->getWidget('clients_nav')
+                    ->addClasses(['oocss-discret', 'not-closable', 'small']);
         
         if(!$params['client']->getContrats()->isEmpty()){
             $this
                 ->addWidget(new ClientContratsListWidget($params['client']))
                     ->getWidget('client_contrats')
-                        ->addClasses(['large', 'highlight'])
+                        ->addClasses(['large', 'client-contrats'])
                         ->setTitle('contrats');
         } else{
             // TODO: add contrats infos widget
@@ -36,7 +38,8 @@ class ClientContratsWidgets extends WidgetsContainer{
         $this
             ->addWidget(new ClientContratCreationWidget($params['client'], $this->contrat_creation_handler))
                 ->getWidget('client_contrat_creation')
-                    ->addClass('small')
+                    ->addClasses(['small', 'highlight', 'client-contrats-new'])
+                    ->setTitle('ajouter un contrat')
                     ->addVariable('isSlideshow', true);
     }
 }

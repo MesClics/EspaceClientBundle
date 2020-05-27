@@ -1,20 +1,17 @@
-<section class="oocss-widget large client-projets">
-    <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Projets</h2>
-    </div>
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
 
-    <div class="oocss-widget--content">
-        <div class="oocss-table oocss-full-container-width">
-            <div class="oocss-table-row">
-                <span class="oocss-table-head none-on-small-screens">créé le</span>
-                <span class="oocss-table-head none-on-small-screens">modifié le</span>
-                <span class="oocss-table-head">nom</span>
-                <span class="oocss-table-head">type</span>
-                <span class="oocss-table-head">contrat</span>
-                <span class="oocss-table-head">terminé</span>
-                <span class="oocss-table-head"></span>
-            </div>
-            {% for projet in projets %}
+{% block widgetContent %}
+    <div class="oocss-table oocss-full-container-width">
+        <div class="oocss-table-row">
+            <span class="oocss-table-head none-on-small-screens">créé le</span>
+            <span class="oocss-table-head none-on-small-screens">modifié le</span>
+            <span class="oocss-table-head">nom</span>
+            <span class="oocss-table-head">type</span>
+            <span class="oocss-table-head">contrat</span>
+            <span class="oocss-table-head">terminé</span>
+            <span class="oocss-table-head"></span>
+        </div>
+        {% for projet in projets %}
             <div class="oocss-table-row oocss-clickable-table-row"
                 data-link={{path('mesclics_admin_client_projet', { 'client_id' : widget.client.id, 'projet_id' : projet.id })}}>
                 <span class="oocss-table-data none-on-small-screens">
@@ -26,13 +23,12 @@
                 </span>
                 <span class="oocss-table-data none-on-small-screens">
                     {% if projet.lastUpdate is not null %}
-                    {{ projet.lastUpdate|date("d/m/Y") }}{{ projet.lastUpdate|date(" à h\\hm") }}
+                        {{ projet.lastUpdate|date("d/m/Y") }} {{ projet.lastUpdate|date("à h\\hm") }}
                     {% else %}
-                    -
+                        -
                     {% endif %}
                 </span>
-                <span class="oocss-table-data">{{ projet.nom }}</a>
-                </span>
+                <span class="oocss-table-data">{{ projet.nom }}</span>
                 <span class="oocss-table-data">{{ projet.type }}</span>
                 <span class="oocss-table-data">
                     {{ projet.contrat.numero|default("-") }}
@@ -42,13 +38,15 @@
                 </span>
                 <span class="oocss-table-data">
                     {% if not projet.closed %}
-                        <button data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': widget.client.id, 'projet_id': projet.id})) }} title="supprimer le projet" class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup" >
+                        <button
+                            data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_remove', {'client_id': widget.client.id, 'projet_id': projet.id})) }}
+                            title="supprimer le projet"
+                            class="oocss-input-button oocss-discret oocss-table-data-icon oocss-open-popup">
                             {{ source('@mesclicsbundle/images/svg/trash.svg') }}
                         </button>
                     {% endif %}
                 </span>
             </div>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-</section>
+{% endblock widgetContent %}

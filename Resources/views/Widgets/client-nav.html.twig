@@ -1,9 +1,17 @@
-<section class="oocss-widget oocss-discret not-closable small">
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
+
+{% block widgetTitle %}
     {% if widget.client.image %}
-        <div class="oocss-widget--head oocss-center-h">
-            <h2><img class="oocss-image oocss-m" src={{ widget.client.image.url }} alt={{ widget.client.image.alt }} title={{ widget.client.image.title|default(widget.client.image.alt) }}></h2>
-        </div>
+        <h2 class="oocss-center-h">
+            <img class="oocss-image oocss-m" src={{ widget.client.image.url }} alt={{ widget.client.image.alt }}
+            title={{ widget.client.image.title|default(widget.client.image.alt) }}>
+        </h2>
+    {% else %}
+        <h2>{{ widget.client.nom }}</h2>
     {% endif %}
+{% endblock widgetTitle %}
+
+{% block widgetContent %}
     <ul class="oocss-widget--content oocss-full-container-width oocss-sub_section--nav">
         <li class="oocss-full-container-width oocss-sub_section-nav--bloc">
             <div class="oocss-sub_section-nav-bloc--head">
@@ -11,10 +19,16 @@
             </div>
             <ul class="oocss-sub_section-nav-bloc--content">
                 <li>
-                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-projets" href="{{ path('mesclics_admin_client_projets', {'client_id': widget.client.id}) }}">projets {% if widget.client.projets is not empty %}<span class="oocss-index oocss-index__d__lateral">{{ widget.client.projets|length }}</span>{% endif %}</a>
+                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-projets"
+                        href="{{ path('mesclics_admin_client_projets', {'client_id': widget.client.id}) }}">projets
+                        {% if widget.client.projets is not empty %}<span
+                            class="oocss-index oocss-index__d__lateral">{{ widget.client.projets|length }}</span>{% endif %}</a>
                 </li>
                 <li>
-                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-contrats" href="{{ path('mesclics_admin_client_contrats', {'client_id': widget.client.id}) }}">contrats {% if widget.client.contrats is not empty %}<span class="oocss-index oocss-index__d__lateral">{{ widget.client.contrats|length }}</span>{% endif %}</a>
+                    <a class="oocss-button oocss-discret oocss-headed-block oocss-horizontal oocss-s client-contrats"
+                        href="{{ path('mesclics_admin_client_contrats', {'client_id': widget.client.id}) }}">contrats
+                        {% if widget.client.contrats is not empty %}<span
+                            class="oocss-index oocss-index__d__lateral">{{ widget.client.contrats|length }}</span>{% endif %}</a>
                 </li>
             </ul>
         </li>
@@ -26,4 +40,4 @@
             </ul>
         </li>
     </ul>
-</section>
+{% endblock widgetContent%}
