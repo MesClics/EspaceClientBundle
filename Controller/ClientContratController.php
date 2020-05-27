@@ -122,9 +122,6 @@ class ClientContratController extends Controller{
         // on génère les formulaires
 
         // //ASSOCIATION DE PROJETS
-        // // check if there are some unattached projects for this client
-        // $unattached_projets = $this->entity_manager->getRepository(Projet::class)->getProjetsWithNoContrat($client);
-        // $args["unattachedProjets"] = $unattached_projets;
         
         // //on gère le formulaire
         // //si la requête est de type POST
