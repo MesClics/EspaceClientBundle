@@ -1,29 +1,26 @@
-<section class="oocss-widget small client-contrat-projets">
-    <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Gérer les projets du contrat</h2>
-    </div>
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
 
-    <div class="oocss-widget--content">
-        {% if projets is defined and projets is not empty %}
-            <h3 class="oocss-center-h">Les projets suivants sont actuellement associés au contrat</h3>
-            {% for projet in projets %}
-            <li class="oocss-block oocss-horizontal oocss-center-v oocss-full-container-width">
-                <div class="oocss-block oocss-discret oocss-vertical">
-                    <span class="oocss-title">{{ projet.nom }}</span>
-                    <span class="oocss-instruction oocss-discret">{{ projet.type|upper }} | créé le
-                        {{ projet.dateCreation|date("d/m/Y") }}</span>
-                </div>
-                <span class="oocss-block oocss-justify-end">
-                    <button class="oocss-button oocss-inline oocss-open-popup"
-                        data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_detach', { 'client_id': client.id, 'projet_id': projet.id })) }}>dissocier</button>
-                </span>
-            </li>
-            {% endfor %}            
-        {% endif %}
-        {% if projetsToAttach is defined and projetsToAttach is not empty %}
-            <h3 class="oocss-center-h">Les projets suivants peuvent être attachés au contrat</h3>
-            <ul class="oocss-full-container-width oocss-block oocss-vertical">
-                {% for projet in projetsToAttach %}
+{% block widgetContent %}
+    {% if widget.contrat.projets is defined and widget.contrat.projets is not empty %}
+        <h3 class="oocss-center-h">Les projets suivants sont actuellement associés au contrat</h3>
+        {% for projet in widget.contrat.projets %}
+        <li class="oocss-block oocss-horizontal oocss-center-v oocss-full-container-width">
+            <div class="oocss-block oocss-discret oocss-vertical">
+                <span class="oocss-title">{{ projet.nom }}</span>
+                <span class="oocss-instruction oocss-discret">{{ projet.type|upper }} | créé le
+                    {{ projet.dateCreation|date("d/m/Y") }}</span>
+            </div>
+            <span class="oocss-block oocss-justify-end">
+                <button class="oocss-button oocss-inline oocss-open-popup"
+                    data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_detach', { 'client_id': widget.contrat.client.id, 'projet_id': projet.id })) }}>dissocier</button>
+            </span>
+        </li>
+        {% endfor %}
+    {% endif %}
+    {% if widget.unattachedProjets is defined and widget.unattachedProjets is not empty %}
+        <h3 class="oocss-center-h">Les projets suivants peuvent être attachés au contrat</h3>
+        <ul class="oocss-full-container-width oocss-block oocss-vertical">
+            {% for projet in widget.unattachedProjets %}
                 <li class="oocss-block oocss-horizontal oocss-center-v oocss-full-container-width">
                     <div class="oocss-block oocss-discret oocss-vertical">
                         <span class="oocss-title">{{ projet.nom }}</span>
@@ -32,11 +29,10 @@
                     </div>
                     <span class="oocss-block oocss-justify-end">
                         <button class="oocss-button oocss-inline oocss-open-popup"
-                            data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_attach', { 'contrat_id': contrat.id, 'projet_id': projet.id })) }}>associer</button>
+                            data-popup-path={{ absolute_url(path('mesclics_admin_client_projet_attach', { 'contrat_id': widget.contrat.id, 'projet_id': projet.id })) }}>associer</button>
                     </span>
                 </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
-</section>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock widgetContent %}
