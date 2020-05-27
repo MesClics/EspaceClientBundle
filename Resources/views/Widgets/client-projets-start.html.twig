@@ -1,22 +1,20 @@
-<section class="oocss-widget medium highlight2 client-projets-info">
-    <div class="oocss-widget--head">
-        <h2 class="oocss-widget--title">Par où commencer ?</h2>
-    </div>
-    <div class="oocss-widget--content">
-        <div class="oocss-widget--content-zone">
-            <h3>Qu'est-ce qu'un projet ?</h3>
-            <p class="">Un projet est un ensemble de prestations et produits réalisés dans un même cadre pour le client.
-                Il peut s'agir, par exemple, de la réalisation d'un site internet (qui comporterait entre autres
-                prestations : la réalisation d'une maquette, l'intégration de la maquette, la création d'une base de
-                données, la mise en ligne etc...), d'une identité visuelle (qui comporterait entre autres prestations :
-                la réalisation d'une charte graphique, d'un logo, de cartes de viste, de papier à en-tête, d'enveloppes
-                etc...) ou d'un pack abonnement de service-après-vente (qui comporterait entre autres prestations : le
-                suivi statistique de l'utilisation du site, la mise-à-jour mensuelle du contenu éditorial, la sauvegarde
-                quotidienne de la base de données etc...)</p>
-        </div>
+{% extends "MesClicsAdminBundle::widget-layout.html.twig" %}
 
-        <img class="oocss-s oocss-image oocss-full-container-width" src={{ widget.client.image.url }}
-            alt={{ widget.client.image.alt }} title={{ widget.client.image.title|default('logo du client') }} />
-        <p class="oocss-instruction">Vous n'avez pas encore de projets avec {{ widget.client.nom }}. Commencez par en ajouter un.</p>
+{% block widgetContent %}
+    <div class="oocss-widget--content-zone">
+        <h3>Qu'est-ce qu'un projet ?</h3>
+        <p class="">Un projet est un ensemble de prestations et produits réalisés dans un même cadre pour le client.
+            Il peut s'agir, par exemple, de la réalisation d'un site internet (qui comporterait entre autres
+            prestations : la réalisation d'une maquette, l'intégration de la maquette, la création d'une base de
+            données, la mise en ligne etc...), d'une identité visuelle (qui comporterait entre autres prestations :
+            la réalisation d'une charte graphique, d'un logo, de cartes de viste, de papier à en-tête, d'enveloppes
+            etc...) ou d'un pack abonnement de service-après-vente (qui comporterait entre autres prestations : le
+            suivi statistique de l'utilisation du site, la mise-à-jour mensuelle du contenu éditorial, la sauvegarde
+            quotidienne de la base de données etc...)</p>
     </div>
-</section>
+    
+    <img class="oocss-s oocss-image oocss-full-container-width" src={{ widget.client.image.url }}
+        alt={{ widget.client.image.alt }} title={{ widget.client.image.title|default('logo du client') }} />
+    <p class="oocss-instruction oocss-center-all">Vous n'avez pas encore de projets avec {{ widget.client.nom }}. Commencez
+        par en ajouter un.</p>
+{% endblock widgetContent %}
