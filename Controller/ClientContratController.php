@@ -4,10 +4,7 @@ namespace MesClics\EspaceClientBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
-use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
-use MesClics\EspaceClientBundle\Form\ContratType;
-use MesClics\EspaceClientBundle\Form\DTO\ContratDTO;
 use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MesClics\EspaceClientBundle\Widget\ClientContratWidgets;
@@ -20,7 +17,6 @@ use MesClics\EspaceClientBundle\Widget\ClientContratCreationWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratRemoveEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientContratUpdateEvent;
-use MesClics\EspaceClientBundle\Event\MesClicsClientContratCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientContratPopups;
 use MesClics\EspaceClientBundle\Widget\Handler\ClientContratCreationWidgetHandler;
 
@@ -36,7 +32,6 @@ class ClientContratController extends Controller{
         $this->session = $session;
     }
 
-    
     /**
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("client", options={"mapping": {"client_id": "id"}})
@@ -108,8 +103,7 @@ class ClientContratController extends Controller{
             'client' => $client
         );
         $widgets->initialize($params);
-        
-        $res = $widgets->handleRequest($request);
+        $widgets->handleRequest($request);
 
         $args = array(
             'navRails' => array(
@@ -121,27 +115,6 @@ class ClientContratController extends Controller{
             'widgets' => $widgets->getWidgets()
         );
 
-        // on génère les formulaires
-
-        // //ASSOCIATION DE PROJETS
-        
-        // //on gère le formulaire
-        // //si la requête est de type POST
-        // if($request->isMethod('POST')){
-        //     //MODIFICATION DE CONTRAT
-        //     $contratForm->handleRequest($request);
-        //     if($contratForm->isSubmitted() && $contratForm->isValid()){
-        //         $old_contrat = clone $contrat;
-        //         $contrat_dto = $contratForm->getData();
-        //         $contrat_dto->mapTo($contrat);
-
-        //         $event = new MesClicsClientContratUpdateEvent($old_contrat, $contrat);
-        //         $this->event_dispatcher->dispatch(MesClicsClientContratEvents::UPDATE, $event);
-
-        //         $this->entity_manager->flush();
-        //         return $this->redirectToRoute('mesclics_admin_client_contrat', array('client_id' => $client->getId(), 'contrat_id' => $contrat->getId()));
-        //     }
-        // }
         return $this->render('MesClicsAdminBundle::layout.html.twig', $args);
     }
 

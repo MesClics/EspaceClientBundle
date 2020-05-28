@@ -6,7 +6,6 @@ use MesClics\EspaceClientBundle\Widget\ClientEditWidget;
 use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use MesClics\EspaceClientBundle\Widget\Handler\ClientEditWidgetHandler;
 
-
 class ClientEditWidgets extends WidgetsContainer{
     protected $client_edit_handler;
     

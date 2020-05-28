@@ -1,7 +1,6 @@
 <?php
 namespace MesClics\EspaceClientBundle\Controller;
 
-use Symfony\Component\Asset\Packages;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use MesClics\EspaceClientBundle\Entity\Client;
@@ -9,10 +8,8 @@ use MesClics\EspaceClientBundle\Entity\Projet;
 use MesClics\EspaceClientBundle\Entity\Contrat;
 use MesClics\EspaceClientBundle\Form\ProjetType;
 use MesClics\EspaceClientBundle\Form\DTO\ProjetDTO;
-use MesClics\EspaceClientBundle\Widget\ClientNavWidget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MesClics\EspaceClientBundle\Widget\ClientProjetsWidgets;
-use MesClics\EspaceClientBundle\Widget\ClientProjetEditWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetEvents;
@@ -21,8 +18,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetAttachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetDetachEvent;
 use MesClics\EspaceClientBundle\Event\MesClicsClientProjetRemoveEvent;
-use MesClics\EspaceClientBundle\Event\MesClicsClientProjetUpdateEvent;
-use MesClics\EspaceClientBundle\Event\MesClicsClientProjetCreationEvent;
 use MesClics\EspaceClientBundle\Popups\MesClicsEspaceClientProjetPopups;
 
 class ClientProjetController extends Controller{

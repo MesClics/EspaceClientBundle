@@ -3,8 +3,6 @@ namespace MesClics\EspaceClientBundle\Widget;
 
 use MesClics\UtilsBundle\Widget\Widget;
 use MesClics\EspaceClientBundle\Entity\Client;
-use Doctrine\Common\Collections\ArrayCollection;
-
 
 class ClientContratsListWidget extends Widget{
     protected $contrats;
